@@ -9,6 +9,10 @@ export default {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+		container:{
+			center:true,
+			padding:'1rem',
+		},
   	extend: {
   		colors: {
   			background: 'hsl(var(--background))',
@@ -99,5 +103,5 @@ export default {
   		}
   	}
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"),require('@tailwindcss/forms'),],
 } satisfies Config;

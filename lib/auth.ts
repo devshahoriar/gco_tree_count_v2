@@ -8,6 +8,7 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'sqlite',
   }),
+
   emailAndPassword: {
     enabled: true,
     // sendResetPassword: async (user, url) => {
@@ -29,6 +30,20 @@ export const auth = betterAuth({
     },
     expiresIn: 60 * 60 * 24 * 7,
     updateAge: 60 * 60 * 24 * 2,
+    additionalFields: {
+      createdAt: {
+        type: 'date',
+        returned: false,
+      },
+      updatedAt: {
+        type: 'date',
+        returned: false,
+      },
+      userAgent: {
+        type: 'string',
+        returned: false,
+      },
+    },
   },
   advanced: {
     cookies: {
@@ -37,17 +52,29 @@ export const auth = betterAuth({
       },
     },
   },
-  user:{
-    additionalFields:{
-      role:{
-        type:'string',
-        default:'user',
-        required:true
+  user: {
+    additionalFields: {
+      role: {
+        type: 'string',
+        default: 'user',
+        required: true,
       },
-      permissions :{
-        type:'string',
-        default:'',
-      }
-    }
-  }
+      permissions: {
+        type: 'string',
+        default: '',
+      },
+      createdAt: {
+        type: 'date',
+        returned: false,
+      },
+      updatedAt: {
+        type: 'date',
+        returned: false,
+      },
+      emailVerified: {
+        type: 'boolean',
+        returned: false,
+      },
+    },
+  },
 })

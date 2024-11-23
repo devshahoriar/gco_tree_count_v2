@@ -8,7 +8,7 @@ export default async function Home() {
       headers: await headers()
     }
   })
-  // console.log(auth)
+  console.log(auth)
   return (
    <h1>Shuvo</h1>
   );

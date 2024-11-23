@@ -1,4 +1,5 @@
 import {
+  AreaChart,
   LayoutGrid,
   LucideIcon,
   Notebook,
@@ -27,7 +28,7 @@ type Group = {
 }
 
 export function getMenuList(): Group[] {
-// pathname: string
+  // pathname: string
   return [
     {
       groupLabel: '',
@@ -67,6 +68,37 @@ export function getMenuList(): Group[] {
             {
               href: '/d/report/ot4oc',
               label: 'Report OT4OC',
+            },
+          ],
+        },
+        {
+          href: '',
+          label: 'Data',
+          icon: AreaChart,
+          submenus: [
+            {
+              href: '/d/data/division',
+              label: 'Add Division',
+            },
+            {
+              href: '/d/data/post',
+              label: 'Add Post Office',
+            },
+            {
+              href: '/d/data/union',
+              label: 'Add Union',
+            },
+            {
+              href: '/d/data/up-zilla',
+              label: 'Add Up-Zilla',
+            },
+            {
+              href: '/d/data/zilla',
+              label: 'Add Zilla',
+            },
+            {
+              href: '/d/data/tree',
+              label: 'Add Tree',
             },
           ],
         },
