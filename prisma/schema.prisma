@@ -67,3 +67,41 @@ model Verification {
 
   @@map("verification")
 }
+
+model Division {
+  id    Int     @id @default(autoincrement())
+  name  String
+  Zilla Zilla[]
+}
+
+model Zilla {
+  id         Int        @id @default(autoincrement())
+  name       String
+  divisionId Int
+  division   Division   @relation(fields: [divisionId], references: [id], onDelete: Cascade)
+  Upazilla   Upazilla[]
+}
+
+model Upazilla {
+  id         Int          @id @default(autoincrement())
+  name       String
+  zillaId    Int
+  zilla      Zilla        @relation(fields: [zillaId], references: [id], onDelete: Cascade)
+  Union      Union[]
+  PostOffice PostOffice[]
+}
+
+model Union {
+  id         Int      @id @default(autoincrement())
+  name       String
+  upazillaId Int
+  upazilla   Upazilla @relation(fields: [upazillaId], references: [id], onDelete: Cascade)
+}
+
+model PostOffice {
+  id        Int      @id @default(autoincrement())
+  name      String
+  postCode  String
+  upZillaId Int
+  upZilla   Upazilla @relation(fields: [upZillaId], references: [id], onDelete: Cascade)
+}

@@ -81,6 +81,14 @@ export function getMenuList(): Group[] {
               label: 'Add Division',
             },
             {
+              href: '/d/data/zilla',
+              label: 'Add Zilla',
+            },
+            {
+              href: '/d/data/up-zilla',
+              label: 'Add Up-Zilla',
+            },
+            {
               href: '/d/data/post',
               label: 'Add Post Office',
             },
@@ -88,14 +96,7 @@ export function getMenuList(): Group[] {
               href: '/d/data/union',
               label: 'Add Union',
             },
-            {
-              href: '/d/data/up-zilla',
-              label: 'Add Up-Zilla',
-            },
-            {
-              href: '/d/data/zilla',
-              label: 'Add Zilla',
-            },
+
             {
               href: '/d/data/tree',
               label: 'Add Tree',
