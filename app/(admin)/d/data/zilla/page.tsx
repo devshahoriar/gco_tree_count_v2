@@ -1,7 +1,7 @@
 import { ContentLayout } from '@/components/admin-panel/content-layout'
 import prisma from '@/prisma/db'
 import { unstable_cache } from 'next/cache'
-import { AddZilla, EditZilla } from './c'
+import { AddZilla, DeleteZilla, EditZilla } from './c'
 import {
   Table,
   TableBody,
@@ -102,6 +102,11 @@ const DataZilla = async () => {
                     name={division.name}
                     zillacount={division._count.Zilla}
                   /> */}
+                  <DeleteZilla
+                    id={zilla.id}
+                    name={zilla.name}
+                    Upzillacount={zilla._count.Upazilla}
+                  />
                 </TableCell>
               </TableRow>
             ))}

@@ -1,3 +1,4 @@
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 import InputBox from '@/components/shared/InputBox'
@@ -13,21 +14,23 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from '@/components/ui/credenza'
-import { Division } from '@prisma/client'
+import { Label } from '@/components/ui/label'
 import { Edit, Trash } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useRef, useState } from 'react'
 
-export const AddDivision = () => {
+export const AddPostOffice = ({ allUpazilla }: { allUpazilla: any[] }) => {
   const [name, setName] = useState('')
+  const [postCode, setPostCode] = useState('')
+  const [upazillaId, setUpazillaId] = useState(0)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const { refresh } = useRouter()
   const closeRef = useRef<HTMLButtonElement>(null)
 
-  const hendelSubmit = async () => {
-    if (!name) {
-      setError('Name is required')
+  const handleSubmit = async () => {
+    if (!name || !postCode || !upazillaId) {
+      setError('All fields are required')
       return
     }
     setLoading(true)
@@ -38,12 +41,13 @@ export const AddDivision = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, type: 'division' }),
+        body: JSON.stringify({ name, postCode, type: 'postOffice', pId: upazillaId }),
         credentials: 'include',
       })
       closeRef?.current?.click()
       refresh()
       setName('')
+      setPostCode('')
     } catch (error: any) {
       console.log(error)
       setError('Something went wrong')
@@ -54,24 +58,45 @@ export const AddDivision = () => {
   return (
     <Credenza>
       <CredenzaTrigger asChild>
-        <Button>Add Division</Button>
+        <Button>Add Post Office</Button>
       </CredenzaTrigger>
       <CredenzaContent>
         <CredenzaHeader>
-          <CredenzaTitle>Add Division</CredenzaTitle>
+          <CredenzaTitle>Add Post Office</CredenzaTitle>
           <CredenzaDescription> </CredenzaDescription>
         </CredenzaHeader>
-        <CredenzaBody>
+        <CredenzaBody className="space-y-4">
+          <div className="space-y-2 flex flex-col">
+            <Label>Select Upazilla</Label>
+            <select
+              value={upazillaId}
+              onChange={(e) => setUpazillaId(Number(e.target.value))}
+              className="from-input bg-transparent focus:outline-none rounded-md"
+            >
+              <option value={0}>Select</option>
+              {allUpazilla.map((upazilla) => (
+                <option key={upazilla.id} value={upazilla.id}>
+                  {upazilla.name} - {upazilla.zilla.name} - {upazilla.zilla.division.name}
+                </option>
+              ))}
+            </select>
+          </div>
           <InputBox
             id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             title="Name"
           />
+          <InputBox
+            id="postCode"
+            value={postCode}
+            onChange={(e) => setPostCode(e.target.value)}
+            title="Post Code"
+          />
           <p className="text-red-500 text-sm">{error}</p>
         </CredenzaBody>
         <CredenzaFooter>
-          <Button onClick={hendelSubmit} disabled={loading}>
+          <Button onClick={handleSubmit} disabled={loading}>
             Create
           </Button>
           <CredenzaClose asChild>
@@ -83,16 +108,30 @@ export const AddDivision = () => {
   )
 }
 
-export const EditDivision = ({ id, n }: { id: number; n: string }) => {
+export const EditPostOffice = ({
+  id,
+  n,
+  pc,
+  allUpazilla,
+  upId,
+}: {
+  id: number
+  n: string
+  pc: string
+  allUpazilla: any[]
+  upId: number
+}) => {
   const [name, setName] = useState(n)
+  const [postCode, setPostCode] = useState(pc)
+  const [upazillaId, setUpazillaId] = useState(upId)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const { refresh } = useRouter()
   const closeRef = useRef<HTMLButtonElement>(null)
 
-  const hendelSubmit = async () => {
-    if (!name) {
-      setError('Name is required')
+  const handleSubmit = async () => {
+    if (!name || !postCode) {
+      setError('Name and Post Code are required')
       return
     }
     setLoading(true)
@@ -103,10 +142,10 @@ export const EditDivision = ({ id, n }: { id: number; n: string }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, type: 'division', id }),
+        body: JSON.stringify({ id, name, postCode, type: 'postOffice', pId: upazillaId }),
         credentials: 'include',
       })
-      closeRef?.current?.click()
+      closeRef.current?.click()
       refresh()
     } catch (error: any) {
       console.log(error)
@@ -122,23 +161,43 @@ export const EditDivision = ({ id, n }: { id: number; n: string }) => {
           <Edit size={20} />
         </Button>
       </CredenzaTrigger>
-
       <CredenzaContent>
         <CredenzaHeader>
-          <CredenzaTitle>Edit Division</CredenzaTitle>
+          <CredenzaTitle>Edit Post Office</CredenzaTitle>
           <CredenzaDescription> </CredenzaDescription>
         </CredenzaHeader>
-        <CredenzaBody>
+        <CredenzaBody className="space-y-4">
+          <div className="space-y-2 flex flex-col">
+            <Label>Select Upazilla</Label>
+            <select
+              value={upazillaId}
+              onChange={(e) => setUpazillaId(Number(e.target.value))}
+              className="from-input bg-transparent focus:outline-none rounded-md"
+            >
+              <option value={0}>Select</option>
+              {allUpazilla.map((upazilla) => (
+                <option key={upazilla.id} value={upazilla.id}>
+                  {upazilla.name} - {upazilla.zilla.name} - {upazilla.zilla.division.name}
+                </option>
+              ))}
+            </select>
+          </div>
           <InputBox
             id="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             title="Name"
           />
+          <InputBox
+            id="postCode"
+            value={postCode}
+            onChange={(e) => setPostCode(e.target.value)}
+            title="Post Code"
+          />
           <p className="text-red-500 text-sm">{error}</p>
         </CredenzaBody>
         <CredenzaFooter>
-          <Button onClick={hendelSubmit} disabled={loading}>
+          <Button onClick={handleSubmit} disabled={loading}>
             Update
           </Button>
           <CredenzaClose asChild>
@@ -150,16 +209,18 @@ export const EditDivision = ({ id, n }: { id: number; n: string }) => {
   )
 }
 
-export const DeleteDivision = ({
+export const DeletePostOffice = ({
   id,
   name,
-  zillacount,
-}: { zillacount: number } & Division) => {
+}: {
+  id: number
+  name: string
+}) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const { refresh } = useRouter()
 
-  const hendelSubmit = async () => {
+  const handleSubmit = async () => {
     setLoading(true)
     setError('')
     try {
@@ -168,10 +229,9 @@ export const DeleteDivision = ({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ type: 'division', id }),
+        body: JSON.stringify({ id, type: 'postOffice' }),
         credentials: 'include',
       })
-
       refresh()
     } catch (error: any) {
       console.log(error)
@@ -190,20 +250,16 @@ export const DeleteDivision = ({
 
       <CredenzaContent>
         <CredenzaHeader>
-          <CredenzaTitle>Delete Division</CredenzaTitle>
+          <CredenzaTitle>Delete Post Office</CredenzaTitle>
           <CredenzaDescription>
-            Delete <span className='font-bold'>{name}</span> will {zillacount} zillas also deleted. Are you shure?{' '}
+            Are you sure you want to delete <span className="font-bold">{name}</span>?
           </CredenzaDescription>
         </CredenzaHeader>
         <CredenzaBody>
           <p className="text-red-500">{error}</p>
         </CredenzaBody>
         <CredenzaFooter>
-          <Button
-            onClick={hendelSubmit}
-            disabled={loading}
-            variant="destructive"
-          >
+          <Button onClick={handleSubmit} disabled={loading} variant="destructive">
             Delete
           </Button>
           <CredenzaClose asChild>

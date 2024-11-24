@@ -17,7 +17,7 @@ import { Label } from '@/components/ui/label'
 import { Division } from '@prisma/client'
 import { Edit, Trash } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 export const AddZilla = ({ allDivision }: { allDivision: Division[] }) => {
   const [name, setName] = useState('')
@@ -25,6 +25,7 @@ export const AddZilla = ({ allDivision }: { allDivision: Division[] }) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const { refresh } = useRouter()
+  const closeRef = useRef<HTMLButtonElement>(null)
 
   const hendelSubmit = async () => {
     if (!name || !divisionId) {
@@ -42,7 +43,7 @@ export const AddZilla = ({ allDivision }: { allDivision: Division[] }) => {
         body: JSON.stringify({ name, type: 'zilla', pId: divisionId }),
         credentials: 'include',
       })
-
+      closeRef?.current?.click()
       refresh()
       setName('')
     } catch (error: any) {
@@ -91,7 +92,7 @@ export const AddZilla = ({ allDivision }: { allDivision: Division[] }) => {
             Create
           </Button>
           <CredenzaClose asChild>
-            <Button>Close</Button>
+            <Button ref={closeRef}>Close</Button>
           </CredenzaClose>
         </CredenzaFooter>
       </CredenzaContent>
@@ -115,6 +116,7 @@ export const EditZilla = ({
   const [divisionId, setDivisionId] = useState(dId)
   const [error, setError] = useState('')
   const { refresh } = useRouter()
+  const closeRef = useRef<HTMLButtonElement>(null)
 
   const hendelSubmit = async () => {
     if (!name) {
@@ -132,7 +134,7 @@ export const EditZilla = ({
         body: JSON.stringify({ name, type: 'zilla', id, pId: divisionId }),
         credentials: 'include',
       })
-
+      closeRef.current?.click()
       refresh()
     } catch (error: any) {
       console.log(error)
@@ -154,7 +156,7 @@ export const EditZilla = ({
           <CredenzaTitle>Edit Zilla</CredenzaTitle>
           <CredenzaDescription> </CredenzaDescription>
         </CredenzaHeader>
-        <CredenzaBody className='space-y-4'>
+        <CredenzaBody className="space-y-4">
           <div className="space-y-2 flex flex-col">
             <Label>Select Zilla</Label>
             <select
@@ -183,7 +185,7 @@ export const EditZilla = ({
             Update
           </Button>
           <CredenzaClose asChild>
-            <Button>Close</Button>
+            <Button ref={closeRef}>Close</Button>
           </CredenzaClose>
         </CredenzaFooter>
       </CredenzaContent>
@@ -191,11 +193,15 @@ export const EditZilla = ({
   )
 }
 
-export const DeleteDivision = ({
+export const DeleteZilla = ({
   id,
   name,
-  zillacount,
-}: { zillacount: number } & Division) => {
+  Upzillacount,
+}: {
+  Upzillacount: number
+  id: number
+  name: string
+}) => {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const { refresh } = useRouter()
@@ -209,7 +215,7 @@ export const DeleteDivision = ({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ type: 'division', id }),
+        body: JSON.stringify({ type: 'zilla', id }),
         credentials: 'include',
       })
 
@@ -233,8 +239,8 @@ export const DeleteDivision = ({
         <CredenzaHeader>
           <CredenzaTitle>Delete Division</CredenzaTitle>
           <CredenzaDescription>
-            Delete <span className="font-bold">{name}</span> will {zillacount}{' '}
-            zillas. Are you shure?{' '}
+            Delete <span className="font-bold">{name}</span> will {Upzillacount}{' '}
+            zillas. Are you shure?
           </CredenzaDescription>
         </CredenzaHeader>
         <CredenzaBody>
