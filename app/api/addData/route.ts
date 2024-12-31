@@ -1,3 +1,4 @@
+import { PERMISSIONS } from '@/data/const'
 import { getSession } from '@/lib/auth-client'
 import prisma from '@/prisma/db'
 import { revalidateTag } from 'next/cache'
@@ -11,6 +12,10 @@ export const POST = async (req: NextRequest) => {
     },
   })
   if (!data) {
+    return Response.json({ message: 'Unauthorized' }, { status: 401 })
+  }
+  const userPermissions = data?.user?.permissions?.split(',')
+  if (!userPermissions?.includes(PERMISSIONS.DATA)) {
     return Response.json({ message: 'Unauthorized' }, { status: 401 })
   }
   const { name, type, pId, postCode } = await req.json()
@@ -72,6 +77,10 @@ export const PATCH = async (req: NextRequest) => {
     },
   })
   if (!data) {
+    return Response.json({ message: 'Unauthorized' }, { status: 401 })
+  }
+  const userPermissions = data?.user?.permissions?.split(',')
+  if (!userPermissions?.includes(PERMISSIONS.DATA)) {
     return Response.json({ message: 'Unauthorized' }, { status: 401 })
   }
 
@@ -146,12 +155,21 @@ export const PATCH = async (req: NextRequest) => {
 }
 
 export const DELETE = async (req: NextRequest) => {
+
+
+  return Response.json({ message: 'This opration destroy database!' }, { status: 401 })
+
+
   const { data } = await getSession({
     fetchOptions: {
       headers: await headers(),
     },
   })
   if (!data) {
+    return Response.json({ message: 'Unauthorized' }, { status: 401 })
+  }
+  const userPermissions = data?.user?.permissions?.split(',')
+  if (!userPermissions?.includes(PERMISSIONS.DATA)) {
     return Response.json({ message: 'Unauthorized' }, { status: 401 })
   }
 

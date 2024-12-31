@@ -6,7 +6,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
@@ -16,7 +15,7 @@ import { Label } from '@/components/ui/label'
 import { PasswordInput } from '@/components/ui/password-input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { signIn, signUp, useSession } from '@/lib/auth-client'
-import { Facebook, Instagram, Loader, Twitter } from 'lucide-react'
+import { Loader } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
@@ -25,12 +24,13 @@ import { FormEvent, useEffect, useState } from 'react'
 export default function LoginRegistrationPage() {
   const [activeTab, setActiveTab] = useState('login')
   const [registerData, setRegisterData] = useState<any>({})
-  const [loginData, setLoginData] = useState<any>({})
+  const [loginData, setLoginData] = useState<any>({ remem: false })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [loginError, setLoginError] = useState('')
   const { data } = useSession()
-  
+  const [success, setSuccess] = useState('')
+
   const { replace } = useRouter()
   useEffect(() => {
     if (data !== null) {
@@ -48,7 +48,8 @@ export default function LoginRegistrationPage() {
       },
       {
         onSuccess: () => {
-          replace('/')
+          setActiveTab('login')
+          setSuccess('Account created successfully, please login')
           setLoading(false)
         },
         onError: (v) => {
@@ -66,9 +67,11 @@ export default function LoginRegistrationPage() {
   const _hendelLogin = async (e: FormEvent) => {
     e.preventDefault()
     setLoading(true)
+    setSuccess('')
     const { error } = await signIn.email({
       email: loginData.email,
       password: loginData.pass,
+      rememberMe: loginData.remem,
       callbackURL: '/',
     })
     if (error) {
@@ -122,16 +125,34 @@ export default function LoginRegistrationPage() {
                       }
                     />
                   </div>
+                  <div className="flex items-center space-x-2">
+                    <Checkbox
+                      id="remem"
+                      value={loginData.remem}
+                      onCheckedChange={(v) =>
+                        setLoginData({ ...loginData, remem: v })
+                      }
+                    />
+                    <label
+                      htmlFor="remem"
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      Remember me
+                    </label>
+                  </div>
                   {loginError && (
                     <p className="text-red-500 text-sm">{loginError}</p>
                   )}
-                
+                  {success && (
+                    <p className="text-green-500 text-sm">{success}</p>
+                  )}
+
                   <Button
                     type="submit"
-                    className="w-full bg-primary hover:bg-opacity-30"
+                    className="w-full hover:bg-opacity-30"
                     disabled={loading}
                   >
-                    {loading ? <Loader className='animate-spin'/>: "Log In"}
+                    {loading ? <Loader className="animate-spin" /> : 'Log In'}
                   </Button>
                 </div>
               </form>
@@ -224,47 +245,14 @@ export default function LoginRegistrationPage() {
                     </label>
                   </div>
                   <p className="text-sm text-red-600">{error}</p>
-                  <Button
-                    disabled={loading}
-                    type="submit"
-                    className="w-full"
-                  >
-                    {loading ? (
-                      <Loader className="animate-spin" />
-                    ) : (
-                      'Register'
-                    )}
+                  <Button disabled={loading} type="submit" className="w-full">
+                    {loading ? <Loader className="animate-spin" /> : 'Register'}
                   </Button>
                 </div>
               </form>
             </TabsContent>
           </Tabs>
         </CardContent>
-        <CardFooter>
-          <div className="w-full space-y-4">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-foreground" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-background px-2 text-muted-foreground">
-                  Or continue with
-                </span>
-              </div>
-            </div>
-            <div className="flex justify-center space-x-4">
-              <Button variant="outline" size="icon">
-                <Facebook className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="icon">
-                <Twitter className="h-4 w-4" />
-              </Button>
-              <Button variant="outline" size="icon">
-                <Instagram className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>
-        </CardFooter>
       </Card>
     </main>
   )

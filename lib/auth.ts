@@ -1,28 +1,35 @@
 import prisma from '@/prisma/db'
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
-
-// import sendMail from './sendEmail'
+import { headers } from 'next/headers'
+import { getSession } from './auth-client'
+import logger from './logger'
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'sqlite',
   }),
-
+  databaseHooks:{
+    user:{
+     create:{
+      after: async (user) => {
+        logger.info(`User created: ${user.email}`)
+      }
+     }
+    },
+    session:{
+     create:{
+      after: async (session) => {
+        logger.info(`User Login: ${session.userId}`)
+      }
+     }
+    }
+  },
   emailAndPassword: {
     enabled: true,
-    // sendResetPassword: async (user, url) => {
-    //   const result = await sendMail(
-    //     user.email,
-    //     'Reset Password',
-    //     `Click here to reset your password: ${url}`
-    //   )
-    //   if (result.error) {
-    //     throw new Error('Failed to send email')
-    //   }
-    // },
+    autoSignIn: false,
   },
-
+  trustedOrigins: [process.env.NEXT_PUBLIC_URL!],
   session: {
     cookieCache: {
       enabled: true,
@@ -57,24 +64,43 @@ export const auth = betterAuth({
       role: {
         type: 'string',
         default: 'user',
-        required: true,
+        required: false,
       },
       permissions: {
         type: 'string',
         default: '',
+        required: false,
+      },
+      active: {
+        type: 'boolean',
+        required: false,
+        returned: true,
       },
       createdAt: {
         type: 'date',
         returned: false,
+        required: false,
       },
       updatedAt: {
         type: 'date',
         returned: false,
+        required: false,
       },
       emailVerified: {
         type: 'boolean',
         returned: false,
+        required: false,
       },
     },
   },
 })
+
+export const getUser = async (header: typeof headers) => {
+  const { data } = await getSession({
+    fetchOptions: {
+      headers: await header(),
+    },
+  })
+  const user = data?.user
+  return user
+}

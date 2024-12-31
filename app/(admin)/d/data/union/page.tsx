@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { ContentLayout } from '@/components/admin-panel/content-layout'
 import prisma from '@/prisma/db'
 import { unstable_cache } from 'next/cache'
@@ -8,7 +9,6 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-
 } from '@/components/ui/table'
 import { AddUnion, EditUnion, DeleteUnion } from './c'
 
@@ -84,7 +84,13 @@ const DataUnion = async () => {
   return (
     <ContentLayout title="Add Union">
       <div className="flex items-center justify-between">
-        <p className="font-bold">{count} Unions</p>
+        <div>
+          <p className="font-bold">{count} Unions</p>
+          <p className="text-xs text-red-600">
+            Ones add you can't <b>delete</b> or <b>Remove</b>.
+          </p>
+          <p className="text-xs text-red-600"> Only you can edit.</p>
+        </div>
         <AddUnion allUpazilla={allUpazilla} />
       </div>
       <div className="mt-10">

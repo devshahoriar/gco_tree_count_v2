@@ -1,20 +1,21 @@
 import AdminPanelLayout from '@/components/admin-panel/admin-panel-layout'
 import UnAuth from '@/components/shared/UnAuth'
-import { getSession } from '@/lib/auth-client'
+import { getUser } from '@/lib/auth'
+
 import { headers } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 export default async function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
-  const { data } = await getSession({
-    fetchOptions: {
-      headers: await headers(),
-    },
-  })
-  if (data === null) {
+  const user = await getUser(headers)
+
+  if (!user) {
     return <UnAuth />
   }
+
+  if (!user.active) redirect('/deactive')
   return <AdminPanelLayout>{children}</AdminPanelLayout>
 }

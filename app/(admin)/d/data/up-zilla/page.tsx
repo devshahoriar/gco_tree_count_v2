@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { ContentLayout } from '@/components/admin-panel/content-layout'
 import prisma from '@/prisma/db'
 import { unstable_cache } from 'next/cache'
@@ -79,7 +80,11 @@ const DataUpZilla = async () => {
   return (
     <ContentLayout title="Add Up-Zilla">
       <div className="flex items-center justify-between">
+        <div>
         <p className="font-bold">{count} Up-Zilla</p>
+        <p className='text-xs text-red-600'>Ones add you can't <b>delete</b> or <b>Remove</b>.</p>
+        <p className='text-xs text-red-600'> Only you can edit.</p>
+        </div>
         <AddUpZilla allZilla={allZilla} />
       </div>
       <div className="mt-10">

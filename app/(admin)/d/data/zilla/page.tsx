@@ -1,7 +1,5 @@
+/* eslint-disable react/no-unescaped-entities */
 import { ContentLayout } from '@/components/admin-panel/content-layout'
-import prisma from '@/prisma/db'
-import { unstable_cache } from 'next/cache'
-import { AddZilla, DeleteZilla, EditZilla } from './c'
 import {
   Table,
   TableBody,
@@ -10,6 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
+import prisma from '@/prisma/db'
+import { unstable_cache } from 'next/cache'
+import { AddZilla, DeleteZilla, EditZilla } from './c'
 
 const getCountZilla = unstable_cache(
   async () => await prisma.zilla.count(),
@@ -67,7 +68,13 @@ const DataZilla = async () => {
   return (
     <ContentLayout title="Add Zilla">
       <div className="flex items-center justify-between">
-        <p className="font-bold">{count} Zilla</p>
+        <div>
+          <p className="font-bold">{count} Zilla</p>
+          <p className="text-xs text-red-600">
+            Ones add you can't <b>delete</b> or <b>Remove</b>.
+          </p>
+          <p className="text-xs text-red-600"> Only you can edit.</p>
+        </div>
         <AddZilla allDivision={allDivision} />
       </div>
       <div className="mt-10">
@@ -96,12 +103,6 @@ const DataZilla = async () => {
                     n={zilla.name}
                     dId={zilla.division.id}
                   />
-                  {/* <EditDivision id={division.id} n={division.name} />
-                  <DeleteDivision
-                    id={division.id}
-                    name={division.name}
-                    zillacount={division._count.Zilla}
-                  /> */}
                   <DeleteZilla
                     id={zilla.id}
                     name={zilla.name}

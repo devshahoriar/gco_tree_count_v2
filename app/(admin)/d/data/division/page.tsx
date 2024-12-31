@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 import { ContentLayout } from '@/components/admin-panel/content-layout'
 import {
   Table,
@@ -46,7 +47,11 @@ const DataDivision = async () => {
   return (
     <ContentLayout title="Add Division">
       <div className="flex items-center justify-between">
-        <p className="font-bold">{count} Divisions</p>
+        <div>
+          <p className="font-bold">{count} Divisions</p>
+          <p className='text-xs text-red-600'>Ones add you can't <b>delete</b> or <b>Remove</b>.</p>
+          <p className='text-xs text-red-600'> Only you can edit.</p>
+        </div>
         <AddDivision />
       </div>
       <div className="mt-10">

@@ -1,4 +1,5 @@
 'use client'
+import InputBox, { InputParent } from '@/components/shared/InputBox'
 /* eslint-disable react/no-unescaped-entities */
 import { Button } from '@/components/ui/button'
 import {
@@ -13,7 +14,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Search, X } from 'lucide-react'
-import { HTMLProps } from 'react'
+
 
 const NewOt4oc = () => {
   return (
@@ -83,7 +84,7 @@ const MasterRoll = () => {
           title="How many tree plant"
           placeholder="Tree Count"
         />
-        <InputBox id="masterId" title="Master roll" placeholder="ID" />
+        <InputBox id="masterId" title="Master roll Id" placeholder="ID" />
       </CardContent>
       <CardFooter>
         <Button>Save changes</Button>
@@ -115,7 +116,7 @@ const Details = () => {
         <InputBox id="fBithday" type="date" title="Father's Birthday" />
         <InputBox id="fNID" placeholder="Father's NID" title="Father's NID" />
 
-        <div className="space-y-2 flex flex-col">
+        <InputParent>
           <Label>Father's Job</Label>
           <select
             name=""
@@ -132,8 +133,8 @@ const Details = () => {
             <option value="Farmer">Farmer</option>
             <option value="Other">Other</option>
           </select>
-        </div>
-        <div className="space-y-2 flex flex-col">
+        </InputParent>
+        <InputParent>
           <Label>Father's Education</Label>
           <select
             name=""
@@ -153,14 +154,14 @@ const Details = () => {
 
             <option value="No formal education">No formal education</option>
           </select>
-        </div>
+        </InputParent>
 
         {/* mother info */}
         <InputBox id="mName" title="Mother Name" placeholder="Name" />
         <InputBox id="mBithday" type="date" title="Mother's Birthday" />
         <InputBox id="mNID" placeholder="Mother's NID" title="Mother's NID" />
 
-        <div className="space-y-2 flex flex-col">
+        <InputParent>
           <Label>Mother's Job</Label>
           <select
             name=""
@@ -177,8 +178,8 @@ const Details = () => {
             <option value="Farmer">Farmer</option>
             <option value="Other">Other</option>
           </select>
-        </div>
-        <div className="space-y-2 flex flex-col">
+        </InputParent>
+        <InputParent>
           <Label>Mother's Education</Label>
           <select
             name=""
@@ -198,9 +199,9 @@ const Details = () => {
 
             <option value="No formal education">No formal education</option>
           </select>
-        </div>
+        </InputParent>
 
-        <div className="space-y-2 flex flex-col">
+        <InputParent>
           <Label>Relesian</Label>
           <select
             name=""
@@ -212,9 +213,9 @@ const Details = () => {
             <option value="islam">Islam</option>
             <option value="hindu">Hindu</option>
           </select>
-        </div>
+        </InputParent>
 
-        <div className="space-y-2 flex flex-col">
+        <InputParent>
           <Label>Delevary info</Label>
           <select
             name=""
@@ -226,8 +227,8 @@ const Details = () => {
             <option value="normal">Normal</option>
             <option value="operation">Operation</option>
           </select>
-        </div>
-        <div className="space-y-2 flex flex-col">
+        </InputParent>
+        <InputParent>
           <Label>Child health on delevary</Label>
           <select
             name=""
@@ -239,7 +240,7 @@ const Details = () => {
             <option value="normal">Normal</option>
             <option value="abnormal">Abnormal</option>
           </select>
-        </div>
+        </InputParent>
         <InputBox id="fameliIncome" title="Famely income" placeholder="Taka" />
       </CardContent>
       <CardFooter>
@@ -300,23 +301,7 @@ const MatiInfo = () => {
   )
 }
 
-type InputBoxProps = {
-  title: string
-  id: string
-} & HTMLProps<HTMLInputElement>
 
-const InputBox = ({ id, title, ...props }: InputBoxProps) => {
-  return (
-    <div className="space-y-2 flex flex-col">
-      <Label htmlFor={id}>{title}</Label>
-      <input
-        id={id}
-        name={id}
-        {...props}
-        className="from-input bg-transparent focus:outline-none rounded-md"
-      />
-    </div>
-  )
-}
+
 
 export default NewOt4oc
