@@ -25,6 +25,7 @@
     "better-auth": "1.0.0-canary.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "imagekit": "^6.0.0",
     "immer": "^10.1.1",
     "lucide-react": "^0.460.0",
     "moment": "^2.30.1",

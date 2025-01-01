@@ -9,3 +9,8 @@ export const PERMISSIONS = {
   DATA: 'DATA',
   REPORT: 'REPORT',
 }
+
+export enum FILETYPE {
+  TREEPHOTOINITIAL = 'tfi',
+  USERPROFILEPHOTO = 'upp',
+}

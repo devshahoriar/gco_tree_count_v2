@@ -111,3 +111,11 @@ model TreeType {
   id   Int    @id @default(autoincrement())
   name String @unique
 }
+
+model File {
+  id        Int      @id @default(autoincrement())
+  url       String
+  fileId    String   @unique
+  fileType  String? 
+  createdAt DateTime
+}
