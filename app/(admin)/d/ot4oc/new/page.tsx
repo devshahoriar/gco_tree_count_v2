@@ -1,8 +1,7 @@
 import { ContentLayout } from '@/components/admin-panel/content-layout'
-import React from 'react'
 import NewOt4oc from './NewOt4oc'
 
-const Ot4OcnewPage = () => {
+const Ot4OcnewPage = async () => {
   return (
     <ContentLayout title="New OT4OC">
       <NewOt4oc />
