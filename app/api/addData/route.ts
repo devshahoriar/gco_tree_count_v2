@@ -3,7 +3,7 @@ import { getSession } from '@/lib/auth-client'
 import prisma from '@/prisma/db'
 import { revalidateTag } from 'next/cache'
 import { headers } from 'next/headers'
-import { NextRequest } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
 export const POST = async (req: NextRequest) => {
   const { data } = await getSession({
@@ -155,10 +155,10 @@ export const PATCH = async (req: NextRequest) => {
 }
 
 export const DELETE = async (req: NextRequest) => {
-
-
-  return Response.json({ message: 'This opration destroy database!' }, { status: 401 })
-
+  return Response.json(
+    { message: 'This opration destroy database!' },
+    { status: 401 }
+  )
 
   const { data } = await getSession({
     fetchOptions: {
@@ -218,4 +218,63 @@ export const DELETE = async (req: NextRequest) => {
   revalidateTag('postOffice')
   revalidateTag('union')
   return Response.json({ message: 'ok' })
+}
+
+export const GET = async (req: NextRequest) => {
+  const divisionId = req.nextUrl.searchParams.get('divisionId')
+  if (divisionId) {
+    const data = await prisma.zilla.findMany({
+      where: {
+        divisionId: Number(divisionId),
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+    })
+
+    return NextResponse.json(data)
+  }
+  const zillaId = req.nextUrl.searchParams.get('zillaId')
+  if (zillaId) {
+    const data = await prisma.upazilla.findMany({
+      where: {
+        zillaId: Number(zillaId),
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+    })
+
+    return NextResponse.json(data)
+  }
+  const upZillaId = req.nextUrl.searchParams.get('upZillaId')
+  if (upZillaId) {
+    const data = await prisma.union.findMany({
+      where: {
+        upazillaId: Number(upZillaId),
+      },
+      select: {
+        id: true,
+        name: true,
+      },
+    })
+    const data2 = await prisma.postOffice.findMany({
+      where: {
+        upZillaId: Number(upZillaId),
+      },
+      select: {
+        id: true,
+        name: true,
+        postCode: true,
+      },
+    })
+    return NextResponse.json({
+      unions: data,
+      posts: data2,
+    })
+  }
+
+  return NextResponse.json({ message: 'ok' })
 }

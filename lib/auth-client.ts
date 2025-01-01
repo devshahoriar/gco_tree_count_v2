@@ -10,7 +10,7 @@ export const { signIn, signUp, useSession, getSession, signOut } =
     plugins: [inferAdditionalFields<typeof auth>()],
   })
 
-export const getUserPermissions = (data: any) => {
+export const getUserPermissions = (data: any): [string] | [] => {
   const p = data?.user?.permissions || data?.permissions
   if (!p) return []
   return p.split(',')

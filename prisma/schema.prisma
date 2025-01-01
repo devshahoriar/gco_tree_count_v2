@@ -8,19 +8,23 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  email         String    @unique
-  name          String?
-  emailVerified Boolean
-  image         String?
-  role          String    @default("admin")
-  permissions   String?
-  active        Boolean   @default(true)
-  createdAt     DateTime
-  updatedAt     DateTime
-  Session       Session[]
-  Account       Account[]
-  Ot4oc         Ot4oc[]
+  id               String         @id @default(uuid())
+  email            String         @unique
+  name             String?
+  emailVerified    Boolean
+  image            String?
+  role             String         @default("admin")
+  permissions      String?
+  active           Boolean        @default(true)
+  createdAt        DateTime
+  updatedAt        DateTime
+  Session          Session[]
+  Account          Account[]
+  Ot4oc            Ot4oc[]
+  masterRollForms  TreeInvolved[] @relation("MasterRollBy")
+  detailsForms     TreeInvolved[] @relation("DetailsBy")
+  contactInfoForms TreeInvolved[] @relation("ContactInfoBy")
+  motherInfoForms  TreeInvolved[] @relation("MotherInfoBy")
 
   @@map("user")
 }
@@ -165,12 +169,12 @@ model Ot4oc {
   unionId Int?
   union   Union? @relation(fields: [unionId], references: [id])
 
-  wordNo                      Int?
+  wordNo                    String?
   phone                     String?
   email                     String?
   treePlantDate             DateTime?
   tree_count                String?
-  treeType                  String?
+
   whoPlanName               String?
   bornWeek                  String?
   bornWeight                String?
@@ -186,8 +190,35 @@ model Ot4oc {
   step                      String?
   deleted                   Boolean   @default(false)
 
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
+  masterId     String?        @unique
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  User         User?          @relation(fields: [userId], references: [id])
+  userId       String?
+  TreeInvolved TreeInvolved[]
+}
+
+model TreeInvolved {
+  id     Int   @id @default(autoincrement())
+  formId Int
+  form   Ot4oc @relation(fields: [formId], references: [id])
+
+  masterRollById String?
+  masterRollBy   User?     @relation("MasterRollBy", fields: [masterRollById], references: [id])
+  masterRollDate DateTime?
+
+  detailsById String?
+  detailsBy   User?     @relation("DetailsBy", fields: [detailsById], references: [id])
+  detailsDate DateTime?
+
+  contactInfoById String?
+  contactInfoBy   User?     @relation("ContactInfoBy", fields: [contactInfoById], references: [id])
+  contactInfoDate DateTime?
+
+  motherInfoById String?
+  motherInfoBy   User?     @relation("MotherInfoBy", fields: [motherInfoById], references: [id])
+  motherInfoDate DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
