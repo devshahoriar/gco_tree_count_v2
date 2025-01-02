@@ -15,34 +15,37 @@ import {
 import { Label } from '@/components/ui/label'
 
 import { useState } from 'react'
+import { toast } from 'sonner'
 
-const MatiInfo = () => {
-  const [data, setData] = useState<any>({
-    treePlantDate: '',
-    treeType: '',
-    whoPlanName: '',
-    bornWeek: '',
-    bornWeight: '',
-    thChild: '',
-    childBirthPlace: '',
-    motherContractExpart: '',
-    howManyTimeContractExpart: '',
-    motherFreedomVisitExpert: '',
-    motherSeriousSick: '',
-    preventCozToGoExpert: '',
-    whereIsMotherWhenPregnant: '',
-  })
+const MatiInfo = ({ baby, setBaby }: { baby: any; setBaby: any }) => {
   const [isChanged, setIsChanged] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const handleChange = (name: string, value: string | number) => {
-    setData({ ...data, [name]: value })
+    setBaby({ ...baby, [name]: value })
     setIsChanged(true)
   }
 
-  const handleSave = () => {
-    // Implement save functionality here
-    console.log(isChanged)
-    console.log('Data saved:', data)
-    setIsChanged(false)
+  const handleSave = async () => {
+    if (!baby?.id) {
+      toast.error('Please fill the master roll first')
+      return
+    }
+    try {
+      setIsLoading(true)
+      await fetch('/api/addtree', {
+        method: 'POST',
+        body: JSON.stringify(baby),
+        credentials: 'include',
+      }).then((res) => res.json())
+
+      setIsChanged(false)
+      toast.success('Maternity information saved')
+    } catch (error) {
+      console.log(error)
+      toast.error('Failed to save maternity information')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -62,18 +65,25 @@ const MatiInfo = () => {
             id="treePlantDate"
             title="Tree Plant Date"
             type="date"
+            value={
+              baby.treePlantDate
+                ? new Date(baby.treePlantDate).toISOString().split('T')[0]
+                : ''
+            }
             onChange={(e) => handleChange('treePlantDate', e.target.value)}
           />
           <InputBox
             id="whoPlanName"
             title="Who Planted the Tree"
             placeholder="Name"
+            value={baby?.whoPlanName || ''}
             onChange={(e) => handleChange('whoPlanName', e.target.value)}
           />
           <InputParent>
             <Label>Birth Week</Label>
             <select
               className="from-input bg-transparent focus:outline-none rounded-md"
+              value={baby?.bornWeek || ''}
               onChange={(e) => handleChange('bornWeek', e.target.value)}
             >
               <option value="">Select Birth Week</option>
@@ -88,9 +98,10 @@ const MatiInfo = () => {
             </select>
           </InputParent>
           <InputParent>
-            <Label>Birth Weight</Label>
+            <Label>Birth Weight (kg)</Label>
             <select
               className="from-input bg-transparent focus:outline-none rounded-md"
+              value={baby?.bornWeight || ''}
               onChange={(e) => handleChange('bornWeight', e.target.value)}
             >
               <option value="">Select Birth Weight</option>
@@ -121,6 +132,7 @@ const MatiInfo = () => {
             <Label>Child Number</Label>
             <select
               className="from-input bg-transparent focus:outline-none rounded-md"
+              value={baby?.thChild || ''}
               onChange={(e) => handleChange('thChild', e.target.value)}
             >
               <option value="">Select Child Number</option>
@@ -135,7 +147,8 @@ const MatiInfo = () => {
             <Label>Child Birth Place</Label>
             <select
               className="from-input bg-transparent focus:outline-none rounded-md"
-              onChange={(e) => handleChange('childBirthPlace', e.target.value)}
+              value={baby?.childBornPlace || ''}
+              onChange={(e) => handleChange('childBornPlace', e.target.value)}
             >
               <option value="">Select Birth Place</option>
               <option value="house">House</option>
@@ -149,6 +162,7 @@ const MatiInfo = () => {
             <select
               id="motherContractExpart"
               className="from-input bg-transparent focus:outline-none rounded-md"
+              value={baby?.motherContractExpart || ''}
               onChange={(e) =>
                 handleChange('motherContractExpart', e.target.value)
               }
@@ -162,7 +176,10 @@ const MatiInfo = () => {
             <Label>Number of Expert Consultations</Label>
             <select
               className="from-input bg-transparent focus:outline-none rounded-md"
-              onChange={(e) => handleChange('howManyTimeContractExpart', e.target.value)}
+              value={baby?.howManyTimeContractExpart || ''}
+              onChange={(e) =>
+                handleChange('howManyTimeContractExpart', e.target.value)
+              }
             >
               <option value="">Select Number</option>
               <option value="1">1</option>
@@ -176,10 +193,12 @@ const MatiInfo = () => {
             <Label>Mother's Freedom to Visit Expert</Label>
             <select
               className="from-input bg-transparent focus:outline-none rounded-md"
+              value={baby?.motherFreedomVisitExpert || ''}
               onChange={(e) =>
                 handleChange('motherFreedomVisitExpert', e.target.value)
               }
             >
+              <option value="">Select</option>
               <option value="yes">Yes</option>
               <option value="no">No</option>
             </select>
@@ -188,7 +207,10 @@ const MatiInfo = () => {
             <Label>Mother's Serious Sickness</Label>
             <select
               className="from-input bg-transparent focus:outline-none rounded-md"
-              onChange={(e) => handleChange('motherSeriousSick', e.target.value)}
+              value={baby?.motherSeriousSick || ''}
+              onChange={(e) =>
+                handleChange('motherSeriousSick', e.target.value)
+              }
             >
               <option value="">Select</option>
               <option value="yes">Yes</option>
@@ -199,7 +221,10 @@ const MatiInfo = () => {
             <Label>Reasons Preventing Expert Visit</Label>
             <select
               className="from-input bg-transparent focus:outline-none rounded-md"
-              onChange={(e) => handleChange('preventCozToGoExpert', e.target.value)}
+              value={baby?.preventCozToGoExpert || ''}
+              onChange={(e) =>
+                handleChange('preventCozToGoExpert', e.target.value)
+              }
             >
               <option value="">Select Reason</option>
               <option value="distance">Distance</option>
@@ -211,6 +236,7 @@ const MatiInfo = () => {
             <Label>Mother's Location During Pregnancy</Label>
             <select
               className="from-input bg-transparent focus:outline-none rounded-md"
+              value={baby?.whereIsMotherWhenPregnant || ''}
               onChange={(e) =>
                 handleChange('whereIsMotherWhenPregnant', e.target.value)
               }
@@ -225,10 +251,10 @@ const MatiInfo = () => {
       <CardFooter className="space-x-2">
         <Button
           onClick={handleSave}
-          disabled={!isChanged}
+          disabled={!isChanged || isLoading}
           className="bg-green-500"
         >
-          Submit All Information
+          {isLoading ? 'Submitting' : 'Submit'}
         </Button>
         {/* <Button onClick={() => setTab('contant')}>
           <ArrowLeft /> Previous

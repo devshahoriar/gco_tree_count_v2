@@ -169,11 +169,11 @@ model Ot4oc {
   unionId Int?
   union   Union? @relation(fields: [unionId], references: [id])
 
-  wordNo                    String?
-  phone                     String?
-  email                     String?
-  treePlantDate             DateTime?
-  tree_count                String?
+  wordNo        String?
+  phone         String?
+  email         String?
+  treePlantDate DateTime?
+  tree_count    Int?
 
   whoPlanName               String?
   bornWeek                  String?
@@ -186,16 +186,16 @@ model Ot4oc {
   motherSeriousSick         String?
   preventCozToGoExpert      String?
   whereIsMotherWhenPregnant String?
-  childPhoto                String?
-  step                      String?
-  deleted                   Boolean   @default(false)
 
-  masterId     String?        @unique
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
+  deleted Boolean @default(false)
+
+  masterId  String?  @unique @map("master_id")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  TreeInvolved TreeInvolved[]
   User         User?          @relation(fields: [userId], references: [id])
   userId       String?
-  TreeInvolved TreeInvolved[]
 }
 
 model TreeInvolved {

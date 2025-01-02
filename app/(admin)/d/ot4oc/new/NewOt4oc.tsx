@@ -11,8 +11,60 @@ import Details from './Details'
 import MasterRoll from './MasterRoll'
 import MatiInfo from './MatiInfo'
 
-const NewOt4oc = ({ allDivi }: { allDivi: any }) => {
+const initialData = {
+  // Master Roll fields
+  childName: '',
+  fatherName: '',
+  village: '',
+  phone: '',
+  tree_count: 0,
+  masterId: '',
+  subNumber: false,
+
+  // Details fields
+  childGender: '',
+  childBirthDate: '',
+  fatherBirthDate: '',
+  fatherNid: '',
+  fatherJob: '',
+  fatherEdu: '',
+  motherName: '',
+  motherBirthDate: '',
+  motherNid: '',
+  motherJob: '',
+  motherEdu: '',
+  religion: '',
+  deliveryInfo: '',
+  deliveryChildHealth: '',
+  familyIncome: '',
+
+  // Contact fields
+  email: '',
+  wordNo: '',
+  divisionId: undefined,
+  zillaId: undefined,
+  upZillaId: undefined,
+  unionId: undefined,
+  postId: undefined,
+
+  // Maternity Info fields
+  treePlantDate: '',
+  whoPlanName: '',
+  bornWeek: '',
+  bornWeight: '',
+  thChild: '',
+  childBornPlace: '',
+  motherContractExpart: '',
+  howManyTimeContractExpart: '',
+  motherFreedomVisitExpert: '',
+  motherSeriousSick: '',
+  preventCozToGoExpert: '',
+  whereIsMotherWhenPregnant: '',
+}
+
+const NewOt4oc = ({ allDivi,upOt4oc }: { allDivi: any,upOt4oc:any }) => {
   const [tab, setTab] = useState('masterRoll')
+  const [baby, setbaby] = useState(upOt4oc || initialData)
   return (
     <section>
       <div className="flex justify-between items-center">
@@ -22,7 +74,7 @@ const NewOt4oc = ({ allDivi }: { allDivi: any }) => {
             <Search />
             <span className="hidden md:inline">Search</span>
           </Button>
-          <Button>
+          <Button onClick={() => setbaby(initialData)}>
             <X />
             <span className="hidden md:inline">Reset</span>
           </Button>
@@ -44,16 +96,27 @@ const NewOt4oc = ({ allDivi }: { allDivi: any }) => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="masterRoll">
-            {tab === 'masterRoll' && <MasterRoll setTab={setTab} />}
+            {tab === 'masterRoll' && (
+              <MasterRoll setTab={setTab} baby={baby} setBaby={setbaby} />
+            )}
           </TabsContent>
           <TabsContent value="details">
-            {tab === 'details' && <Details setTab={setTab} />}
+            {tab === 'details' && (
+              <Details setTab={setTab} baby={baby} setBaby={setbaby} />
+            )}
           </TabsContent>
           <TabsContent value="contant">
-            {tab === 'contant' && <Content setTab={setTab} allDivi={allDivi} />}
+            {tab === 'contant' && (
+              <Content
+                setTab={setTab}
+                allDivi={allDivi}
+                baby={baby}
+                setBaby={setbaby}
+              />
+            )}
           </TabsContent>
           <TabsContent value="matinfo">
-            {tab === 'matinfo' && <MatiInfo />}
+            {tab === 'matinfo' && <MatiInfo baby={baby} setBaby={setbaby} />}
           </TabsContent>
         </Tabs>
       </div>

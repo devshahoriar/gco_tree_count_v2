@@ -16,51 +16,76 @@ import {
 import { Label } from '@/components/ui/label'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useState } from 'react'
+import { toast } from 'sonner'
 import useSWR from 'swr'
 const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
 const Content = ({
   setTab,
   allDivi,
+  baby,
+  setBaby,
 }: {
   allDivi: any
-  setTab: (arg0: string) => void
+  baby: any
+  setBaby: any
+  setTab: (arg: string) => void
 }) => {
-  const [data, setData] = useState<any>({})
   const [isChanged, setIsChanged] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const { data: zillas } = useSWR(
     () =>
-      data?.divisionId !== undefined
-        ? `/api/addData?divisionId=${data.divisionId}`
+      baby?.divisionId !== undefined
+        ? `/api/addData?divisionId=${baby.divisionId}`
         : null,
     fetcher
   )
 
   const { data: Upzillas } = useSWR(
     () =>
-      data?.zillaId !== undefined
-        ? `/api/addData?zillaId=${data.zillaId}`
+      baby?.zillaId !== undefined
+        ? `/api/addData?zillaId=${baby.zillaId}`
         : null,
     fetcher
   )
 
   const { data: unions } = useSWR(
     () =>
-      data?.upZillaId !== undefined
-        ? `/api/addData?upZillaId=${data.upZillaId}`
+      baby?.upZillaId !== undefined
+        ? `/api/addData?upZillaId=${baby.upZillaId}`
         : null,
     fetcher
   )
 
+  // all fild mendatary onlt email acepted
+
   const handleChange = (name: string, value: string | number) => {
-    setData({ ...data, [name]: value })
+    setBaby({ ...baby, [name]: value })
     setIsChanged(true)
   }
 
-  const hendelSubmit = () => {
-    setIsChanged(false)
-    console.log(data)
+  const hendelSubmit = async () => {
+    if (!baby?.id) {
+      toast.error('Please fill the master roll first')
+      return
+    }
+    try {
+      setIsLoading(true)
+      await fetch('/api/addtree', {
+        method: 'POST',
+        body: JSON.stringify(baby),
+        credentials: 'include',
+      }).then((res) => res.json())
+
+      setIsChanged(false)
+      toast.success('Contact information saved')
+    } catch (error) {
+      console.log(error)
+      toast.error('Failed to save contact information')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -81,23 +106,27 @@ const Content = ({
             title="Email"
             type="email"
             placeholder="Email"
+            value={baby.email || ''}
             onChange={(e) => handleChange('email', e.target.value)}
           />
           <InputBox
             id="phone"
             title="Phone"
             placeholder="Phone number"
+            value={baby.phone || ''}
             onChange={(e) => handleChange('phone', e.target.value)}
           />
           <InputBox
             id="village"
             title="Village"
             placeholder="Village name"
+            value={baby.village || ''}
             onChange={(e) => handleChange('village', e.target.value)}
           />
           <InputParent>
             <Label>Word No</Label>
             <select
+              value={baby.wordNo || ''}
               onChange={(e) => handleChange('wordNo', e.target.value)}
               className="from-input bg-transparent focus:outline-none rounded-md"
             >
@@ -115,6 +144,7 @@ const Content = ({
           <InputParent>
             <Label>Division</Label>
             <select
+              value={baby.divisionId || ''}
               onChange={async (e) => handleChange('divisionId', e.target.value)}
               className="from-input bg-transparent focus:outline-none rounded-md"
             >
@@ -131,6 +161,7 @@ const Content = ({
             <InputParent>
               <Label>Zilla</Label>
               <select
+                value={baby.zillaId || ''}
                 onChange={(e) => handleChange('zillaId', e.target.value)}
                 className="from-input bg-transparent focus:outline-none rounded-md"
               >
@@ -148,6 +179,7 @@ const Content = ({
             <InputParent>
               <Label>Upazilla</Label>
               <select
+                value={baby.upZillaId || ''}
                 onChange={(e) => handleChange('upZillaId', e.target.value)}
                 className="from-input bg-transparent focus:outline-none rounded-md"
               >
@@ -165,6 +197,7 @@ const Content = ({
             <InputParent>
               <Label>Union</Label>
               <select
+                value={baby.unionId || ''}
                 onChange={(e) => handleChange('unionId', e.target.value)}
                 className="from-input bg-transparent focus:outline-none rounded-md"
               >
@@ -182,6 +215,7 @@ const Content = ({
             <InputParent>
               <Label>Post Office</Label>
               <select
+                value={baby.postId || ''}
                 onChange={(e) => handleChange('postId', e.target.value)}
                 className="from-input bg-transparent focus:outline-none rounded-md"
               >
@@ -199,15 +233,32 @@ const Content = ({
       <CardFooter className="space-x-2">
         <Button
           onClick={hendelSubmit}
-          disabled={!isChanged}
-          className="bg-green-500"
+          disabled={!isChanged || isLoading}
         >
-          Save changes
+          {isLoading ? 'Saving' : 'Save'}
         </Button>
-        <Button onClick={() => setTab('details')}>
+        <Button
+          onClick={() => {
+            if (isChanged) {
+              toast.error('Please save changes first')
+              return
+            }
+            setTab('details')
+          }}
+          disabled={isLoading}
+        >
           <ArrowLeft /> Previous
         </Button>
-        <Button onClick={() => setTab('matinfo')}>
+        <Button
+          onClick={() => {
+            if (isChanged) {
+              toast.error('Please save changes first')
+              return
+            }
+            setTab('matinfo')
+          }}
+          disabled={isLoading}
+        >
           Next <ArrowRight />
         </Button>
       </CardFooter>

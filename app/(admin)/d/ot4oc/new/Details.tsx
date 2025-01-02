@@ -15,40 +15,55 @@ import {
 import { Label } from '@/components/ui/label'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useState } from 'react'
+import { toast } from 'sonner'
 
-const Details = ({ setTab }: { setTab: (arg0: string) => void }) => {
-  const [data, setData] = useState<any>({
-    childName: '',
-    childBirthDate: '',
-    childGender: '',
-    fatherName: '',
-    fatherBirthDate: '',
-    fatherNid: '',
-    fatherJob: '',
-    fatherEdu: '',
-    motherName: '',
-    motherBirthDate: '',
-    motherNid: '',
-    motherJob: '',
-    motherEdu: '',
-    religion: '',
-    deliveryInfo: '',
-    deliveryChildHealth: '',
-    familyIncome: ''
-  })
+const Details = ({
+  setTab,
+  baby,
+  setBaby,
+}: {
+  baby: any
+  setBaby: any
+  setTab: (arg: string) => void
+}) => {
   const [isChanged, setIsChanged] = useState(false)
+  const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+
   const handleChange = (name: string, value: string | number) => {
-    setData({ ...data, [name]: value })
+    setBaby({ ...baby, [name]: value })
     setIsChanged(true)
   }
 
-  const handleSave = () => {
-    // Implement save functionality here
-    console.log(isChanged)
-    console.log('Data saved:', data)
-    setIsChanged(false)
-  }
+  const handleSave = async () => {
+    if (!baby?.id) {
+      toast.error('Please fill the master roll first')
+      return
+    }
+    try {
+      setIsLoading(true)
+      const response = await fetch('/api/addtree', {
+        method: 'POST',
+        body: JSON.stringify(baby),
+        credentials: 'include',
+      }).then((res) => res.json())
 
+      if (response?.error) {
+        setError(response.error)
+        console.error(response.error)
+      } else if (response?.success) {
+        console.log('Data saved:', response.data)
+        setIsChanged(false)
+        setError('')
+        toast.success('Details saved successfully')
+      }
+    } catch (error) {
+      setError('Error saving data')
+      console.error('Error saving data:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <Card>
@@ -67,18 +82,33 @@ const Details = ({ setTab }: { setTab: (arg0: string) => void }) => {
             id="name"
             title="Child Name / Rechivar name"
             placeholder="Name"
+            value={baby.childName}
             onChange={(e) => handleChange('childName', e.target.value)}
           />
-          <InputBox
-            id="gender"
-            title="Child gender"
-            placeholder="Gender"
-            onChange={(e) => handleChange('childGender', e.target.value)}
-          />
+          <InputParent>
+            <Label>Child Gender</Label>
+            <select
+              name="childGender"
+              id="childGender"
+              className="from-input bg-transparent focus:outline-none rounded-md"
+              value={baby.childGender}
+              onChange={(e) => handleChange('childGender', e.target.value)}
+            >
+              <option>Select</option>
+              <option value="Boy">Boy</option>
+              <option value="Girl">Girl</option>
+              <option value="Other">Other</option>
+            </select>
+          </InputParent>
           <InputBox
             id="bithday"
             type="date"
             title="Child Birthday"
+            value={
+              baby.childBirthDate
+                ? new Date(baby.childBirthDate).toISOString().split('T')[0]
+                : ''
+            }
             onChange={(e) => handleChange('childBirthDate', e.target.value)}
           />
 
@@ -87,18 +117,25 @@ const Details = ({ setTab }: { setTab: (arg0: string) => void }) => {
             id="fName"
             title="Father Name"
             placeholder="Name"
+            value={baby.fatherName}
             onChange={(e) => handleChange('fatherName', e.target.value)}
           />
           <InputBox
             id="fBithday"
             type="date"
             title="Father's Birthday"
+            value={
+              baby.fatherBirthDate
+                ? new Date(baby.fatherBirthDate).toISOString().split('T')[0]
+                : ''
+            }
             onChange={(e) => handleChange('fatherBirthDate', e.target.value)}
           />
           <InputBox
             id="fNID"
             placeholder="Father's NID"
             title="Father's NID"
+            value={baby.fatherNid}
             onChange={(e) => handleChange('fatherNid', e.target.value)}
           />
 
@@ -108,6 +145,7 @@ const Details = ({ setTab }: { setTab: (arg0: string) => void }) => {
               name="fatherJob"
               id="fatherJob"
               className="from-input bg-transparent focus:outline-none rounded-md"
+              value={baby.fatherJob}
               onChange={(e) => handleChange('fatherJob', e.target.value)}
             >
               <option>Select</option>
@@ -127,6 +165,7 @@ const Details = ({ setTab }: { setTab: (arg0: string) => void }) => {
               name="fatherEdu"
               id="fatherEdu"
               className="from-input bg-transparent focus:outline-none rounded-md"
+              value={baby.fatherEdu}
               onChange={(e) => handleChange('fatherEdu', e.target.value)}
             >
               <option>Select</option>
@@ -149,18 +188,25 @@ const Details = ({ setTab }: { setTab: (arg0: string) => void }) => {
             id="mName"
             title="Mother Name"
             placeholder="Name"
+            value={baby.motherName}
             onChange={(e) => handleChange('motherName', e.target.value)}
           />
           <InputBox
             id="mBithday"
             type="date"
             title="Mother's Birthday"
+            value={
+              baby.motherBirthDate
+                ? new Date(baby.motherBirthDate).toISOString().split('T')[0]
+                : ''
+            }
             onChange={(e) => handleChange('motherBirthDate', e.target.value)}
           />
           <InputBox
             id="mNID"
             placeholder="Mother's NID"
             title="Mother's NID"
+            value={baby.motherNid}
             onChange={(e) => handleChange('motherNid', e.target.value)}
           />
 
@@ -170,6 +216,7 @@ const Details = ({ setTab }: { setTab: (arg0: string) => void }) => {
               name="motherJob"
               id="motherJob"
               className="from-input bg-transparent focus:outline-none rounded-md"
+              value={baby.motherJob}
               onChange={(e) => handleChange('motherJob', e.target.value)}
             >
               <option>Select</option>
@@ -189,6 +236,7 @@ const Details = ({ setTab }: { setTab: (arg0: string) => void }) => {
               name="motherEdu"
               id="motherEdu"
               className="from-input bg-transparent focus:outline-none rounded-md"
+              value={baby.motherEdu}
               onChange={(e) => handleChange('motherEdu', e.target.value)}
             >
               <option>Select</option>
@@ -212,6 +260,7 @@ const Details = ({ setTab }: { setTab: (arg0: string) => void }) => {
               name="religion"
               id="religion"
               className="from-input bg-transparent focus:outline-none rounded-md"
+              value={baby.religion}
               onChange={(e) => handleChange('religion', e.target.value)}
             >
               <option>Select</option>
@@ -227,6 +276,7 @@ const Details = ({ setTab }: { setTab: (arg0: string) => void }) => {
               name="deliveryInfo"
               id="deliveryInfo"
               className="from-input bg-transparent focus:outline-none rounded-md"
+              value={baby.deliveryInfo}
               onChange={(e) => handleChange('deliveryInfo', e.target.value)}
             >
               <option>Select</option>
@@ -241,7 +291,10 @@ const Details = ({ setTab }: { setTab: (arg0: string) => void }) => {
               name="deliveryChildHealth"
               id="deliveryChildHealth"
               className="from-input bg-transparent focus:outline-none rounded-md"
-              onChange={(e) => handleChange('deliveryChildHealth', e.target.value)}
+              value={baby.deliveryChildHealth}
+              onChange={(e) =>
+                handleChange('deliveryChildHealth', e.target.value)
+              }
             >
               <option>Select</option>
 
@@ -253,20 +306,38 @@ const Details = ({ setTab }: { setTab: (arg0: string) => void }) => {
             id="fameliIncome"
             title="Famely income"
             placeholder="Taka"
+            value={baby.familyIncome}
             onChange={(e) => handleChange('familyIncome', e.target.value)}
           />
         </div>
+        {error && <p className="text-red-500 mt-2">{error}</p>}
       </CardContent>
       <CardFooter className="space-x-2">
+        <Button onClick={handleSave} disabled={!isChanged || isLoading}>
+          {isLoading ? 'Saving' : 'Save'}
+        </Button>
         <Button
-          onClick={handleSave}
-          disabled={!isChanged}
-          className="bg-green-500"
-        >Save Change</Button>
-        <Button onClick={() => setTab('masterRoll')}>
+          onClick={() => {
+            if (isChanged) {
+              toast.error('Please save changes first')
+              return
+            }
+            setTab('masterRoll')
+          }}
+          disabled={isLoading}
+        >
           <ArrowLeft /> Previous
         </Button>
-        <Button onClick={() => setTab('contant')}>
+        <Button
+          onClick={() => {
+            if (isChanged) {
+              toast.error('Please save changes first')
+              return
+            }
+            setTab('contant')
+          }}
+          disabled={isLoading}
+        >
           Next <ArrowRight />
         </Button>
       </CardFooter>
