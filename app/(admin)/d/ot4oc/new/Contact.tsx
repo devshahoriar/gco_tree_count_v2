@@ -36,7 +36,7 @@ const Content = ({
 
   const { data: zillas } = useSWR(
     () =>
-      baby?.divisionId !== undefined
+      baby?.divisionId !== undefined && baby?.divisionId !== null
         ? `/api/addData?divisionId=${baby.divisionId}`
         : null,
     fetcher
@@ -44,7 +44,7 @@ const Content = ({
 
   const { data: Upzillas } = useSWR(
     () =>
-      baby?.zillaId !== undefined
+      baby?.zillaId !== undefined && baby?.zillaId !== null
         ? `/api/addData?zillaId=${baby.zillaId}`
         : null,
     fetcher
@@ -52,7 +52,7 @@ const Content = ({
 
   const { data: unions } = useSWR(
     () =>
-      baby?.upZillaId !== undefined
+      baby?.upZillaId !== undefined && baby?.upZillaId !== null
         ? `/api/addData?upZillaId=${baby.upZillaId}`
         : null,
     fetcher

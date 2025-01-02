@@ -82,7 +82,7 @@ const Details = ({
             id="name"
             title="Child Name / Rechivar name"
             placeholder="Name"
-            value={baby.childName}
+            value={baby.childName || ''}
             onChange={(e) => handleChange('childName', e.target.value)}
           />
           <InputParent>
@@ -91,7 +91,7 @@ const Details = ({
               name="childGender"
               id="childGender"
               className="from-input bg-transparent focus:outline-none rounded-md"
-              value={baby.childGender}
+              value={baby.childGender || ''}
               onChange={(e) => handleChange('childGender', e.target.value)}
             >
               <option>Select</option>
@@ -117,7 +117,7 @@ const Details = ({
             id="fName"
             title="Father Name"
             placeholder="Name"
-            value={baby.fatherName}
+            value={baby.fatherName || ''}
             onChange={(e) => handleChange('fatherName', e.target.value)}
           />
           <InputBox
@@ -135,7 +135,7 @@ const Details = ({
             id="fNID"
             placeholder="Father's NID"
             title="Father's NID"
-            value={baby.fatherNid}
+            value={baby.fatherNid || ''}
             onChange={(e) => handleChange('fatherNid', e.target.value)}
           />
 
@@ -145,7 +145,7 @@ const Details = ({
               name="fatherJob"
               id="fatherJob"
               className="from-input bg-transparent focus:outline-none rounded-md"
-              value={baby.fatherJob}
+              value={baby.fatherJob || ''}
               onChange={(e) => handleChange('fatherJob', e.target.value)}
             >
               <option>Select</option>
@@ -165,7 +165,7 @@ const Details = ({
               name="fatherEdu"
               id="fatherEdu"
               className="from-input bg-transparent focus:outline-none rounded-md"
-              value={baby.fatherEdu}
+              value={baby.fatherEdu || ''}
               onChange={(e) => handleChange('fatherEdu', e.target.value)}
             >
               <option>Select</option>
@@ -188,7 +188,7 @@ const Details = ({
             id="mName"
             title="Mother Name"
             placeholder="Name"
-            value={baby.motherName}
+            value={baby.motherName || ''}
             onChange={(e) => handleChange('motherName', e.target.value)}
           />
           <InputBox
@@ -206,7 +206,7 @@ const Details = ({
             id="mNID"
             placeholder="Mother's NID"
             title="Mother's NID"
-            value={baby.motherNid}
+            value={baby.motherNid || ''}
             onChange={(e) => handleChange('motherNid', e.target.value)}
           />
 
@@ -216,7 +216,7 @@ const Details = ({
               name="motherJob"
               id="motherJob"
               className="from-input bg-transparent focus:outline-none rounded-md"
-              value={baby.motherJob}
+              value={baby.motherJob || ''}
               onChange={(e) => handleChange('motherJob', e.target.value)}
             >
               <option>Select</option>
@@ -236,7 +236,7 @@ const Details = ({
               name="motherEdu"
               id="motherEdu"
               className="from-input bg-transparent focus:outline-none rounded-md"
-              value={baby.motherEdu}
+              value={baby.motherEdu || ''}
               onChange={(e) => handleChange('motherEdu', e.target.value)}
             >
               <option>Select</option>
@@ -260,7 +260,7 @@ const Details = ({
               name="religion"
               id="religion"
               className="from-input bg-transparent focus:outline-none rounded-md"
-              value={baby.religion}
+              value={baby.religion || ''}
               onChange={(e) => handleChange('religion', e.target.value)}
             >
               <option>Select</option>
@@ -276,7 +276,7 @@ const Details = ({
               name="deliveryInfo"
               id="deliveryInfo"
               className="from-input bg-transparent focus:outline-none rounded-md"
-              value={baby.deliveryInfo}
+              value={baby.deliveryInfo || ''}
               onChange={(e) => handleChange('deliveryInfo', e.target.value)}
             >
               <option>Select</option>
@@ -291,7 +291,7 @@ const Details = ({
               name="deliveryChildHealth"
               id="deliveryChildHealth"
               className="from-input bg-transparent focus:outline-none rounded-md"
-              value={baby.deliveryChildHealth}
+              value={baby.deliveryChildHealth || ''}
               onChange={(e) =>
                 handleChange('deliveryChildHealth', e.target.value)
               }
@@ -306,7 +306,7 @@ const Details = ({
             id="fameliIncome"
             title="Famely income"
             placeholder="Taka"
-            value={baby.familyIncome}
+            value={baby.familyIncome || ''}
             onChange={(e) => handleChange('familyIncome', e.target.value)}
           />
         </div>

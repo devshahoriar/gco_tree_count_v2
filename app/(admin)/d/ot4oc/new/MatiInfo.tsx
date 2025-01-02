@@ -252,7 +252,7 @@ const MatiInfo = ({ baby, setBaby }: { baby: any; setBaby: any }) => {
         <Button
           onClick={handleSave}
           disabled={!isChanged || isLoading}
-          className="bg-green-500"
+
         >
           {isLoading ? 'Submitting' : 'Submit'}
         </Button>

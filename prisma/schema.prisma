@@ -21,12 +21,13 @@ model User {
   Session          Session[]
   Account          Account[]
   Ot4oc            Ot4oc[]
-  masterRollForms  TreeInvolved[] @relation("MasterRollBy")
+
   detailsForms     TreeInvolved[] @relation("DetailsBy")
   contactInfoForms TreeInvolved[] @relation("ContactInfoBy")
   motherInfoForms  TreeInvolved[] @relation("MotherInfoBy")
 
   @@map("user")
+  TreeInvolved TreeInvolved[]
 }
 
 model Session {
@@ -203,10 +204,6 @@ model TreeInvolved {
   formId Int
   form   Ot4oc @relation(fields: [formId], references: [id])
 
-  masterRollById String?
-  masterRollBy   User?     @relation("MasterRollBy", fields: [masterRollById], references: [id])
-  masterRollDate DateTime?
-
   detailsById String?
   detailsBy   User?     @relation("DetailsBy", fields: [detailsById], references: [id])
   detailsDate DateTime?
@@ -221,4 +218,6 @@ model TreeInvolved {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?
 }

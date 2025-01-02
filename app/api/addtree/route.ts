@@ -93,6 +93,18 @@ export const POST = async (request: NextRequest) => {
         },
       })
 
+      if (body.childBirthDate) {
+        console.log("this is deteils")
+      }
+
+      if (body.wordNo) {
+        console.log("this is contact info")
+      }
+
+      if (body.bornWeek) {
+        console.log("this is medical info")
+      }
+
       return NextResponse.json({
         success: true,
         data: updatedOt4oc.id,
@@ -137,6 +149,7 @@ export const POST = async (request: NextRequest) => {
         phone: body.phone,
         tree_count: Number(body.tree_count),
         masterId: body.masterId,
+        userId: user.id,
       },
       select: {
         id: true,
