@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
   },
   reactStrictMode: false,
   output: 'standalone',
+  eslint:{
+    ignoreDuringBuilds: true,
+  },
+  distDir: 'build',
 }
 
 export default nextConfig

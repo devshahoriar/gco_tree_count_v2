@@ -3,7 +3,7 @@ import { ContentLayout } from '@/components/admin-panel/content-layout'
 import { getAllTree } from './action'
 import { AddNewTree } from './c'
 import { TreeTable } from './table'
-import { TreeType } from '@prisma/client'
+import { TreeType } from '@/output' 
 
 const AddTreePage = async () => {
   const trees: TreeType[] = await getAllTree()

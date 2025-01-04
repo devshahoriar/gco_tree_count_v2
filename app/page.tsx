@@ -4,18 +4,29 @@ import prisma from '@/prisma/db'
 import { headers } from 'next/headers'
 import Image from 'next/image'
 import Link from 'next/link'
-import { FaUsers, FaTree, FaHandsHelping, FaServer, FaMemory, FaMicrochip } from 'react-icons/fa'
+import {
+  FaUsers,
+  FaTree,
+  FaHandsHelping,
+  FaServer,
+  FaMemory,
+  FaMicrochip,
+} from 'react-icons/fa'
 
 const homeApp = process.env.NEXT_PUBLIC_HOME_APP
 const oldApp = process.env.NEXT_PUBLIC_OLD_APP
 
 async function getSystemInfo() {
   try {
-    const res = await fetch(`${APP_URL}/api/sysinfo`, { cache: 'no-store' });
-    return await res.json();
+    const res = await fetch(`${APP_URL}/api/sysinfo`, {
+      next: {
+        revalidate: 0,
+      },
+    })
+    return await res.json()
   } catch (error) {
-    console.error('Failed to fetch system info:', error);
-    return null;
+    console.error('Failed to fetch system info:', error)
+    return null
   }
 }
 
@@ -24,9 +35,9 @@ export default async function Home() {
     prisma.user.count(),
     prisma.ot4oc.count(),
     prisma.tree.count(),
-    getSystemInfo()
-  ]);
-  const user = await getUser(headers);
+    getSystemInfo(),
+  ])
+  const user = await getUser(headers)
 
   return (
     <div className=" min-h-screen bg-gradient-to-br from-green-50 to-blue-50 dark:from-gray-900 dark:to-gray-800 p-4 md:p-8">
@@ -84,15 +95,23 @@ export default async function Home() {
                 </h2>
                 <div className="flex flex-wrap gap-4 justify-center md:justify-start">
                   <div className="flex items-center gap-2">
-                    <span className="text-gray-500 dark:text-gray-400">Email:</span>
-                    <span className="text-gray-700 dark:text-gray-300">{user.email}</span>
+                    <span className="text-gray-500 dark:text-gray-400">
+                      Email:
+                    </span>
+                    <span className="text-gray-700 dark:text-gray-300">
+                      {user.email}
+                    </span>
                     {user.emailVerified && (
-                      <span className="text-green-500 dark:text-green-400 text-sm">✓ Verified</span>
+                      <span className="text-green-500 dark:text-green-400 text-sm">
+                        ✓ Verified
+                      </span>
                     )}
                   </div>
                   {user.role && (
                     <div className="flex items-center gap-2">
-                      <span className="text-gray-500 dark:text-gray-400">Role:</span>
+                      <span className="text-gray-500 dark:text-gray-400">
+                        Role:
+                      </span>
                       <span className="px-3 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full text-sm">
                         {user.role}
                       </span>
@@ -116,17 +135,41 @@ export default async function Home() {
           </div>
         </div>
       )}
-      <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 text-center">DB Information</h2>
+      <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 text-center">
+        DB Information
+      </h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mb-8">
         {[
-          { icon: FaUsers, title: "Total Users", count: userCount, color: "blue" },
-          { icon: FaHandsHelping, title: "OT4OC Count", count: ot4ocCount, color: "purple" },
-          { icon: FaTree, title: "Trees Planted", count: treeCount, color: "green" }
+          {
+            icon: FaUsers,
+            title: 'Total Users',
+            count: userCount,
+            color: 'blue',
+          },
+          {
+            icon: FaHandsHelping,
+            title: 'OT4OC Count',
+            count: ot4ocCount,
+            color: 'purple',
+          },
+          {
+            icon: FaTree,
+            title: 'Trees Planted',
+            count: treeCount,
+            color: 'green',
+          },
         ].map(({ icon: Icon, title, count, color }) => (
-          <div key={title} className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+          <div
+            key={title}
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+          >
             <div className="flex items-center gap-4 mb-4">
-              <Icon className={`text-4xl text-${color}-500 dark:text-${color}-400`} />
-              <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200">{title}</h2>
+              <Icon
+                className={`text-4xl text-${color}-500 dark:text-${color}-400`}
+              />
+              <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200">
+                {title}
+              </h2>
             </div>
             <p className="text-3xl font-bold text-gray-900 dark:text-white">
               {count.toLocaleString()}
@@ -137,7 +180,9 @@ export default async function Home() {
 
       {sysInfo && (
         <div className="max-w-6xl mx-auto mt-8">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 text-center">System Information</h2>
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 text-center">
+            System Information
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
               <div className="flex items-center gap-4 mb-4">
@@ -145,9 +190,15 @@ export default async function Home() {
                 <h3 className="text-lg font-semibold">CPU</h3>
               </div>
               <div className="space-y-2">
-                <p className="text-gray-600 dark:text-gray-300">{sysInfo.cpu.model}</p>
-                <p className="text-gray-600 dark:text-gray-300">Cores: {sysInfo.cpu.cores}</p>
-                <p className="text-gray-600 dark:text-gray-300">Speed: {sysInfo.cpu.speed} GHz</p>
+                <p className="text-gray-600 dark:text-gray-300">
+                  {sysInfo.cpu.model}
+                </p>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Cores: {sysInfo.cpu.cores}
+                </p>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Speed: {sysInfo.cpu.speed} GHz
+                </p>
               </div>
             </div>
 
@@ -158,13 +209,16 @@ export default async function Home() {
               </div>
               <div className="space-y-2">
                 <p className="text-gray-600 dark:text-gray-300">
-                  Total: {Math.round(sysInfo.memory.total / 1024 / 1024 / 1024)} GB
+                  Total: {Math.round(sysInfo.memory.total / 1024 / 1024 / 1024)}{' '}
+                  GB
                 </p>
                 <p className="text-gray-600 dark:text-gray-300">
-                  Used: {Math.round(sysInfo.memory.used / 1024 / 1024 / 1024)} GB
+                  Used: {Math.round(sysInfo.memory.used / 1024 / 1024 / 1024)}{' '}
+                  GB
                 </p>
                 <p className="text-gray-600 dark:text-gray-300">
-                  Free: {Math.round(sysInfo.memory.free / 1024 / 1024 / 1024)} GB
+                  Free: {Math.round(sysInfo.memory.free / 1024 / 1024 / 1024)}{' '}
+                  GB
                 </p>
               </div>
             </div>
@@ -175,14 +229,20 @@ export default async function Home() {
                 <h3 className="text-lg font-semibold">Operating System</h3>
               </div>
               <div className="space-y-2">
-                <p className="text-gray-600 dark:text-gray-300">Platform: {sysInfo.os.platform}</p>
-                <p className="text-gray-600 dark:text-gray-300">Distribution: {sysInfo.os.distro}</p>
-                <p className="text-gray-600 dark:text-gray-300">Release: {sysInfo.os.release}</p>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Platform: {sysInfo.os.platform}
+                </p>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Distribution: {sysInfo.os.distro}
+                </p>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Release: {sysInfo.os.release}
+                </p>
               </div>
             </div>
           </div>
         </div>
       )}
     </div>
-  );
+  )
 }
