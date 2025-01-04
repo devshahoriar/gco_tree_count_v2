@@ -4,10 +4,11 @@ import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { headers } from 'next/headers'
 import { getSession } from './auth-client'
 import logger from './logger'
+import { APP_URL } from '@/data/const'
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
-    provider: 'sqlite',
+    provider: 'mysql',
   }),
   databaseHooks:{
     user:{
@@ -29,7 +30,7 @@ export const auth = betterAuth({
     enabled: true,
     autoSignIn: false,
   },
-  trustedOrigins: [process.env.NEXT_PUBLIC_URL!],
+  trustedOrigins: [APP_URL!],
   session: {
     cookieCache: {
       enabled: true,

@@ -19,6 +19,7 @@ import { z } from 'zod'
 import { toast } from 'sonner'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
+import AddInitialTreeInfo from './AddInitialTreeInfo'
 
 const dataSchema = z.object({
   childName: z.string().nonempty('Child name is required'),
@@ -168,6 +169,7 @@ const MasterRoll = ({
         >
           Next <ArrowRight />
         </Button>
+        {baby.id && <AddInitialTreeInfo id={baby.id} />}
       </CardFooter>
     </Card>
   )

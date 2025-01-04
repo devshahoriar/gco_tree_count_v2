@@ -14,11 +14,12 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
+import fetcher from '@/lib/swrFectcher'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
-const fetcher = (url: string) => fetch(url).then((r) => r.json())
+
 
 const Content = ({
   setTab,

@@ -11,8 +11,9 @@ import {
 import { X, Package } from 'lucide-react'
 import Link from 'next/link'
 import { countOt4oc, df, getListOfOt4oc } from './action'
-import Filter from './Filter'
+import Filter, { RefreshButton } from './Filter'
 import PaginationControl from './Pagination'
+import { formatDate } from '@/lib/utils'
 
 const Ot4ocNewPage = async ({
   searchParams,
@@ -50,6 +51,7 @@ const Ot4ocNewPage = async ({
           <p className="">Total: {count}</p>
         </div>
         <div className="flex items-center gap-2">
+          <RefreshButton />
           <Filter />
           <Button>
             <span className="hidden md:inline">Reset</span>
@@ -93,16 +95,22 @@ const Ot4ocNewPage = async ({
                 <TableCell>{item.phone || '-'}</TableCell>
                 <TableCell>{item.tree_count || 0}</TableCell>
                 <TableCell>
-                  {new Date(item.createdAt).toLocaleDateString()}
+                  {formatDate(item?.createdAt)}
                   <br />
                   by {item.User?.name || '-'}
                 </TableCell>
-                <TableCell>
+                <TableCell className='space-x-2'>
                   <Link
                     href={`/d/ot4oc/new?id=${item.id}`}
                     className="text-blue-600 hover:text-blue-800"
                   >
                     Update
+                  </Link>
+                  <Link
+                    href={`/d/ot4oc/view?id=${item.id}`}
+                    className="text-yellow-400 hover:text-yellow-800"
+                  >
+                    View
                   </Link>
                 </TableCell>
               </TableRow>

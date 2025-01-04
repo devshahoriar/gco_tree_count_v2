@@ -1,3 +1,5 @@
+export const APP_URL = process.env.NODE_ENV === 'production' ? process.env.NEXT_PUBLIC_URL : 'https://localhost:3000'
+
 export const USERROLES = {
   ADMIN: 'admin',
   SUPERADMIN: 'superadmin',
@@ -9,8 +11,10 @@ export const PERMISSIONS = {
   DATA: 'DATA',
   REPORT: 'REPORT',
 }
+// OT4OC,USER,DATA,REPORT
 
 export enum FILETYPE {
   TREEPHOTOINITIAL = 'tfi',
+  TREEPHOTOODIT = 'tfo',
   USERPROFILEPHOTO = 'upp',
 }

@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { FilterIcon } from 'lucide-react'
+import { FilterIcon, RefreshCw } from 'lucide-react'
 import {
   Credenza,
   CredenzaTrigger,
@@ -33,28 +33,28 @@ const Filter = () => {
     search: searchParams.get('search') || '',
     sortBy: searchParams.get('sortBy') || '',
     orderBy: searchParams.get('orderBy') || '',
-    perPage: searchParams.get('perPage') || ''
+    perPage: searchParams.get('perPage') || '',
   })
 
   const handleApplyFilters = () => {
     const params = new URLSearchParams(searchParams)
-    
+
     // Update search params
     if (filters.search) params.set('search', filters.search)
     else params.delete('search')
-    
+
     if (filters.sortBy) params.set('sortBy', filters.sortBy)
     else params.delete('sortBy')
-    
+
     if (filters.orderBy) params.set('orderBy', filters.orderBy)
     else params.delete('orderBy')
-    
+
     if (filters.perPage) params.set('limit', filters.perPage)
     else params.delete('limit')
 
     // Reset to page 1 when filters change
     params.set('page', '1')
-    
+
     push(`${pathname}?${params.toString()}`)
     setOpen(false)
   }
@@ -78,14 +78,21 @@ const Filter = () => {
               id="search"
               placeholder="Name, ID, Phone Number, MASTER ID"
               value={filters.search}
-              onChange={(e) => setFilters(prev => ({...prev, search: e.target.value}))}
+              onChange={(e) =>
+                setFilters((prev) => ({ ...prev, search: e.target.value }))
+              }
             />
           </div>
 
           <div className="flex gap-4">
             <div className="space-y-2 flex-1">
               <Label htmlFor="sortBy">Sort By</Label>
-              <Select value={filters.sortBy} onValueChange={(value) => setFilters(prev => ({...prev, sortBy: value}))}>
+              <Select
+                value={filters.sortBy}
+                onValueChange={(value) =>
+                  setFilters((prev) => ({ ...prev, sortBy: value }))
+                }
+              >
                 <SelectTrigger id="sortBy">
                   <SelectValue placeholder="Select sort field" />
                 </SelectTrigger>
@@ -99,7 +106,12 @@ const Filter = () => {
 
             <div className="space-y-2 flex-1">
               <Label htmlFor="orderBy">Order By</Label>
-              <Select value={filters.orderBy} onValueChange={(value) => setFilters(prev => ({...prev, orderBy: value}))}>
+              <Select
+                value={filters.orderBy}
+                onValueChange={(value) =>
+                  setFilters((prev) => ({ ...prev, orderBy: value }))
+                }
+              >
                 <SelectTrigger id="orderBy">
                   <SelectValue placeholder="Select order" />
                 </SelectTrigger>
@@ -113,7 +125,12 @@ const Filter = () => {
 
           <div className="space-y-2">
             <Label htmlFor="perPage">Items per page</Label>
-            <Select value={filters.perPage} onValueChange={(value) => setFilters(prev => ({...prev, perPage: value}))}>
+            <Select
+              value={filters.perPage}
+              onValueChange={(value) =>
+                setFilters((prev) => ({ ...prev, perPage: value }))
+              }
+            >
               <SelectTrigger id="perPage">
                 <SelectValue placeholder="Select items per page" />
               </SelectTrigger>
@@ -139,3 +156,22 @@ const Filter = () => {
 }
 
 export default Filter
+
+export const RefreshButton = () => {
+  const { refresh } = useRouter()
+  const [isRotating, setIsRotating] = useState(false)
+
+  const handleRefresh = () => {
+    setIsRotating(true)
+    refresh()
+    setTimeout(() => setIsRotating(false), 1500)
+  }
+
+  return (
+    <Button onClick={handleRefresh}>
+      <span className="hidden md:inline-block mr-2">Refresh</span>
+      <RefreshCw className={`h-4 w-4 ${isRotating ? 'animate-spin' : ''}`} />
+    </Button>
+  )
+}
+

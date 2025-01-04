@@ -27,6 +27,22 @@ export const POST = async (request: NextRequest) => {
   const body = await request?.json()
   //update tree
   if (body?.id) {
+  
+    if (body?.tree_count !== undefined) {
+
+      const treeCount = await prisma.tree.count({
+        where: {
+          treeFormId: Number(body.id),
+        },
+      })
+      console.log(body.tree_count, treeCount)
+      if (treeCount > body.tree_count) {
+        return NextResponse.json({
+          error: `You can't reduce tree count, Already ${treeCount} tree added \n Please add more tree or keep same tree count`,
+        })
+      }
+    }
+
     try {
       const updatedOt4oc = await prisma.ot4oc.update({
         where: { id: body.id },
@@ -68,7 +84,7 @@ export const POST = async (request: NextRequest) => {
           village: body.village,
           phone: body.phone,
           email: body.email,
-          
+
           // Tree info
           tree_count: Number(body.tree_count),
           masterId: body.masterId,
@@ -86,7 +102,6 @@ export const POST = async (request: NextRequest) => {
           motherSeriousSick: body.motherSeriousSick,
           preventCozToGoExpert: body.preventCozToGoExpert,
           whereIsMotherWhenPregnant: body.whereIsMotherWhenPregnant,
-          
         },
         select: {
           id: true,
@@ -94,15 +109,54 @@ export const POST = async (request: NextRequest) => {
       })
 
       if (body.childBirthDate) {
-        console.log("this is deteils")
+        await prisma.treeInvolved.upsert({
+          where: {
+            formId: Number(body.id),
+          },
+          update: {
+            detailsById: user.id,
+            detailsDate: new Date(),
+          },
+          create: {
+            detailsById: user.id,
+            formId: Number(body.id),
+            detailsDate: new Date(),
+          },
+        })
       }
 
       if (body.wordNo) {
-        console.log("this is contact info")
+        await prisma.treeInvolved.upsert({
+          where: {
+            formId: Number(body.id),
+          },
+          update: {
+            contactInfoById: user.id,
+            contactInfoDate: new Date(),
+          },
+          create: {
+            contactInfoById: user.id,
+            formId: Number(body.id),
+            contactInfoDate: new Date(),
+          },
+        })
       }
 
       if (body.bornWeek) {
-        console.log("this is medical info")
+        await prisma.treeInvolved.upsert({
+          where: {
+            formId: Number(body.id),
+          },
+          update: {
+            motherInfoById: user.id,
+            motherInfoDate: new Date(),
+          },
+          create: {
+            motherInfoById: user.id,
+            formId: Number(body.id),
+            motherInfoDate: new Date(),
+          },
+        })
       }
 
       return NextResponse.json({
