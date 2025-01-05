@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { TreeType } from "@/output"
+import { TreeType } from "@/prisma/out" 
 import { EditTreeDialog } from './c'
 
 export const TreeTable = ({ trees }: { trees: TreeType[] }) => {

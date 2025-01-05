@@ -3,34 +3,35 @@ import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { headers } from 'next/headers'
 import { getSession } from './auth-client'
-import logger from './logger'
+// import logger from './logger'
 import { APP_URL } from '@/data/const'
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'mysql',
   }),
-  databaseHooks:{
-    user:{
-     create:{
-      after: async (user) => {
-        logger.info(`User created: ${user.email}`)
-      }
-     }
-    },
-    session:{
-     create:{
-      after: async (session) => {
-        logger.info(`User Login: ${session.userId}`)
-      }
-     }
-    }
-  },
+  // databaseHooks:{
+  //   user:{
+  //    create:{
+  //     after: async (user) => {
+  //       logger.info(`User created: ${user.email}`)
+  //     }
+  //    }
+  //   },
+  //   session:{
+  //    create:{
+  //     after: async (session) => {
+  //       logger.info(`User Login: ${session.userId}`)
+  //     }
+  //    }
+  //   }
+  // },
   emailAndPassword: {
     enabled: true,
     autoSignIn: false,
   },
-  trustedOrigins: [APP_URL!],
+  trustedOrigins: [APP_URL,'https://try.globalcommunityorganization.org'],
+  baseURL: APP_URL,
   session: {
     cookieCache: {
       enabled: true,

@@ -7,8 +7,8 @@ export const imageKit = new Imagekit({
   urlEndpoint: 'https://ik.imagekit.io/proshuvo',
 })
 
-// un tested
-const UploadFile = async (file: File | any, folder: string = ''): Promise<{ fileId: string, url: string }> => {
+// un testedexpo
+export const UploadFile = async (file: File | any, folder: string = ''): Promise<{ fileId: string, url: string }> => {
   const byte = await file.arrayBuffer()
   const buffer = Buffer.from(byte)
   return new Promise((resolve, reject) => {
@@ -30,7 +30,7 @@ const UploadFile = async (file: File | any, folder: string = ''): Promise<{ file
   })
 }
 
-const FileDelete = async (fileId: string) => {
+export const FileDelete = async (fileId: string) => {
   return new Promise((resolve, reject) => {
     imageKit.deleteFile(fileId, (err:any, result:any) => {
       if (err) {

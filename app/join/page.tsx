@@ -14,12 +14,11 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { PasswordInput } from '@/components/ui/password-input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { signIn, signUp, useSession } from '@/lib/auth-client'
+import { signIn, signUp } from '@/lib/auth-client'
 import { Loader } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useState } from 'react'
 
 export default function LoginRegistrationPage() {
   const [activeTab, setActiveTab] = useState('login')
@@ -28,15 +27,15 @@ export default function LoginRegistrationPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [loginError, setLoginError] = useState('')
-  const { data } = useSession()
+  // const { data } = useSession()
   const [success, setSuccess] = useState('')
 
-  const { replace } = useRouter()
-  useEffect(() => {
-    if (data !== null) {
-      replace('/')
-    }
-  }, [data?.session])
+  // const { replace } = useRouter()
+  // useEffect(() => {
+  //   if (data !== null) {
+  //     replace('/')
+  //   }
+  // }, [data?.session])
 
   const _hendelRegister = async (e: FormEvent) => {
     e.preventDefault()

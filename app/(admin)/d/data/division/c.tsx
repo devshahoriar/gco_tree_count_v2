@@ -13,7 +13,7 @@ import {
   CredenzaTitle,
   CredenzaTrigger,
 } from '@/components/ui/credenza'
-import { Division } from '@/output' 
+import { Division } from '@/prisma/out' 
 import { Edit, Trash } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useRef, useState } from 'react'

@@ -19,3 +19,5 @@ export default async function Layout({
   if (!user.active) redirect('/deactive')
   return <AdminPanelLayout>{children}</AdminPanelLayout>
 }
+
+export const dynamic = 'force-dynamic'
