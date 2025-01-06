@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { Button } from '@/components/ui/button'
@@ -37,7 +38,7 @@ const PaginationControl = ({
   const generatePagesArray = () => {
     const currentPageNum = Number(currentPage)
     const totalPageNum = Number(totalPage)
-    let pages = []
+    let pages:any = []
 
     if (totalPageNum <= 5) {
       for (let i = 1; i <= totalPageNum; i++) {
