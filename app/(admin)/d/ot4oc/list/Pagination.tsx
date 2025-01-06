@@ -84,7 +84,7 @@ const PaginationControl = ({
           </Button>
         </PaginationItem>
 
-        {generatePagesArray().map((page, index) => (
+        {generatePagesArray().map((page:any, index:any) => (
           <PaginationItem key={index}>
             {page === '...' ? (
               <PaginationEllipsis />
