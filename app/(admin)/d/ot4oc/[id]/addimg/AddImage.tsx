@@ -36,7 +36,7 @@ const AddImage = ({
                 setLoaction(loc)
               }
               const img = await imageCompress(file)
-              addFun((p) => [...p, img])
+              addFun((p:any) => [...p, img])
             } catch (error: any) {
               if (error?.message) {
                 setError(error.message)
