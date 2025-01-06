@@ -1,6 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
-  output = "./out"
+  provider      = "prisma-client-js"
+  output        = "./out"
   binaryTargets = ["native", "debian-openssl-1.1.x"]
 }
 
@@ -132,13 +132,13 @@ model TreeType {
 }
 
 model File {
-  id          Int              @id @default(autoincrement())
-  url         String
-  fileId      String           @unique
-  fileType    String?
-  createdAt   DateTime
-  treeImages  TreeImage[]
-  auditImages TreeAuditImage[]
+  id              Int      @id @default(autoincrement())
+  url             String
+  fileId          String?  @unique
+  fileType        String?
+  createdAt       DateTime
+  treeImages      Tree[]   @relation("TreeImages")
+  treeAuditImages Tree[]   @relation("TreeAuditImages")
 
   @@map("file")
 }
@@ -236,22 +236,27 @@ model TreeInvolved {
 model Tree {
   id Int @id @default(autoincrement())
 
-  treeFormId    Int
-  treeForm      Ot4oc            @relation(fields: [treeFormId], references: [id], onDelete: Cascade)
-  treeTypeId    Int
-  treeType      TreeType         @relation(fields: [treeTypeId], references: [id], onDelete: Cascade)
-  lat           String?
-  lon           String?
-  images        TreeImage[]
-  auditImages   TreeAuditImage[]
-  auditDate     DateTime?
-  replaced      Boolean          @default(false)
+  treeFormId Int
+  treeForm   Ot4oc     @relation(fields: [treeFormId], references: [id], onDelete: Cascade)
+  treeTypeId Int
+  treeType   TreeType  @relation(fields: [treeTypeId], references: [id], onDelete: Cascade)
+  lat        String?
+  lon        String?
+  images     File[]    @relation("TreeImages")
+  imageDate  DateTime?
+  remarkImg  String?
+
+  auditImages    File[]    @relation("TreeAuditImages")
+  auditRemarkImg String?
+  auditDate      DateTime?
+
+  replaced      Boolean   @default(false)
   replacedById  String?
-  replacedBy    User?            @relation("ReplacedBy", fields: [replacedById], references: [id], onDelete: SetNull)
+  replacedBy    User?     @relation("ReplacedBy", fields: [replacedById], references: [id], onDelete: SetNull)
   replacedAt    DateTime?
   replaceTreeId Int?
-  replaceTree   Tree?            @relation("TreeReplacement", fields: [replaceTreeId], references: [id], onDelete: SetNull)
-  replacedTrees Tree[]           @relation("TreeReplacement")
+  replaceTree   Tree?     @relation("TreeReplacement", fields: [replaceTreeId], references: [id], onDelete: Cascade)
+  replacedTrees Tree[]    @relation("TreeReplacement")
 
   addById String?
   addBy   User?   @relation("AddedBy", fields: [addById], references: [id], onDelete: SetNull)
@@ -260,26 +265,4 @@ model Tree {
   updatedAt DateTime @updatedAt
 
   @@map("tree")
-}
-
-model TreeImage {
-  id        Int      @id @default(autoincrement())
-  treeId    Int
-  tree      Tree     @relation(fields: [treeId], references: [id], onDelete: Cascade)
-  fileId    Int
-  file      File     @relation(fields: [fileId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-
-  @@map("tree_image")
-}
-
-model TreeAuditImage {
-  id        Int      @id @default(autoincrement())
-  treeId    Int
-  tree      Tree     @relation(fields: [treeId], references: [id], onDelete: Cascade)
-  fileId    Int
-  file      File     @relation(fields: [fileId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
-
-  @@map("tree_audit_image")
 }

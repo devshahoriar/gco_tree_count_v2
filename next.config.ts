@@ -12,6 +12,12 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   crossOrigin: 'anonymous',
+  webpack: (config)=>{
+    config.plugins.push(
+      new webpack.IgnorePlugin({ resourceRegExp: /osx-temperature-sensor/ }),
+    );
+    return config;
+  }
 }
 
 export default nextConfig

@@ -99,18 +99,24 @@ const Ot4ocNewPage = async ({
                   <br />
                   by {item.User?.name || '-'}
                 </TableCell>
-                <TableCell className='space-x-2'>
+                <TableCell className='flex flex-col gap-2 items-center justify-center md:flex-row'>
                   <Link
                     href={`/d/ot4oc/new?id=${item.id}`}
-                    className="text-blue-600 hover:text-blue-800"
+                    className="text-blue-600 hover:text-blue-800 text-center"
                   >
                     Update
                   </Link>
                   <Link
                     href={`/d/ot4oc/view?id=${item.id}`}
-                    className="text-yellow-400 hover:text-yellow-800"
+                    className="text-yellow-400 hover:text-yellow-800 text-center"
                   >
                     View
+                  </Link>
+                  <Link
+                    href={`/d/ot4oc/${item.id}/addimg`}
+                    className="text-green-400 hover:text-green-800 text-center"
+                  >
+                    Add Image
                   </Link>
                 </TableCell>
               </TableRow>

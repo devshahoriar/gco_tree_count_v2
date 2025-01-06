@@ -155,7 +155,7 @@ const MasterRoll = ({
       </CardContent>
       <CardFooter className="space-x-2">
         <Button disabled={!isChanged || isLoading} onClick={handleSave}>
-          {isLoading ? 'Saving...' : 'Save changes'}
+          {isLoading ? 'Saving' : 'Save'}
         </Button>
         <Button
           onClick={() => {
@@ -163,11 +163,11 @@ const MasterRoll = ({
               toast.error('Please save changes first')
               return
             }
-            setTab('details')
+            setTab('contant')
           }}
           disabled={isLoading}
         >
-          Next <ArrowRight />
+          <span className='hidden md:block'>Next</span> <ArrowRight />
         </Button>
         {baby.id && <AddInitialTreeInfo id={baby.id} />}
       </CardFooter>

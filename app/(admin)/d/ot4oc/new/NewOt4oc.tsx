@@ -62,7 +62,7 @@ const initialData = {
   whereIsMotherWhenPregnant: '',
 }
 
-const NewOt4oc = ({ allDivi,upOt4oc }: { allDivi: any,upOt4oc:any }) => {
+const NewOt4oc = ({ allDivi, upOt4oc }: { allDivi: any; upOt4oc: any }) => {
   const [tab, setTab] = useState('masterRoll')
   const [baby, setbaby] = useState(upOt4oc || initialData)
   return (
@@ -89,8 +89,8 @@ const NewOt4oc = ({ allDivi,upOt4oc }: { allDivi: any,upOt4oc:any }) => {
         >
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="masterRoll">Master roll</TabsTrigger>
-            <TabsTrigger value="details">Details</TabsTrigger>
             <TabsTrigger value="contant">Contact</TabsTrigger>
+            <TabsTrigger value="details">Details</TabsTrigger>
             <TabsTrigger value="matinfo">
               Maternity <span className="hidden md:inline">-information</span>
             </TabsTrigger>
@@ -98,11 +98,6 @@ const NewOt4oc = ({ allDivi,upOt4oc }: { allDivi: any,upOt4oc:any }) => {
           <TabsContent value="masterRoll">
             {tab === 'masterRoll' && (
               <MasterRoll setTab={setTab} baby={baby} setBaby={setbaby} />
-            )}
-          </TabsContent>
-          <TabsContent value="details">
-            {tab === 'details' && (
-              <Details setTab={setTab} baby={baby} setBaby={setbaby} />
             )}
           </TabsContent>
           <TabsContent value="contant">
@@ -113,6 +108,11 @@ const NewOt4oc = ({ allDivi,upOt4oc }: { allDivi: any,upOt4oc:any }) => {
                 baby={baby}
                 setBaby={setbaby}
               />
+            )}
+          </TabsContent>
+          <TabsContent value="details">
+            {tab === 'details' && (
+              <Details setTab={setTab} baby={baby} setBaby={setbaby} />
             )}
           </TabsContent>
           <TabsContent value="matinfo">

@@ -244,11 +244,11 @@ const Content = ({
               toast.error('Please save changes first')
               return
             }
-            setTab('details')
+            setTab('masterRoll')
           }}
           disabled={isLoading}
         >
-          <ArrowLeft /> Previous
+          <ArrowLeft /> <span className='hidden md:block'>Previous</span>
         </Button>
         <Button
           onClick={() => {
@@ -256,11 +256,11 @@ const Content = ({
               toast.error('Please save changes first')
               return
             }
-            setTab('matinfo')
+            setTab('details')
           }}
           disabled={isLoading}
         >
-          Next <ArrowRight />
+          <span className='hidden md:block'>Next</span> <ArrowRight />
         </Button>
       </CardFooter>
     </Card>

@@ -22,6 +22,7 @@ import {
   formatDate,
   formatWeight,
 } from '@/lib/utils'
+import { FilePenLine, ImagePlus } from 'lucide-react'
 
 const Ot4ocView = async ({
   searchParams,
@@ -64,9 +65,20 @@ const Ot4ocView = async ({
                 </span>
               </div>
             </div>
-            <Button asChild>
-              <Link href={`/d/ot4oc/new?id=${data.id}`}>Edit</Link>
-            </Button>
+            <div className='flex flex-col gap-2 md:flex-row'>
+              <Button asChild>
+                <Link href={`/d/ot4oc/${data.id}/addimg`}>
+                  <ImagePlus />
+                  <span className='hidden md:block'>Add Image</span>
+                </Link>
+              </Button>
+              <Button asChild>
+                <Link href={`/d/ot4oc/new?id=${data.id}`}>
+                  <FilePenLine />
+                  <span  className='hidden md:block'>Edit</span>
+                </Link>
+              </Button>
+            </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
