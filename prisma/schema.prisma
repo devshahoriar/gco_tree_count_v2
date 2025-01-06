@@ -136,7 +136,7 @@ model File {
   url             String
   fileId          String?  @unique
   fileType        String?
-  createdAt       DateTime
+  createdAt       DateTime @default(now())
   treeImages      Tree[]   @relation("TreeImages")
   treeAuditImages Tree[]   @relation("TreeAuditImages")
 
@@ -244,7 +244,7 @@ model Tree {
   lon        String?
   images     File[]    @relation("TreeImages")
   imageDate  DateTime?
-  remarkImg  String?
+  remarkOfImg  String?
 
   auditImages    File[]    @relation("TreeAuditImages")
   auditRemarkImg String?

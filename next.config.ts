@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   experimental: {
     reactCompiler: true,
   },
-  reactStrictMode: true,
+  reactStrictMode: false,
   output: 'standalone',
   eslint:{
     ignoreDuringBuilds: true,

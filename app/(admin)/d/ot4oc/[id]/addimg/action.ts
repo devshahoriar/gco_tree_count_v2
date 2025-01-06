@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use server'
 
+import { FILETYPE } from '@/data/const'
+import { getUser } from '@/lib/auth'
+import { getUserPermissions } from '@/lib/auth-client'
+import { FileDelete, UploadFile } from '@/lib/fileMeneger'
 import prisma from '@/prisma/db'
+import { headers } from 'next/headers'
 
 export const getAllTreeTypes = async () => {
   return await prisma.treeType.findMany({
@@ -39,6 +44,30 @@ export type OT4OCTYPE = {
   masterId: string | null
 }
 
+export const removeImage = async (
+  treeId: number | string,
+  fileId: number | string,
+  imageId: number | string
+) => {
+  await FileDelete(fileId + '')
+  await prisma.tree.update({
+    where: {
+      id: Number(treeId),
+    },
+    data: {
+      images: {
+        delete: {
+          id: Number(imageId),
+        },
+      },
+    },
+    select: {
+      id: true,
+    },
+  })
+  return { success: true }
+}
+
 export const getTreesByOt4ocId = async (id: string | number) => {
   return await prisma.tree.findMany({
     where: {
@@ -54,6 +83,7 @@ export const getTreesByOt4ocId = async (id: string | number) => {
           url: true,
         },
       },
+      remarkOfImg: true,
       lat: true,
       lon: true,
       replaced: true,
@@ -61,13 +91,132 @@ export const getTreesByOt4ocId = async (id: string | number) => {
     },
   })
 }
-
 export type Tree_Type = Awaited<ReturnType<typeof getTreesByOt4ocId>>[number]
 
 export const updateTree = async (data: any) => {
   try {
-    const { treeTypeId, ot4ocId, imgs, location, treeId, update } = data
-    let imageIds: number[] = []
+    const user = await getUser(headers)
+    if (!user) {
+      return { error: 'User not found' }
+    }
+    const permissions = getUserPermissions(user)
+    if (!permissions.includes('OT4OC')) {
+      return { error: 'You do not have permission to add image' }
+    }
+
+    // logic start here
+
+    const { treeTypeId, ot4ocId, imgs, location, treeId, update, remark } = data
+
+    const isNotPhoto = Boolean(remark)
+
+    const dbIds = []
+    if (!isNotPhoto) {
+      if (imgs.length === 0 || !location) {
+        return { error: 'Please add a image with location' }
+      }
+      const locations = await prisma.ot4oc.findUnique({
+        where: {
+          id: Number(ot4ocId),
+        },
+        select: {
+          division: {
+            select: {
+              name: true,
+            },
+          },
+          zilla: {
+            select: {
+              name: true,
+            },
+          },
+          upZilla: {
+            select: {
+              name: true,
+            },
+          },
+          union: {
+            select: {
+              name: true,
+            },
+          },
+          wordNo: true,
+        },
+      })
+
+      if (
+        !locations ||
+        !locations.division ||
+        !locations.zilla ||
+        !locations.upZilla ||
+        !locations.union ||
+        !locations.wordNo
+      ) {
+        return {
+          error: 'First select word no, union, up-zilla, zilla, division.',
+        }
+      }
+
+      const uploadFolder =
+        `${locations?.division?.name}/${locations?.zilla?.name}/${locations?.upZilla?.name}/${locations?.union?.name}/${locations?.wordNo}`
+          .toLocaleLowerCase()
+          .replaceAll(' ', '_')
+
+      for (const img of imgs) {
+        const { fileId, url } = await UploadFile(img, uploadFolder)
+        const d = await prisma.file.create({
+          data: {
+            fileId: fileId,
+            url: url,
+            fileType: FILETYPE.TREEPHOTOINITIAL,
+          },
+        })
+        dbIds.push(d.id)
+      }
+    }
+
+    if (update) {
+      const tree = await prisma.tree.update({
+        where: {
+          id: Number(treeId),
+        },
+        data: {
+          treeTypeId: Number(treeTypeId),
+          images: {
+            connect: dbIds.map((id) => ({ id })),
+          },
+          imageDate: new Date(),
+          lat: location?.lat ? location?.lat + '' : undefined,
+          lon: location?.lon ? location?.lon + '' : undefined,
+          addById: user.id,
+          remarkOfImg: remark,
+        },
+        select: {
+          id: true,
+        },
+      })
+      console.log('tree updated = ', tree.id)
+    } else {
+      const newTree = await prisma.tree.create({
+        data: {
+          treeTypeId: Number(treeTypeId),
+          images: {
+            connect: dbIds.map((id) => ({ id })),
+          },
+          lat: location?.lat ? location?.lat + '' : undefined,
+          lon: location?.lon ? location?.lon + '' : undefined,
+          imageDate: new Date(),
+          treeFormId: Number(ot4ocId),
+          addById: user.id,
+          remarkOfImg: remark,
+        },
+        select: {
+          id: true,
+        },
+      })
+      console.log('new tree added = ', newTree.id)
+    }
+
     return { success: true }
   } catch (error) {
     console.log(error)

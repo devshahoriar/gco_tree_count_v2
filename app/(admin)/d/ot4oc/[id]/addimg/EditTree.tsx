@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @next/next/no-img-element */
 'use client'
 import { InputParent } from '@/components/shared/InputBox'
@@ -12,11 +14,13 @@ import {
 } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { Trash2 } from 'lucide-react'
-import { useState, useTransition } from 'react'
-import { Tree_Type, updateTree } from './action'
+import { useEffect, useState, useTransition } from 'react'
+import { removeImage, Tree_Type, updateTree } from './action'
 import AddImage from './AddImage'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Input } from '@/components/ui/input'
 
 const EditTree = ({
   ot4ocId,
@@ -36,17 +40,47 @@ const EditTree = ({
   const isUpdated = Boolean(tree?.id)
   const [isPending, trens] = useTransition()
   const [selectTree, setSelectTree] = useState<number>()
+  const [cantTakeimg, setcantTakeimg] = useState(false)
+  const [remark, setRemark] = useState('')
+  const [previousImg, setPreviousImg] = useState<
+    {
+      id: number
+      url: string
+      fileId: string | null
+    }[]
+  >([])
   const { refresh } = useRouter()
+
+  useEffect(() => {
+    if (tree?.images) {
+      setPreviousImg(tree.images)
+    }
+
+    if (tree?.remarkOfImg) {
+      setRemark(tree.remarkOfImg)
+      setcantTakeimg(true)
+    }
+    if (tree?.lat && tree?.lon) {
+      setLoaction({ lat: Number(tree.lat), lon: Number(tree.lon) })
+    }
+  }, [tree])
 
   const hendelAdd = async () => {
     setError('')
-    if (addedImage.length === 0) {
-      setError('Please add a image')
-      return
-    }
-    if (!location) {
-      setError('Please select location')
-      return
+    if (!cantTakeimg) {
+      if (addedImage.length === 0) {
+        setError('Please add a image')
+        return
+      }
+      if (!location) {
+        setError('Please select location')
+        return
+      }
+    } else {
+      if (!remark) {
+        setError('Please enter remark')
+        return
+      }
     }
     if (!tree?.treeType.id && !selectTree) {
       setError('Please select tree')
@@ -61,11 +95,16 @@ const EditTree = ({
         treeTypeId: selectTree || tree?.treeType?.id,
         treeId: tree?.id,
         update: isUpdated,
+        remark,
       })
       if (d?.error) {
         setError(d.error)
       }
       if (d?.success) {
+        setAddedImage([])
+        setLoaction(undefined)
+        setRemark('')
+        setSelectTree(undefined)
         refresh()
         toast.success('Image added successfully')
       }
@@ -96,11 +135,38 @@ const EditTree = ({
             </select>
           </InputParent>
           <div>
-            <AddImage
-              addFun={setAddedImage}
-              setLoaction={setLoaction}
-              location={location}
-            />
+            <div className="space-y-2">
+              {previousImg?.length > 0 || (
+                <div className="flex items-center gap-2">
+                  <Checkbox
+                    checked={cantTakeimg}
+                    onCheckedChange={(v) => {
+                      setcantTakeimg(v as boolean)
+                      setAddedImage([])
+                      setRemark('')
+                      setLoaction(undefined)
+                    }}
+                  />
+                  <Label>Can't take image.</Label>
+                </div>
+              )}
+              {cantTakeimg ? (
+                <div>
+                  <Label>Enter Remark</Label>
+                  <Input
+                    value={remark}
+                    onChange={(e) => setRemark(e.target.value)}
+                    placeholder="Tree so far.."
+                  />
+                </div>
+              ) : (
+                <AddImage
+                  addFun={setAddedImage}
+                  setLoaction={setLoaction}
+                  location={location}
+                />
+              )}
+            </div>
             {addedImage.length > 0 && (
               <div className="mt-2">
                 <Label>Selected Images</Label>
@@ -119,6 +185,40 @@ const EditTree = ({
                       </button>
                       <img
                         src={URL.createObjectURL(img)}
+                        alt="tree"
+                        className="w-16 h-16 object-cover rounded-md"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            {previousImg?.length > 0 && (
+              <div className="mt-2">
+                <Label>Previous Images</Label>
+                <div className="flex gap-2 mt-1 flex-wrap">
+                  {previousImg?.map((img, i) => (
+                    <div className="relative" key={i}>
+                      <button
+                        disabled={isPending}
+                        onClick={async () => {
+                          if (img?.fileId) {
+                            trens(async () => {
+                              await removeImage(
+                                tree?.id as any,
+                                img.fileId as any,
+                                img.id
+                              )
+                            })
+                            refresh()
+                          }
+                        }}
+                        className="absolute rounded top-[1px] right-[1px] z-10 bg-red-600 p-[1px] bg-opacity-80 disabled:animate-pulse"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                      <img
+                        src={img.url}
                         alt="tree"
                         className="w-16 h-16 object-cover rounded-md"
                       />

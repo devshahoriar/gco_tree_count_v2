@@ -11,12 +11,13 @@ export const imageKit = new Imagekit({
 export const UploadFile = async (file: File | any, folder: string = ''): Promise<{ fileId: string, url: string }> => {
   const byte = await file.arrayBuffer()
   const buffer = Buffer.from(byte)
+
   return new Promise((resolve, reject) => {
     imageKit.upload(
       {
         file: buffer,
-        fileName: file.name,
-        folder: 'gco_home/' + folder,
+        fileName: 'img.jpg',
+        folder: 'gco_admin_v2/' + folder,
       },
       (err:any, result:any) => {
         if (err) {
