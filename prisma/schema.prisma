@@ -236,27 +236,29 @@ model TreeInvolved {
 model Tree {
   id Int @id @default(autoincrement())
 
-  treeFormId Int
-  treeForm   Ot4oc     @relation(fields: [treeFormId], references: [id], onDelete: Cascade)
-  treeTypeId Int
-  treeType   TreeType  @relation(fields: [treeTypeId], references: [id], onDelete: Cascade)
-  lat        String?
-  lon        String?
-  images     File[]    @relation("TreeImages")
-  imageDate  DateTime?
-  remarkOfImg  String?
+  treeFormId  Int
+  treeForm    Ot4oc     @relation(fields: [treeFormId], references: [id], onDelete: Cascade)
+  treeTypeId  Int
+  treeType    TreeType  @relation(fields: [treeTypeId], references: [id], onDelete: Cascade)
+  lat         String?
+  lon         String?
+  images      File[]    @relation("TreeImages")
+  imageDate   DateTime?
+  remarkOfImg String?
 
   auditImages    File[]    @relation("TreeAuditImages")
   auditRemarkImg String?
   auditDate      DateTime?
 
-  replaced      Boolean   @default(false)
-  replacedById  String?
-  replacedBy    User?     @relation("ReplacedBy", fields: [replacedById], references: [id], onDelete: SetNull)
-  replacedAt    DateTime?
-  replaceTreeId Int?
-  replaceTree   Tree?     @relation("TreeReplacement", fields: [replaceTreeId], references: [id], onDelete: Cascade)
-  replacedTrees Tree[]    @relation("TreeReplacement")
+  replaced         Boolean   @default(false)
+  replaceReason    String?
+  thisForReplached Boolean   @default(false)
+  replacedById     String?
+  replacedBy       User?     @relation("ReplacedBy", fields: [replacedById], references: [id], onDelete: SetNull)
+  replacedAt       DateTime?
+  replaceTreeId    Int?
+  replaceTree      Tree?     @relation("TreeReplacement", fields: [replaceTreeId], references: [id], onDelete: Cascade)
+  replacedTrees    Tree[]    @relation("TreeReplacement")
 
   addById String?
   addBy   User?   @relation("AddedBy", fields: [addById], references: [id], onDelete: SetNull)

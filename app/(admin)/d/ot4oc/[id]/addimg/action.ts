@@ -88,6 +88,8 @@ export const getTreesByOt4ocId = async (id: string | number) => {
       lon: true,
       replaced: true,
       replacedAt: true,
+      replaceReason: true,
+      thisForReplached: true,
     },
   })
 }
@@ -106,9 +108,20 @@ export const updateTree = async (data: any) => {
 
     // logic start here
 
-    const { treeTypeId, ot4ocId, imgs, location, treeId, update, remark } = data
+    const {
+      treeTypeId,
+      ot4ocId,
+      imgs,
+      location,
+      treeId,
+      update,
+      remark,
+      replaced,
+      replaceReason,
+    } = data
 
-    const isNotPhoto = Boolean(remark)
+    const isNotPhoto = Boolean(remark) || Boolean(replaced)
+
 
     const dbIds = []
     if (!isNotPhoto) {
@@ -174,9 +187,9 @@ export const updateTree = async (data: any) => {
         dbIds.push(d.id)
       }
     }
-
+    let tree = null
     if (update) {
-      const tree = await prisma.tree.update({
+      tree = await prisma.tree.update({
         where: {
           id: Number(treeId),
         },
@@ -190,14 +203,16 @@ export const updateTree = async (data: any) => {
           lon: location?.lon ? location?.lon + '' : undefined,
           addById: user.id,
           remarkOfImg: remark,
+          replaced: replaced,
         },
         select: {
           id: true,
+          replaced: true,
         },
       })
       console.log('tree updated = ', tree.id)
     } else {
-      const newTree = await prisma.tree.create({
+      tree = await prisma.tree.create({
         data: {
           treeTypeId: Number(treeTypeId),
           images: {
@@ -209,12 +224,47 @@ export const updateTree = async (data: any) => {
           treeFormId: Number(ot4ocId),
           addById: user.id,
           remarkOfImg: remark,
+          replaced: replaced,
         },
         select: {
           id: true,
+          replaced: true,
         },
       })
-      console.log('new tree added = ', newTree.id)
+      console.log('new tree added = ', tree.id)
+    }
+
+    if (replaced) {
+      await prisma.tree.update({
+        where: {
+          id: Number(tree.id),
+        },
+        data: {
+          replacedAt: new Date(),
+          replaceReason: replaceReason,
+          replacedById: user.id,
+        },
+      })
+      if (!update) {
+        await prisma.ot4oc.update({
+          where: {
+            id: Number(ot4ocId),
+          },
+          data: {
+            tree_count: {
+              increment: 1,
+            },
+          },
+        })
+        await prisma.tree.create({
+          data: {
+            treeFormId: Number(ot4ocId),
+            treeTypeId: Number(treeTypeId),
+            thisForReplached: true,
+            addById: user.id,
+          },
+        })
+      }
     }
 
     return { success: true }

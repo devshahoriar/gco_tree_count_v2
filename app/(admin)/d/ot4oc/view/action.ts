@@ -9,11 +9,54 @@ export const getOt4ocById = async (id: string) => {
         id: Number(id),
       },
       select: {
-        // Tree: {
-        //   select: {
-        //     //todo: add fields
-        //   },
-        // },
+        Tree: {
+          select: {
+            id: true,
+            addBy: {
+              select: {
+                name: true,
+                id: true
+              }
+            },
+            images: {
+              select: {
+                url: true,
+                fileType: true,
+                createdAt: true
+              }
+            },
+            auditImages: {
+              select: {
+                url: true,
+                fileType: true,
+                createdAt: true
+              }
+            },
+            lat: true,
+            lon: true,
+            replaced: true,
+            treeType: {
+              select: {
+                name: true,
+                id: true
+              }
+            },
+            thisForReplached: true,
+            replaceReason: true,
+            imageDate: true,
+            remarkOfImg: true,
+            auditDate: true,
+            auditRemarkImg: true,
+            createdAt: true,
+            replacedAt: true,
+            replacedBy: {
+              select: {
+                name: true,
+                id: true
+              }
+            }
+          },
+        },
         id: true,
         childName: true,
         tree_count: true,

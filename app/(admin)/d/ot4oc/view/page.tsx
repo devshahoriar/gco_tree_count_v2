@@ -24,6 +24,8 @@ import {
 } from '@/lib/utils'
 import { FilePenLine, ImagePlus } from 'lucide-react'
 
+import { TreesInformation } from './c'
+
 const Ot4ocView = async ({
   searchParams,
 }: {
@@ -34,7 +36,6 @@ const Ot4ocView = async ({
 
   const data: any = await getOt4ocById(id)
   if (!data) return notFound()
-
   const percentages = {
     child: calculateSectionPercentage(data, childFields),
     parents: calculateSectionPercentage(data, parentFields),
@@ -132,6 +133,10 @@ const Ot4ocView = async ({
                   label="Birth Order"
                   value={formatBirthOrder(data.thChild)}
                 />
+                <InfoRow
+                  label="Child Health"
+                  value={data.deliveryChildHealth}
+                />
               </TableBody>
             </Table>
           </CardContent>
@@ -200,6 +205,8 @@ const Ot4ocView = async ({
             </Table>
           </CardContent>
         </Card>
+
+        <TreesInformation trees={data.Tree} />
 
         {/* Form Submission Information - Full Width */}
         <Card className="md:col-span-2">
@@ -277,6 +284,7 @@ const childFields = [
   'bornWeek',
   'bornWeight',
   'thChild',
+  'deliveryChildHealth'
 ]
 const parentFields = [
   'fatherName',

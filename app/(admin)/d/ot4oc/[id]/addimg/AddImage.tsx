@@ -37,7 +37,6 @@ const AddImage = ({
               }
               const img = await imageCompress(file)
            
-              console.log(img)
               addFun((p:any) => [...p, img])
             } catch (error: any) {
               if (error?.message) {

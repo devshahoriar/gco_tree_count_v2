@@ -4,6 +4,7 @@ import { getAllTreeTypes, getOt4ocById, getTreesByOt4ocId } from './action'
 import EditTree from './EditTree'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { RefreshButton } from '../../list/Filter'
 
 const AddImagePage = async ({
   params,
@@ -39,6 +40,7 @@ const AddImagePage = async ({
           </div>
         </div>
         <div className='flex flex-col gap-2 sm:flex-row'>
+          <RefreshButton />
           <Button asChild>
             <Link href={`/d/ot4oc/new?id=${id}`}>Edit</Link>
           </Button>

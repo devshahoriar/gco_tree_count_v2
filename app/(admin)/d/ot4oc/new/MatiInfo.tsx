@@ -143,6 +143,22 @@ const MatiInfo = ({ baby, setBaby }: { baby: any; setBaby: any }) => {
               <option value="5">5</option>
             </select>
           </InputParent>
+
+          <InputParent>
+            <Label>Child health on born</Label>
+            <select
+              className="from-input bg-transparent focus:outline-none rounded-md"
+              value={baby?.deliveryChildHealth || ''}
+              onChange={(e) =>
+                handleChange('deliveryChildHealth', e.target.value)
+              }
+            >
+              <option value="">Select</option>
+              <option value="normal">Normal</option>
+              <option value="abnormal">Abnormal</option>
+            </select>
+          </InputParent>
+
           <InputParent>
             <Label>Child Birth Place</Label>
             <select
@@ -249,11 +265,7 @@ const MatiInfo = ({ baby, setBaby }: { baby: any; setBaby: any }) => {
         </div>
       </CardContent>
       <CardFooter className="space-x-2">
-        <Button
-          onClick={handleSave}
-          disabled={!isChanged || isLoading}
-
-        >
+        <Button onClick={handleSave} disabled={!isChanged || isLoading}>
           {isLoading ? 'Submitting' : 'Submit'}
         </Button>
         {/* <Button onClick={() => setTab('contant')}>
