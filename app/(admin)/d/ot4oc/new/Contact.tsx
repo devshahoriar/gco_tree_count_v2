@@ -28,10 +28,10 @@ const contactSchema = z.object({
   unionId: z.string().nonempty('Union is required'),
   postId: z.string().nonempty('Post office is required'),
   wordNo: z.string().nonempty('Word number is required'),
-  
-  email: z.string().email().optional().or(z.literal('')),
-  phone: z.string().nonempty('Phone number is required'),
 
+  email: z.string().email().optional().or(z.literal('')),
+  // phone: z.string().nonempty('Phone number is required'),
+  village: z.string().nonempty('Village name is required'),
 })
 
 const Content = ({
@@ -90,7 +90,7 @@ const Content = ({
       // Validate data before submitting
       contactSchema.parse(baby)
       setError('')
-      
+
       const response = await fetch('/api/addtree', {
         method: 'POST',
         body: JSON.stringify(baby),
@@ -231,7 +231,13 @@ const Content = ({
               <option value="8">8</option>
             </select>
           </InputParent>
-          
+          <InputBox
+            id="village"
+            title="Village Name"
+            placeholder="Village"
+            value={baby.village}
+            onChange={(e) => handleChange('village', e.target.value)}
+          />
           <InputBox
             id="email"
             title="Email"
@@ -239,13 +245,6 @@ const Content = ({
             placeholder="Email"
             value={baby.email || ''}
             onChange={(e) => handleChange('email', e.target.value)}
-          />
-          <InputBox
-            id="phone"
-            title="Phone"
-            placeholder="Phone number"
-            value={baby.phone || ''}
-            onChange={(e) => handleChange('phone', e.target.value)}
           />
         </div>
         {error && <p className="text-red-500 mt-2">{error}</p>}

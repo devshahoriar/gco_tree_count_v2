@@ -16,6 +16,7 @@ import { ArrowRight } from 'lucide-react'
 import { useState } from 'react'
 import { z } from 'zod'
 
+import DateInput from '@/components/shared/DateInput'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
@@ -24,7 +25,7 @@ import AddInitialTreeInfo from './AddInitialTreeInfo'
 const dataSchema = z.object({
   childName: z.string().nonempty('Child name is required'),
   fatherName: z.string().nonempty('Father name is required'),
-  village: z.string().nonempty('Village name is required'),
+  // village: z.string().nonempty('Village name is required'),
   phone: z.string().nonempty('Phone number is required'),
   tree_count: z.number({
     required_error: 'Tree count is required',
@@ -157,13 +158,7 @@ const MasterRoll = ({
             value={baby.fatherName}
             onChange={(e) => handleChange('fatherName', e.target.value)}
           />
-          <InputBox
-            id="village"
-            title="Village Name"
-            placeholder="Village"
-            value={baby.village}
-            onChange={(e) => handleChange('village', e.target.value)}
-          />
+
           <InputBox
             id="phone"
             title="Phone"
@@ -181,7 +176,7 @@ const MasterRoll = ({
             onClick={(e) => e.currentTarget.select()}
             onChange={(e) => handleChange('tree_count', Number(e.target.value))}
           />
-          <InputBox
+          {/* <InputBox
             id="treePlantDate"
             title="Tree Plant Date"
             type="date"
@@ -190,8 +185,18 @@ const MasterRoll = ({
                 ? new Date(baby.treePlantDate).toISOString().split('T')[0]
                 : ''
             }
-            onChange={(e) => handleChange('treePlantDate', e.target.value)}
-          />
+          /> */}
+          <InputParent>
+            <Label>Tree Plant Date</Label>
+            <DateInput
+              onChange={(e) => handleChange('treePlantDate', e)}
+              value={
+                baby.treePlantDate
+                  ? new Date(baby.treePlantDate)
+                  : undefined
+              }
+            />
+          </InputParent>
           <InputBox
             id="whoPlanName"
             title="Who Planted the Tree"

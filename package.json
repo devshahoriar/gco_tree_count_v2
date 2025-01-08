@@ -39,6 +39,7 @@
     "oslo": "^1.2.1",
     "osx-temperature-sensor": "^1.0.8",
     "react": "^19.0.0",
+    "react-date-picker": "^11.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",
     "react-leaflet": "^5.0.0",

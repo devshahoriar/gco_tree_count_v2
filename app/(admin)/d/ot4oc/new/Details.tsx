@@ -16,6 +16,7 @@ import { Label } from '@/components/ui/label'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import DateInput from '@/components/shared/DateInput'
 
 const Details = ({
   setTab,
@@ -30,7 +31,7 @@ const Details = ({
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleChange = (name: string, value: string | number) => {
+  const handleChange = (name: string, value: string | number | Date) => {
     setBaby({ ...baby, [name]: value })
     setIsChanged(true)
   }
@@ -86,17 +87,17 @@ const Details = ({
             onChange={(e) => handleChange('childName', e.target.value)}
           />
           
-          <InputBox
-            id="bithday"
-            type="date"
-            title="Child Birthday"
-            value={
-              baby.childBirthDate
-                ? new Date(baby.childBirthDate).toISOString().split('T')[0]
-                : ''
-            }
-            onChange={(e) => handleChange('childBirthDate', e.target.value)}
-          />
+          <InputParent>
+            <Label>Child Birthday</Label>
+            <DateInput
+              onChange={(e) => handleChange('childBirthDate', e)}
+              value={
+                baby.childBirthDate
+                  ? new Date(baby.childBirthDate)
+                  : undefined
+              }
+            />
+          </InputParent>
 
           {/* //father info */}
           <InputBox
@@ -106,17 +107,17 @@ const Details = ({
             value={baby.fatherName || ''}
             onChange={(e) => handleChange('fatherName', e.target.value)}
           />
-          <InputBox
-            id="fBithday"
-            type="date"
-            title="Father's Birthday"
-            value={
-              baby.fatherBirthDate
-                ? new Date(baby.fatherBirthDate).toISOString().split('T')[0]
-                : ''
-            }
-            onChange={(e) => handleChange('fatherBirthDate', e.target.value)}
-          />
+          <InputParent>
+            <Label>Father's Birthday</Label>
+            <DateInput
+              onChange={(e) => handleChange('fatherBirthDate', e)}
+              value={
+                baby.fatherBirthDate
+                  ? new Date(baby.fatherBirthDate)
+                  : undefined
+              }
+            />
+          </InputParent>
           <InputBox
             id="fNID"
             placeholder="Father's NID"
@@ -177,17 +178,17 @@ const Details = ({
             value={baby.motherName || ''}
             onChange={(e) => handleChange('motherName', e.target.value)}
           />
-          <InputBox
-            id="mBithday"
-            type="date"
-            title="Mother's Birthday"
-            value={
-              baby.motherBirthDate
-                ? new Date(baby.motherBirthDate).toISOString().split('T')[0]
-                : ''
-            }
-            onChange={(e) => handleChange('motherBirthDate', e.target.value)}
-          />
+          <InputParent>
+            <Label>Mother's Birthday</Label>
+            <DateInput
+              onChange={(e) => handleChange('motherBirthDate', e)}
+              value={
+                baby.motherBirthDate
+                  ? new Date(baby.motherBirthDate)
+                  : undefined
+              }
+            />
+          </InputParent>
           <InputBox
             id="mNID"
             placeholder="Mother's NID"

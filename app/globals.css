@@ -70,3 +70,13 @@
 option {
   @apply bg-background text-foreground;
 }
+
+.react-date-picker__wrapper{
+  @apply bg-background text-foreground rounded-md px-2 py-2;
+}
+.react-calendar{
+  @apply !bg-background !text-foreground;
+}
+.react-calendar button{
+  @apply hover:dark:!bg-secondary hover:dark:!text-secondary-foreground dark:!bg-transparent
+}
