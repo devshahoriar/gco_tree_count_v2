@@ -1,10 +1,12 @@
 import { ContentLayout } from '@/components/admin-panel/content-layout'
 import { PrintControl } from './c'
+import { allDivision } from '../../ot4oc/new/action'
 
-const ReportOt4oc = () => {
+const ReportOt4oc =async () => {
+  const allDisi = await allDivision()
   return (
     <ContentLayout title="OT4OC Report">
-      <PrintControl />
+      <PrintControl allDisi={allDisi} />
     </ContentLayout>
   )
 }
