@@ -85,21 +85,7 @@ const Details = ({
             value={baby.childName || ''}
             onChange={(e) => handleChange('childName', e.target.value)}
           />
-          <InputParent>
-            <Label>Child Gender</Label>
-            <select
-              name="childGender"
-              id="childGender"
-              className="from-input bg-transparent focus:outline-none rounded-md"
-              value={baby.childGender || ''}
-              onChange={(e) => handleChange('childGender', e.target.value)}
-            >
-              <option>Select</option>
-              <option value="Boy">Boy</option>
-              <option value="Girl">Girl</option>
-              <option value="Other">Other</option>
-            </select>
-          </InputParent>
+          
           <InputBox
             id="bithday"
             type="date"

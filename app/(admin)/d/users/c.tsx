@@ -40,11 +40,11 @@ export const EditUser = ({ user }: { user: any }) => {
   const { refresh } = useRouter()
   const { data } = useSession()
   const currentUserRole = data?.user?.role
-
   const handleSubmit = async () => {
     setLoading(true)
     try {
       const result = await updateUser(user.id, { permissions, role, active })
+
       if (result.success) {
         toast.success('User updated successfully')
         closeRef.current?.click()

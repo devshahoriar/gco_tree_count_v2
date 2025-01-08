@@ -16,9 +16,9 @@ import { ArrowRight } from 'lucide-react'
 import { useState } from 'react'
 import { z } from 'zod'
 
-import { toast } from 'sonner'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
+import { toast } from 'sonner'
 import AddInitialTreeInfo from './AddInitialTreeInfo'
 
 const dataSchema = z.object({
@@ -31,6 +31,18 @@ const dataSchema = z.object({
     message: 'Tree count must be a number',
   }),
   masterId: z.string().nonempty('Master roll ID is required'),
+  childGender: z.enum(['Boy', 'Girl', 'Other'], {
+    required_error: 'Child gender is required',
+    invalid_type_error: 'Please select a valid gender',
+    message: 'Please select a valid gender',
+  }),
+  deliveryChildHealth: z.enum(['normal', 'abnormal'], {
+    required_error: 'Child health status is required',
+    invalid_type_error: 'Please select a valid health status',
+    message: 'Please select a valid health status',
+  }),
+  treePlantDate: z.string().nonempty('Tree plant date is required'),
+  whoPlanName: z.string().nonempty('Tree planter name is required'),
 })
 
 const MasterRoll = ({
@@ -96,13 +108,48 @@ const MasterRoll = ({
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <InputBox
+            id="masterId"
+            title="Master roll Id"
+            placeholder="ID"
+            value={baby.masterId}
+            onChange={(e) => handleChange('masterId', e.target.value)}
+          />
+          <InputBox
             id="name"
             title="Child Name / Rechivar name"
             placeholder="Name"
             value={baby.childName}
             onChange={(e) => handleChange('childName', e.target.value)}
           />
-
+          <InputParent>
+            <Label>Child Gender</Label>
+            <select
+              name="childGender"
+              id="childGender"
+              className="from-input bg-transparent focus:outline-none rounded-md"
+              value={baby.childGender || ''}
+              onChange={(e) => handleChange('childGender', e.target.value)}
+            >
+              <option>Select</option>
+              <option value="Boy">Boy</option>
+              <option value="Girl">Girl</option>
+              <option value="Other">Other</option>
+            </select>
+          </InputParent>
+          <InputParent>
+            <Label>Child health on born</Label>
+            <select
+              className="from-input bg-transparent focus:outline-none rounded-md"
+              value={baby?.deliveryChildHealth || ''}
+              onChange={(e) =>
+                handleChange('deliveryChildHealth', e.target.value)
+              }
+            >
+              <option value="">Select</option>
+              <option value="normal">Normal</option>
+              <option value="abnormal">Abnormal</option>
+            </select>
+          </InputParent>
           <InputBox
             id="fName"
             title="Father Name"
@@ -135,12 +182,24 @@ const MasterRoll = ({
             onChange={(e) => handleChange('tree_count', Number(e.target.value))}
           />
           <InputBox
-            id="masterId"
-            title="Master roll Id"
-            placeholder="ID"
-            value={baby.masterId}
-            onChange={(e) => handleChange('masterId', e.target.value)}
+            id="treePlantDate"
+            title="Tree Plant Date"
+            type="date"
+            value={
+              baby.treePlantDate
+                ? new Date(baby.treePlantDate).toISOString().split('T')[0]
+                : ''
+            }
+            onChange={(e) => handleChange('treePlantDate', e.target.value)}
           />
+          <InputBox
+            id="whoPlanName"
+            title="Who Planted the Tree"
+            placeholder="Name"
+            value={baby?.whoPlanName || ''}
+            onChange={(e) => handleChange('whoPlanName', e.target.value)}
+          />
+
           {baby?.subNumber && (
             <InputParent className="flex-row items-center gap-2 space-y-0">
               <Checkbox
@@ -167,7 +226,7 @@ const MasterRoll = ({
           }}
           disabled={isLoading}
         >
-          <span className='hidden md:block'>Next</span> <ArrowRight />
+          <span className="hidden md:block">Next</span> <ArrowRight />
         </Button>
         {baby.id && <AddInitialTreeInfo id={baby.id} />}
       </CardFooter>

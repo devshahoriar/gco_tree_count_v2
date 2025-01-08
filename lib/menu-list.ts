@@ -107,7 +107,7 @@ export function getMenuList(p: string[]): Group[] {
       menus: [
         {
           href: '/d/account',
-          label: 'Account',
+          label: 'Settings',
           icon: Settings,
         },
       ],

@@ -8,7 +8,7 @@ type InputBoxProps = {
   id: string
 } & DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
 
-const InputBox = ({ id, title, ...props }: InputBoxProps) => {
+const InputBox = ({ id, title, className,...props }: InputBoxProps) => {
   return (
     <div className="space-y-2 flex flex-col">
       <Label htmlFor={id}>{title}</Label>
@@ -18,7 +18,7 @@ const InputBox = ({ id, title, ...props }: InputBoxProps) => {
         id={id}
         name={id}
         {...props}
-        className="from-input bg-transparent rounded-md"
+        className={cn("from-input bg-transparent rounded-md",className)}
       />
     </div>
   )

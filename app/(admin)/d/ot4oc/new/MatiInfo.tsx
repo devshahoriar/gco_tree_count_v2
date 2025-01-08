@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
-import InputBox, { InputParent } from '@/components/shared/InputBox'
+import { InputParent } from '@/components/shared/InputBox'
 /* eslint-disable react/no-unescaped-entities */
 import { Button } from '@/components/ui/button'
 import {
@@ -61,24 +61,6 @@ const MatiInfo = ({ baby, setBaby }: { baby: any; setBaby: any }) => {
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <InputBox
-            id="treePlantDate"
-            title="Tree Plant Date"
-            type="date"
-            value={
-              baby.treePlantDate
-                ? new Date(baby.treePlantDate).toISOString().split('T')[0]
-                : ''
-            }
-            onChange={(e) => handleChange('treePlantDate', e.target.value)}
-          />
-          <InputBox
-            id="whoPlanName"
-            title="Who Planted the Tree"
-            placeholder="Name"
-            value={baby?.whoPlanName || ''}
-            onChange={(e) => handleChange('whoPlanName', e.target.value)}
-          />
           <InputParent>
             <Label>Birth Week</Label>
             <select
@@ -141,21 +123,6 @@ const MatiInfo = ({ baby, setBaby }: { baby: any; setBaby: any }) => {
               <option value="3">3</option>
               <option value="4">4</option>
               <option value="5">5</option>
-            </select>
-          </InputParent>
-
-          <InputParent>
-            <Label>Child health on born</Label>
-            <select
-              className="from-input bg-transparent focus:outline-none rounded-md"
-              value={baby?.deliveryChildHealth || ''}
-              onChange={(e) =>
-                handleChange('deliveryChildHealth', e.target.value)
-              }
-            >
-              <option value="">Select</option>
-              <option value="normal">Normal</option>
-              <option value="abnormal">Abnormal</option>
             </select>
           </InputParent>
 
