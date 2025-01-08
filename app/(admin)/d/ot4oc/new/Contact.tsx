@@ -22,16 +22,49 @@ import useSWR from 'swr'
 import { z } from 'zod'
 
 const contactSchema = z.object({
-  divisionId: z.string().nonempty('Division is required'),
-  zillaId: z.string().nonempty('Zilla is required'),
-  upZillaId: z.string().nonempty('Upazilla is required'),
-  unionId: z.string().nonempty('Union is required'),
-  postId: z.string().nonempty('Post office is required'),
-  wordNo: z.string().nonempty('Word number is required'),
+  divisionId: z
+    .string({
+      message: 'Division is required',
+    })
+    .min(1, 'Division is required'),
 
-  email: z.string().email().optional().or(z.literal('')),
-  // phone: z.string().nonempty('Phone number is required'),
-  village: z.string().nonempty('Village name is required'),
+  zillaId: z
+    .string({
+      message: 'Zilla is required',
+    })
+    .min(1, 'Zilla is required'),
+
+  upZillaId: z
+    .string({
+      message: 'Upazilla is required',
+    })
+    .min(1, 'Upazilla is required'),
+
+  unionId: z
+    .string({
+      message: 'Union is required',
+    })
+    .min(1, 'Union is required'),
+
+  postId: z
+    .string({
+      message: 'Post office is required',
+    })
+    .min(1, 'Post office is required'),
+
+  wordNo: z
+    .string({
+      message: 'Word number is required',
+    })
+    .min(1, 'Word number is required'),
+
+  email: z.optional(z.string({ message: 'Email must be a string' }).nullable()),
+
+  village: z
+    .string({
+      message: 'Village name is required',
+    })
+    .min(1, 'Village name is required'),
 })
 
 const Content = ({
@@ -48,6 +81,7 @@ const Content = ({
   const [isChanged, setIsChanged] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+
 
   const { data: zillas } = useSWR(
     () =>
@@ -73,7 +107,6 @@ const Content = ({
     fetcher
   )
 
-  // all fild mendatary onlt email acepted
 
   const handleChange = (name: string, value: string | number) => {
     setBaby({ ...baby, [name]: value })
@@ -87,7 +120,7 @@ const Content = ({
     }
     try {
       setIsLoading(true)
-      // Validate data before submitting
+   
       contactSchema.parse(baby)
       setError('')
 
@@ -106,8 +139,9 @@ const Content = ({
       toast.success('Contact information saved')
     } catch (e: any) {
       console.log(e)
+      console.log(baby)
       setError(e.errors?.[0]?.message || 'Failed to save contact information')
-      //toast.error(e.errors?.[0]?.message || 'Failed to save contact information')
+    
     } finally {
       setIsLoading(false)
     }

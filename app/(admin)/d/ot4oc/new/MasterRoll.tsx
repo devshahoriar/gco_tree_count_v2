@@ -23,15 +23,27 @@ import { toast } from 'sonner'
 import AddInitialTreeInfo from './AddInitialTreeInfo'
 
 const dataSchema = z.object({
-  childName: z.string().nonempty('Child name is required'),
-  fatherName: z.string().nonempty('Father name is required'),
-  // village: z.string().nonempty('Village name is required'),
-  phone: z.string().nonempty('Phone number is required'),
+  childName: z
+    .string({
+      required_error: 'Child name is required',
+      message: 'Child name must be a string',
+    })
+    .min(1, 'Child name is required'),
+  fatherName: z
+    .string({
+      required_error: 'Father name is required',
+      message: 'Father name must be a string',
+    })
+    .min(1, 'Father name is required'),
+  phone: z.string({
+    required_error: 'Phone number is required',
+    message: 'Phone number must be a string',
+  }),
   tree_count: z.number({
     required_error: 'Tree count is required',
     message: 'Tree count must be a number',
   }),
-  masterId: z.string().nonempty('Master roll ID is required'),
+  masterId: z.string().min(1, 'Master roll ID is required'),
   childGender: z.enum(['Boy', 'Girl', 'Other'], {
     required_error: 'Child gender is required',
     invalid_type_error: 'Please select a valid gender',
@@ -42,8 +54,10 @@ const dataSchema = z.object({
     invalid_type_error: 'Please select a valid health status',
     message: 'Please select a valid health status',
   }),
-  treePlantDate: z.string().nonempty('Tree plant date is required'),
-  whoPlanName: z.string().nonempty('Tree planter name is required'),
+  treePlantDate: z.date({ message: 'Tree plant date is required' }),
+  whoPlanName: z.string({
+    message: 'Tree planter name is required',
+  }),
 })
 
 const MasterRoll = ({
@@ -189,11 +203,12 @@ const MasterRoll = ({
           <InputParent>
             <Label>Tree Plant Date</Label>
             <DateInput
-              onChange={(e) => handleChange('treePlantDate', e)}
+              onChange={(e) => {
+                console.log(e)
+                handleChange('treePlantDate', e)
+              }}
               value={
-                baby.treePlantDate
-                  ? new Date(baby.treePlantDate)
-                  : undefined
+                baby.treePlantDate ? new Date(baby.treePlantDate) : undefined
               }
             />
           </InputParent>
