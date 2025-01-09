@@ -92,7 +92,7 @@ const AddInitialTreeInfo = ({ id }: { id: number | string }) => {
         </Button>
       </CredenzaTrigger>
       {!isLoading && (
-        <CredenzaContent className="overflow-auto max-h-[70vh]">
+        <CredenzaContent className="overflow-auto md:max-h-[70vh]">
           <CredenzaHeader>
             <CredenzaTitle>Add Tree</CredenzaTitle>
             <CredenzaDescription>

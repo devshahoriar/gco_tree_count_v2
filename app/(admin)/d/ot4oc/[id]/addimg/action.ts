@@ -30,6 +30,7 @@ export const getOt4ocById = async (id: string | number) => {
       tree_count: true,
       phone: true,
       fatherName: true,
+      treePlantDate: true,
     },
   })
 }
@@ -95,6 +96,36 @@ export const getTreesByOt4ocId = async (id: string | number) => {
 }
 export type Tree_Type = Awaited<ReturnType<typeof getTreesByOt4ocId>>[number]
 
+export const getLocationById = async (id: number | string) =>
+  await prisma.ot4oc.findUnique({
+    where: {
+      id: Number(id),
+    },
+    select: {
+      division: {
+        select: {
+          name: true,
+        },
+      },
+      zilla: {
+        select: {
+          name: true,
+        },
+      },
+      upZilla: {
+        select: {
+          name: true,
+        },
+      },
+      union: {
+        select: {
+          name: true,
+        },
+      },
+      wordNo: true,
+    },
+  })
+
 export const updateTree = async (data: any) => {
   try {
     const user = await getUser(headers)
@@ -122,40 +153,12 @@ export const updateTree = async (data: any) => {
 
     const isNotPhoto = Boolean(remark) || Boolean(replaced)
 
-
     const dbIds = []
     if (!isNotPhoto) {
       if (imgs.length === 0 || !location) {
         return { error: 'Please add a image with location' }
       }
-      const locations = await prisma.ot4oc.findUnique({
-        where: {
-          id: Number(ot4ocId),
-        },
-        select: {
-          division: {
-            select: {
-              name: true,
-            },
-          },
-          zilla: {
-            select: {
-              name: true,
-            },
-          },
-          upZilla: {
-            select: {
-              name: true,
-            },
-          },
-          union: {
-            select: {
-              name: true,
-            },
-          },
-          wordNo: true,
-        },
-      })
+      const locations = await getLocationById(ot4ocId)
 
       if (
         !locations ||
