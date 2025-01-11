@@ -80,3 +80,27 @@ option {
 .react-calendar button{
   @apply hover:dark:!bg-secondary hover:dark:!text-secondary-foreground dark:!bg-transparent
 }
+
+.printPage table,
+.printPage th,
+.printPage td {
+  @apply border border-black;
+}
+
+.printPage table {
+  page-break-before: always;
+}
+.printPage tr {
+  page-break-inside: avoid;
+  page-break-after: auto;
+}
+@media print {
+  body {
+      print-color-adjust: exact; 
+  }
+  @page{
+    /* size: A4; */
+    margin: 10px;
+    padding: 0 0 10%;
+  }
+}

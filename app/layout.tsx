@@ -4,13 +4,10 @@ import './globals.css'
 import { ThemeProvider } from '@/components/providers/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 
-
 const popins = Poppins({
-  weight: ['100','400', '500', '600','700','800','900','200','300',],
+  weight: ['100', '400', '500', '600', '700', '800', '900', '200', '300'],
   subsets: ['latin'],
-  
 })
-
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -24,9 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${popins.className} antialiased`}
-      >
+      <body className={`${popins.className} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

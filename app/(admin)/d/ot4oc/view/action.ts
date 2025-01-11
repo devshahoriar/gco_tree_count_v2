@@ -8,6 +8,7 @@ export const getOt4ocById = async (id: string) => {
       where: {
         id: Number(id),
       },
+      
       select: {
         Tree: {
           select: {
