@@ -128,6 +128,8 @@ const MasterRoll = ({
             placeholder="ID"
             value={baby.masterId}
             onChange={(e) => handleChange('masterId', e.target.value)}
+            pattern="[0-9]*"
+            inputMode="numeric"
           />
           <InputBox
             id="name"
