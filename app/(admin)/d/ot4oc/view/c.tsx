@@ -1,28 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import Image from 'next/image'
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import 'leaflet/dist/leaflet.css'
-import L from 'leaflet'
 import { formatDate } from '@/lib/utils'
-
-const defaultIcon = L.icon({
-  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-})
+import Image from 'next/image'
 
 interface TreesInformationProps {
   trees: any[]
 }
 
 export const TreesInformation = ({ trees }: TreesInformationProps) => {
+
   if (!trees || trees.length === 0) return null
 
   return (
@@ -36,33 +26,10 @@ export const TreesInformation = ({ trees }: TreesInformationProps) => {
             <TabsTrigger value="list">List View</TabsTrigger>
             <TabsTrigger value="map">Map View</TabsTrigger>
           </TabsList>
-          
+
           <TabsContent value="map">
             <div className="h-[500px] rounded-lg overflow-hidden">
-              <MapContainer
-                center={[24.117619, 89.085839]}
-                zoom={13}
-                style={{ height: '100%', width: '100%' }}
-              >
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                {trees.map((tree: any) => 
-                  tree.lat && tree.lon && (
-                    <Marker
-                      key={tree.id}
-                      position={[parseFloat(tree.lat), parseFloat(tree.lon)]}
-                      // icon={defaultIcon}
-                    >
-                      <Popup>
-                        <div className="p-2">
-                          <h3 className="font-semibold">{tree.treeType.name}</h3>
-                          <p className="text-sm">Added by: {tree.addBy.name}</p>
-                          <p className="text-sm">Added on: {formatDate(tree.createdAt)}</p>
-                        </div>
-                      </Popup>
-                    </Marker>
-                  )
-                )}
-              </MapContainer>
+            {/* <iframe src={'https://maps.google.com/maps?q=' + trees[0] + ',' + lng + '&t=&z=15&ie=UTF8&iwloc=&output=embed'} /> */}
             </div>
           </TabsContent>
 
@@ -72,9 +39,12 @@ export const TreesInformation = ({ trees }: TreesInformationProps) => {
                 <div key={tree.id} className="border rounded-lg p-4 space-y-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-medium text-lg">{tree.treeType.name}</h3>
+                      <h3 className="font-medium text-lg">
+                        {tree?.treeType?.name}
+                      </h3>
                       <p className="text-sm text-muted-foreground">
-                        Added by {tree.addBy.name} on {formatDate(tree.createdAt)}
+                        Added by {tree?.addBy?.name} on{' '}
+                        {formatDate(tree.createdAt)}
                       </p>
                     </div>
                     {tree.replaced && (
@@ -87,7 +57,10 @@ export const TreesInformation = ({ trees }: TreesInformationProps) => {
                       <h4 className="font-medium mb-2">Initial Images</h4>
                       <div className="grid grid-cols-2 gap-2">
                         {tree.images.map((image: any, imgIndex: number) => (
-                          <div key={imgIndex} className="relative aspect-square">
+                          <div
+                            key={imgIndex}
+                            className="relative aspect-square"
+                          >
                             <Image
                               src={image.url}
                               alt={`Tree ${tree.id} image ${imgIndex + 1}`}
@@ -109,16 +82,21 @@ export const TreesInformation = ({ trees }: TreesInformationProps) => {
                     <div>
                       <h4 className="font-medium mb-2">Audit Images</h4>
                       <div className="grid grid-cols-2 gap-2">
-                        {tree.auditImages.map((image: any, imgIndex: number) => (
-                          <div key={imgIndex} className="relative aspect-square">
-                            <Image
-                              src={image.url}
-                              alt={`Audit image ${imgIndex + 1}`}
-                              fill
-                              className="object-cover rounded-md"
-                            />
-                          </div>
-                        ))}
+                        {tree.auditImages.map(
+                          (image: any, imgIndex: number) => (
+                            <div
+                              key={imgIndex}
+                              className="relative aspect-square"
+                            >
+                              <Image
+                                src={image.url}
+                                alt={`Audit image ${imgIndex + 1}`}
+                                fill
+                                className="object-cover rounded-md"
+                              />
+                            </div>
+                          )
+                        )}
                       </div>
                       {tree.auditRemarkImg && (
                         <p className="text-sm text-muted-foreground mt-1">

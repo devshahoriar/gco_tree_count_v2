@@ -1,5 +1,4 @@
 import { ContentLayout } from '@/components/admin-panel/content-layout'
-import { Button } from '@/components/ui/button'
 import {
   Table,
   TableBody,
@@ -8,12 +7,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { X, Package } from 'lucide-react'
+import { formatDate } from '@/lib/utils'
+import { Package } from 'lucide-react'
 import Link from 'next/link'
 import { countOt4oc, df, getListOfOt4oc } from './action'
-import Filter, { RefreshButton } from './Filter'
+import Filter, { RefreshButton, ResetButton } from './Filter'
 import PaginationControl from './Pagination'
-import { formatDate } from '@/lib/utils'
 
 const Ot4ocNewPage = async ({
   searchParams,
@@ -53,10 +52,7 @@ const Ot4ocNewPage = async ({
         <div className="flex items-center gap-2">
           <RefreshButton />
           <Filter />
-          <Button>
-            <span className="hidden md:inline">Reset</span>
-            <X />
-          </Button>
+         <ResetButton />
         </div>
       </div>
       {list.length > 0 ? (

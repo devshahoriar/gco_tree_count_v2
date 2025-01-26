@@ -13,18 +13,11 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  reactStrictMode: false,
   eslint: {
     ignoreDuringBuilds: true,
   },
   output: 'standalone',
   crossOrigin: 'anonymous',
-  webpack: (config) => {
-    config.plugins.push(
-      new webpack.IgnorePlugin({ resourceRegExp: /osx-temperature-sensor/ })
-    )
-    return config
-  },
 }
 
 export default nextConfig

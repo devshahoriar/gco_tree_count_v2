@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { FilterIcon, RefreshCw } from 'lucide-react'
+import { FilterIcon, RefreshCw, X } from 'lucide-react'
 import {
   Credenza,
   CredenzaTrigger,
@@ -171,6 +171,22 @@ export const RefreshButton = () => {
     <Button onClick={handleRefresh}>
       <span className="hidden md:inline-block mr-2">Refresh</span>
       <RefreshCw className={`h-4 w-4 ${isRotating ? 'animate-spin' : ''}`} />
+    </Button>
+  )
+}
+
+export const ResetButton = () => {
+  const { push } = useRouter()
+  const pathname = usePathname()
+
+  const handleReset = () => {
+    push(pathname)
+  }
+
+  return (
+    <Button onClick={handleReset}>
+      <span className="hidden md:inline-block mr-2">Reset</span>
+      <X className="h-4 w-4" />
     </Button>
   )
 }

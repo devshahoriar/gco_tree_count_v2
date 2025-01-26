@@ -1,41 +1,18 @@
-import { APP_URL } from '@/data/const'
 import { getUser } from '@/lib/auth'
 import prisma from '@/prisma/db'
 import { headers } from 'next/headers'
 import Image from 'next/image'
 import Link from 'next/link'
-import {
-  FaUsers,
-  FaTree,
-  FaHandsHelping,
-  FaServer,
-  FaMemory,
-  FaMicrochip,
-} from 'react-icons/fa'
+import { FaHandsHelping, FaTree, FaUsers } from 'react-icons/fa'
 
 const homeApp = process.env.NEXT_PUBLIC_HOME_APP
 const oldApp = process.env.NEXT_PUBLIC_OLD_APP
 
-async function getSystemInfo() {
-  try {
-    const res = await fetch(`${APP_URL}/api/sysinfo`, {
-      next: {
-        revalidate: 0,
-      },
-    })
-    return await res.json()
-  } catch (error) {
-    console.error('Failed to fetch system info:', error)
-    return null
-  }
-}
-
 export default async function Home() {
-  const [userCount, ot4ocCount, treeCount, sysInfo] = await Promise.all([
+  const [userCount, ot4ocCount, treeCount] = await Promise.all([
     prisma.user.count(),
     prisma.ot4oc.count(),
     prisma.tree.count(),
-    getSystemInfo(),
   ])
   const user = await getUser(headers)
 
@@ -177,82 +154,6 @@ export default async function Home() {
           </div>
         ))}
       </div>
-
-      {sysInfo && (
-        <div className="max-w-6xl mx-auto mt-8">
-          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 text-center">
-            System Information
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-              <div className="flex items-center gap-4 mb-4">
-                <FaMicrochip className="text-3xl text-blue-500" />
-                <h3 className="text-lg font-semibold">CPU</h3>
-              </div>
-              <div className="space-y-2">
-                <p className="text-gray-600 dark:text-gray-300">
-                  {sysInfo.cpu.model}
-                </p>
-                <p className="text-gray-600 dark:text-gray-300">
-                  Cores: {sysInfo.cpu.cores}
-                </p>
-                <p className="text-gray-600 dark:text-gray-300">
-                  Speed: {sysInfo.cpu.speed} GHz
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-              <div className="flex items-center gap-4 mb-4">
-                <FaMemory className="text-3xl text-purple-500" />
-                <h3 className="text-lg font-semibold">Memory</h3>
-              </div>
-              <div className="space-y-2">
-                <p className="text-gray-600 dark:text-gray-300">
-                  Total: {Math.round(sysInfo.memory.total / 1024 / 1024 / 1024)}{' '}
-                  GB
-                </p>
-                <p className="text-gray-600 dark:text-gray-300">
-                  Used: {Math.round(sysInfo.memory.used / 1024 / 1024 / 1024)}{' '}
-                  GB
-                </p>
-                <p className="text-gray-600 dark:text-gray-300">
-                  Free: {Math.round(sysInfo.memory.free / 1024 / 1024 / 1024)}{' '}
-                  GB
-                </p>
-              </div>
-            </div>
-
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6">
-              <div className="flex items-center gap-4 mb-4">
-                <FaServer className="text-3xl text-green-500" />
-                <h3 className="text-lg font-semibold">Operating System</h3>
-              </div>
-              <div className="space-y-2">
-                <p className="text-gray-600 dark:text-gray-300">
-                  Platform: {sysInfo.os.platform}
-                </p>
-                <p className="text-gray-600 dark:text-gray-300">
-                  Distribution: {sysInfo.os.distro}
-                </p>
-                <p className="text-gray-600 dark:text-gray-300">
-                  Release: {sysInfo.os.release}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
-
-// import React from 'react'
-
-// const page = () => {
-//   return (
-//     <div>page</div>
-//   )
-// }
-
-// export default page
