@@ -22,41 +22,47 @@ import useSWR from 'swr'
 import { z } from 'zod'
 
 const contactSchema = z.object({
-  divisionId: z
-    .string({
-      message: 'Division is required',
-    })
-    .min(1, 'Division is required'),
+  divisionId: z.union([
+    z.string().min(1, 'Division is required'),
+    z.number()
+  ], {
+    message: 'Division is required',
+  }),
 
-  zillaId: z
-    .string({
-      message: 'Zilla is required',
-    })
-    .min(1, 'Zilla is required'),
+  zillaId: z.union([
+    z.string().min(1, 'Zilla is required'),
+    z.number()
+  ], {
+    message: 'Zilla is required',
+  }),
 
-  upZillaId: z
-    .string({
-      message: 'Upazilla is required',
-    })
-    .min(1, 'Upazilla is required'),
+  upZillaId: z.union([
+    z.string().min(1, 'Upazilla is required'),
+    z.number()
+  ], {
+    message: 'Upazilla is required',
+  }),
 
-  unionId: z
-    .string({
-      message: 'Union is required',
-    })
-    .min(1, 'Union is required'),
+  unionId: z.union([
+    z.string().min(1, 'Union is required'),
+    z.number()
+  ], {
+    message: 'Union is required',
+  }),
 
-  postId: z
-    .string({
-      message: 'Post office is required',
-    })
-    .min(1, 'Post office is required'),
+  postId: z.union([
+    z.string().min(1, 'Post office is required'),
+    z.number()
+  ], {
+    message: 'Post office is required',
+  }),
 
-  wordNo: z
-    .string({
-      message: 'Word number is required',
-    })
-    .min(1, 'Word number is required'),
+  wordNo: z.union([
+    z.string().min(1, 'Word number is required'),
+    z.number()
+  ], {
+    message: 'Word number is required',
+  }),
 
   email: z.optional(z.string({ message: 'Email must be a string' }).nullable()),
 
@@ -82,7 +88,6 @@ const Content = ({
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
 
-
   const { data: zillas } = useSWR(
     () =>
       baby?.divisionId !== undefined && baby?.divisionId !== null
@@ -107,7 +112,6 @@ const Content = ({
     fetcher
   )
 
-
   const handleChange = (name: string, value: string | number) => {
     setBaby({ ...baby, [name]: value })
     setIsChanged(true)
@@ -118,9 +122,10 @@ const Content = ({
       toast.error('Please fill the master roll first')
       return
     }
+    console.log(baby)
     try {
       setIsLoading(true)
-   
+
       contactSchema.parse(baby)
       setError('')
 
@@ -141,7 +146,6 @@ const Content = ({
       console.log(e)
       console.log(baby)
       setError(e.errors?.[0]?.message || 'Failed to save contact information')
-    
     } finally {
       setIsLoading(false)
     }
@@ -164,7 +168,9 @@ const Content = ({
             <Label>Division</Label>
             <select
               value={baby.divisionId || ''}
-              onChange={async (e) => handleChange('divisionId', e.target.value)}
+              onChange={async (e) =>
+                handleChange('divisionId', e.target.value + '')
+              }
               className="from-input bg-transparent focus:outline-none rounded-md"
             >
               <option>Select Division</option>
@@ -181,7 +187,7 @@ const Content = ({
               <Label>Zilla</Label>
               <select
                 value={baby.zillaId || ''}
-                onChange={(e) => handleChange('zillaId', e.target.value)}
+                onChange={(e) => handleChange('zillaId', e.target.value + '')}
                 className="from-input bg-transparent focus:outline-none rounded-md"
               >
                 <option>Select Zilla</option>
@@ -199,7 +205,7 @@ const Content = ({
               <Label>Upazilla</Label>
               <select
                 value={baby.upZillaId || ''}
-                onChange={(e) => handleChange('upZillaId', e.target.value)}
+                onChange={(e) => handleChange('upZillaId', e.target.value + '')}
                 className="from-input bg-transparent focus:outline-none rounded-md"
               >
                 <option>Select Upazilla</option>
@@ -217,7 +223,7 @@ const Content = ({
               <Label>Union</Label>
               <select
                 value={baby.unionId || ''}
-                onChange={(e) => handleChange('unionId', e.target.value)}
+                onChange={(e) => handleChange('unionId', e.target.value + '')}
                 className="from-input bg-transparent focus:outline-none rounded-md"
               >
                 <option>Select Union</option>
@@ -235,7 +241,7 @@ const Content = ({
               <Label>Post Office</Label>
               <select
                 value={baby.postId || ''}
-                onChange={(e) => handleChange('postId', e.target.value)}
+                onChange={(e) => handleChange('postId', e.target.value + '')}
                 className="from-input bg-transparent focus:outline-none rounded-md"
               >
                 <option>Select Post Office</option>
@@ -251,7 +257,7 @@ const Content = ({
             <Label>Word No</Label>
             <select
               value={baby.wordNo || ''}
-              onChange={(e) => handleChange('wordNo', e.target.value)}
+              onChange={(e) => handleChange('wordNo', e.target.value + '')}
               className="from-input bg-transparent focus:outline-none rounded-md"
             >
               <option value="">Select Word No</option>

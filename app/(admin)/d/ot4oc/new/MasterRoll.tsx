@@ -178,6 +178,7 @@ const MasterRoll = ({
           <InputBox
             id="phone"
             title="Phone"
+            type='tel'
             placeholder="Mobile"
             value={baby.phone}
             onChange={(e) => handleChange('phone', e.target.value)}
@@ -192,16 +193,7 @@ const MasterRoll = ({
             onClick={(e) => e.currentTarget.select()}
             onChange={(e) => handleChange('tree_count', Number(e.target.value))}
           />
-          {/* <InputBox
-            id="treePlantDate"
-            title="Tree Plant Date"
-            type="date"
-            value={
-              baby.treePlantDate
-                ? new Date(baby.treePlantDate).toISOString().split('T')[0]
-                : ''
-            }
-          /> */}
+
           <InputParent>
             <Label>Tree Plant Date</Label>
             <DateInput
@@ -210,7 +202,7 @@ const MasterRoll = ({
                 handleChange('treePlantDate', e)
               }}
               value={
-                baby.treePlantDate ? new Date(baby.treePlantDate) : undefined
+                baby?.treePlantDate ? new Date(baby.treePlantDate) : undefined
               }
             />
           </InputParent>

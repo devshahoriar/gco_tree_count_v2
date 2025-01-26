@@ -49,7 +49,7 @@ const initialData = {
   postId: undefined,
 
   // Maternity Info fields
-  treePlantDate: new Date(),
+  treePlantDate: new Date().toISOString(),
   whoPlanName: '',
   bornWeek: '',
   bornWeight: '',
@@ -68,12 +68,16 @@ const NewOt4oc = ({ allDivi, upOt4oc }: { allDivi: any; upOt4oc: any }) => {
   const [baby, setbaby] = useState(upOt4oc || initialData)
   const { data } = useSession()
 
+  const setUser = () => {
+    setbaby((prev: any) => ({
+      ...prev,
+      whoPlanName: data?.user?.name,
+    }))
+  }
+
   useEffect(() => {
-    if (data?.user) {
-      setbaby((prev: any) => ({
-        ...prev,
-        whoPlanName: data.user.name,
-      }))
+    if (data?.user && !baby?.whoPlanName) {
+      setUser()
     }
   }, [data?.user])
 
@@ -86,7 +90,12 @@ const NewOt4oc = ({ allDivi, upOt4oc }: { allDivi: any; upOt4oc: any }) => {
             <Search />
             <span className="hidden md:inline">Search</span>
           </Button>
-          <Button onClick={() => setbaby(initialData)}>
+          <Button
+            onClick={() => {
+              setbaby(initialData)
+              setUser()
+            }}
+          >
             <X />
             <span className="hidden md:inline">Reset</span>
           </Button>
