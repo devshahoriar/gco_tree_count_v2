@@ -4,8 +4,9 @@
 import { Button } from '@/components/ui/button'
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { useSession } from '@/lib/auth-client'
 import { Search, X } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Content from './Contact'
 import Details from './Details'
 import MasterRoll from './MasterRoll'
@@ -48,7 +49,7 @@ const initialData = {
   postId: undefined,
 
   // Maternity Info fields
-  treePlantDate: '',
+  treePlantDate: new Date(),
   whoPlanName: '',
   bornWeek: '',
   bornWeight: '',
@@ -65,6 +66,17 @@ const initialData = {
 const NewOt4oc = ({ allDivi, upOt4oc }: { allDivi: any; upOt4oc: any }) => {
   const [tab, setTab] = useState('masterRoll')
   const [baby, setbaby] = useState(upOt4oc || initialData)
+  const { data } = useSession()
+
+  useEffect(() => {
+    if (data?.user) {
+      setbaby((prev: any) => ({
+        ...prev,
+        whoPlanName: data.user.name,
+      }))
+    }
+  }, [data?.user])
+
   return (
     <section>
       <div className="flex justify-between items-center">
