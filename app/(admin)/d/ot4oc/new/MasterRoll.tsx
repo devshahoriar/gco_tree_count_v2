@@ -22,6 +22,10 @@ import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
 import AddInitialTreeInfo from './AddInitialTreeInfo'
 
+const phoneRegex = new RegExp(
+  /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
+)
+
 const dataSchema = z.object({
   childName: z
     .string({
@@ -35,10 +39,13 @@ const dataSchema = z.object({
       message: 'Father name must be a string',
     })
     .min(1, 'Father name is required'),
-  phone: z.string({
-    required_error: 'Phone number is required',
-    message: 'Phone number must be a string',
-  }),
+  phone: z
+    .string({
+      required_error: 'Phone number is required',
+      message: 'Phone number must be a string',
+    })
+    .regex(phoneRegex, 'Invalid phonen Number!')
+    .length(11, 'Phone number must be 11 digit'),
   tree_count: z.number({
     required_error: 'Tree count is required',
     message: 'Tree count must be a number',
@@ -83,7 +90,6 @@ const MasterRoll = ({
       setIsLoading(true)
       dataSchema.parse(baby)
       setError('')
-
       const x = await fetch('/api/addtree', {
         method: 'POST',
         body: JSON.stringify(baby),
@@ -178,7 +184,7 @@ const MasterRoll = ({
           <InputBox
             id="phone"
             title="Phone"
-            type='tel'
+            type="tel"
             placeholder="Mobile"
             value={baby.phone}
             onChange={(e) => handleChange('phone', e.target.value)}

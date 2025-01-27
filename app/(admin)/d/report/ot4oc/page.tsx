@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react/no-unescaped-entities */
 import { ContentLayout } from '@/components/admin-panel/content-layout'
 import { PrintControl } from './c'
 import { allDivision } from '../../ot4oc/new/action'

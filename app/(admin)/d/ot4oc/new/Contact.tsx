@@ -15,52 +15,35 @@ import {
 } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import fetcher from '@/lib/swrFectcher'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Image as Img } from 'lucide-react'
+import Link from 'next/link'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 import { z } from 'zod'
 
 const contactSchema = z.object({
-  divisionId: z.union([
-    z.string().min(1, 'Division is required'),
-    z.number()
-  ], {
+  divisionId: z.union([z.string().min(1, 'Division is required'), z.number()], {
     message: 'Division is required',
   }),
 
-  zillaId: z.union([
-    z.string().min(1, 'Zilla is required'),
-    z.number()
-  ], {
+  zillaId: z.union([z.string().min(1, 'Zilla is required'), z.number()], {
     message: 'Zilla is required',
   }),
 
-  upZillaId: z.union([
-    z.string().min(1, 'Upazilla is required'),
-    z.number()
-  ], {
+  upZillaId: z.union([z.string().min(1, 'Upazilla is required'), z.number()], {
     message: 'Upazilla is required',
   }),
 
-  unionId: z.union([
-    z.string().min(1, 'Union is required'),
-    z.number()
-  ], {
+  unionId: z.union([z.string().min(1, 'Union is required'), z.number()], {
     message: 'Union is required',
   }),
 
-  postId: z.union([
-    z.string().min(1, 'Post office is required'),
-    z.number()
-  ], {
+  postId: z.union([z.string().min(1, 'Post office is required'), z.number()], {
     message: 'Post office is required',
   }),
 
-  wordNo: z.union([
-    z.string().min(1, 'Word number is required'),
-    z.number()
-  ], {
+  wordNo: z.union([z.string().min(1, 'Word number is required'), z.number()], {
     message: 'Word number is required',
   }),
 
@@ -87,6 +70,18 @@ const Content = ({
   const [isChanged, setIsChanged] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [isSaved, setIsSaved] = useState(false)
+
+  const isImageAddAble =
+    isSaved &&
+    baby?.id &&
+    baby?.masterId &&
+    baby?.divisionId &&
+    baby?.zillaId &&
+    baby?.upZillaId &&
+    baby?.unionId &&
+    baby?.postId &&
+    baby?.wordNo
 
   const { data: zillas } = useSWR(
     () =>
@@ -115,6 +110,7 @@ const Content = ({
   const handleChange = (name: string, value: string | number) => {
     setBaby({ ...baby, [name]: value })
     setIsChanged(true)
+    setIsSaved(false)
   }
 
   const hendelSubmit = async () => {
@@ -122,7 +118,7 @@ const Content = ({
       toast.error('Please fill the master roll first')
       return
     }
-    console.log(baby)
+
     try {
       setIsLoading(true)
 
@@ -141,6 +137,7 @@ const Content = ({
       }
 
       setIsChanged(false)
+      setIsSaved(true)
       toast.success('Contact information saved')
     } catch (e: any) {
       console.log(e)
@@ -155,10 +152,22 @@ const Content = ({
     <Card>
       <CardHeader>
         <CardTitle>Contact Information</CardTitle>
-        <CardDescription>
+        <CardDescription className="">
           <div className="flex items-center justify-between">
             <p>Address and contact information details.</p>
-            {isChanged && <p className="text-red-500">*Please save changes</p>}
+            <div >
+              {isChanged && (
+                <p className="text-red-500">*Please save changes</p>
+              )}
+              
+              {isImageAddAble && (
+                <Button asChild variant='outline' className='!text-foreground'>
+                  <Link href={`/d/ot4oc/${baby?.id}/addimg`}>
+                    Add Image <Img className='text-red-600' />
+                  </Link>
+                </Button>
+              )}
+            </div>
           </div>
         </CardDescription>
       </CardHeader>
@@ -184,7 +193,7 @@ const Content = ({
 
           {zillas && (
             <InputParent>
-              <Label>Zilla</Label>
+              <Label>District</Label>
               <select
                 value={baby.zillaId || ''}
                 onChange={(e) => handleChange('zillaId', e.target.value + '')}
@@ -220,7 +229,7 @@ const Content = ({
 
           {unions && (
             <InputParent>
-              <Label>Union</Label>
+              <Label>Union/Mnicipal</Label>
               <select
                 value={baby.unionId || ''}
                 onChange={(e) => handleChange('unionId', e.target.value + '')}
