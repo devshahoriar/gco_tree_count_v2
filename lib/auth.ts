@@ -10,27 +10,11 @@ export const auth = betterAuth({
   database: prismaAdapter(prisma, {
     provider: 'mysql',
   }),
-  // databaseHooks:{
-  //   user:{
-  //    create:{
-  //     after: async (user) => {
-  //       logger.info(`User created: ${user.email}`)
-  //     }
-  //    }
-  //   },
-  //   session:{
-  //    create:{
-  //     after: async (session) => {
-  //       logger.info(`User Login: ${session.userId}`)
-  //     }
-  //    }
-  //   }
-  // },
   emailAndPassword: {
     enabled: true,
     autoSignIn: false,
   },
-  trustedOrigins: [APP_URL,'https://try.globalcommunityorganization.org'],
+  trustedOrigins: [APP_URL],
   baseURL: APP_URL,
   session: {
     cookieCache: {
