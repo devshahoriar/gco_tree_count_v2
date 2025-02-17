@@ -50,7 +50,7 @@ export const POST = async (request: NextRequest) => {
           // Basic info
           childName: body.childName,
           childGender: body.childGender,
-          childBirthDate: new Date(body.childBirthDate),
+          childBirthDate: formatDate(body.childBirthDate),
 
           // Father info
           fatherName: body.fatherName,
@@ -164,6 +164,7 @@ export const POST = async (request: NextRequest) => {
         data: updatedOt4oc.id,
       })
     } catch (error: any) {
+      console.log('error = ', error)
       console.log(JSON.stringify(error, null, 2))
       return NextResponse.json({
         error: 'Contact with developer. Not saved!',
@@ -215,7 +216,7 @@ export const POST = async (request: NextRequest) => {
       data: newOt4oc.id,
     })
   } catch (error: any) {
-    console.log(JSON.stringify(error, null, 2))
+    console.error(JSON.stringify(error, null, 2))
     if (error?.code === 'P2002') {
       return NextResponse.json({
         error: 'Master roll ID is already used',

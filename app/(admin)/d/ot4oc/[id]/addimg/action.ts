@@ -219,64 +219,98 @@ export const updateTree = async (data: any) => {
       })
       console.log('tree updated = ', tree.id)
     } else {
-      tree = await prisma.tree.create({
-        data: {
-          treeTypeId: Number(treeTypeId),
-          images: {
-            connect: dbIds.map((id) => ({ id })),
-          },
-          lat: location?.lat ? location?.lat + '' : undefined,
-          lon: location?.lon ? location?.lon + '' : undefined,
-          imageDate: new Date(),
-          treeFormId: Number(ot4ocId),
-          addById: user.id,
-          remarkOfImg: remark,
-          replaced: replaced,
-        },
-        select: {
-          id: true,
-          replaced: true,
-        },
-      })
-      console.log('new tree added = ', tree.id)
+      // Modified create logic with retries
+      let retryCount = 0;
+      const maxRetries = 3;
+      
+      while (retryCount < maxRetries) {
+        try {
+          tree = await prisma.tree.create({
+            data: {
+              treeTypeId: Number(treeTypeId),
+              treeFormId: Number(ot4ocId),
+              images: dbIds.length > 0 ? {
+                connect: dbIds.map((id) => ({ id }))
+              } : undefined,
+              lat: location?.lat ? location?.lat + '' : null,
+              lon: location?.lon ? location?.lon + '' : null,
+              imageDate: dbIds.length > 0 ? new Date() : null,
+              addById: user.id,
+              remarkOfImg: remark || null,
+              replaced: replaced || false
+            },
+            select: {
+              id: true,
+              replaced: true,
+            },
+          });
+          
+          console.log('new tree added = ', tree.id);
+          break; 
+          
+        } catch (createError: any) {
+          console.error(`Creation attempt ${retryCount + 1} failed:`, JSON.stringify(createError, null, 2));
+          
+          if (createError.code === 'P2002' && retryCount < maxRetries - 1) {
+   
+            await prisma.$executeRaw`
+              SELECT setval(pg_get_serial_sequence('tree', 'id'), 
+                COALESCE((SELECT MAX(id) FROM tree), 0) + 1, false);
+            `;
+            retryCount++;
+            continue;
+          }
+          
+          throw createError;
+        }
+      }
     }
 
-    if (replaced) {
-      await prisma.tree.update({
-        where: {
-          id: Number(tree.id),
-        },
-        data: {
-          replacedAt: new Date(),
-          replaceReason: replaceReason,
-          replacedById: user.id,
-        },
-      })
-      if (!update) {
-        await prisma.ot4oc.update({
+    if (replaced && tree) {
+      // Modified replace logic with better error handling
+      try {
+        await prisma.tree.update({
           where: {
-            id: Number(ot4ocId),
+            id: Number(tree.id),
           },
           data: {
-            tree_count: {
-              increment: 1,
-            },
+            replacedAt: new Date(),
+            replaceReason: replaceReason || null,
+            replacedById: user.id,
           },
         })
-        await prisma.tree.create({
-          data: {
-            treeFormId: Number(ot4ocId),
-            treeTypeId: Number(treeTypeId),
-            thisForReplached: true,
-            addById: user.id,
-          },
-        })
+
+        if (!update) {
+          await prisma.$transaction([
+            prisma.ot4oc.update({
+              where: {
+                id: Number(ot4ocId),
+              },
+              data: {
+                tree_count: {
+                  increment: 1,
+                },
+              },
+            }),
+            prisma.tree.create({
+              data: {
+                treeFormId: Number(ot4ocId),
+                treeTypeId: Number(treeTypeId),
+                thisForReplached: true,
+                addById: user.id,
+              },
+            })
+          ])
+        }
+      } catch (replaceError: any) {
+        console.error('Tree replacement error:', replaceError)
+        return { error: 'Error during tree replacement process' }
       }
     }
 
     return { success: true }
   } catch (error) {
-    console.log(error)
-    return { error: 'Server error.' }
+    console.error('General error:', error);
+    return { error: 'Server error.' };
   }
 }
