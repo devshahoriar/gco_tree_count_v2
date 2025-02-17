@@ -180,14 +180,18 @@ export const updateTree = async (data: any) => {
 
       for (const img of imgs) {
         const { fileId, url } = await UploadFile(img, uploadFolder)
-        const d = await prisma.file.create({
+        // Create file record with auto-increment id
+        const fileRecord = await prisma.file.create({
           data: {
             fileId: fileId,
             url: url,
             fileType: FILETYPE.TREEPHOTOINITIAL,
           },
+          select: {
+            id: true
+          }
         })
-        dbIds.push(d.id)
+        dbIds.push(fileRecord.id)
       }
     }
     let tree = null
