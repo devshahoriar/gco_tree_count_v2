@@ -8,7 +8,7 @@ import { APP_URL } from '@/data/const'
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
-    provider: 'mysql',
+    provider: 'postgresql',
   }),
   emailAndPassword: {
     enabled: true,
