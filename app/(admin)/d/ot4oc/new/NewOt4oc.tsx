@@ -122,6 +122,7 @@ const NewOt4oc = ({ allDivi, upOt4oc }: { allDivi: any; upOt4oc: any }) => {
             )}
           </TabsContent>
           <TabsContent value="contant">
+           
             {tab === 'contant' && (
               <Content
                 setTab={setTab}

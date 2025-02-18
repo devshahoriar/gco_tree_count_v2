@@ -214,6 +214,7 @@ const Details = ({
               <option value="Business">Business</option>
               <option value="Doctor">Doctor</option>
               <option value="Farmer">Farmer</option>
+              <option value="House Wife">House Wife</option>
               <option value="Other">Other</option>
             </select>
           </InputParent>
