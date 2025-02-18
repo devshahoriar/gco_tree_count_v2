@@ -100,6 +100,7 @@ const EditTree = ({
     }
 
     trens(async () => {
+
       const d = await updateTree({
         imgs: addedImage,
         location,

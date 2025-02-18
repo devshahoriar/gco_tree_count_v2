@@ -18,6 +18,7 @@ const AddImage = ({
 }) => {
   const inputRef = useRef<HTMLInputElement>(null)
   const [error, setError] = useState('')
+  
   return (
     <div className="flex flex-col items-start space-y-2">
       <Label>Select tree image</Label>
@@ -35,14 +36,16 @@ const AddImage = ({
               if (!location) {
                 setLoaction(loc)
               }
-              const img = await imageCompress(file)
-           
-              addFun((p:any) => [...p, img])
-            } catch (error: any) {
-              if (error?.message) {
-                setError(error.message)
+              // Pass the compressed file directly instead of file metadata
+              const compressedFile: any = await imageCompress(file)
+              if (compressedFile instanceof Blob || compressedFile instanceof File) {
+                addFun((p: any) => [...p, compressedFile])
+              } else {
+                throw new Error('Invalid file format after compression')
               }
-              console.log(error)
+            } catch (error: any) {
+              setError(error?.message || 'Error processing image')
+              console.error('Image processing error:', error)
             }
           }
         }}

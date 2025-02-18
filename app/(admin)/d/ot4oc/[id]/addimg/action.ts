@@ -153,6 +153,12 @@ export const updateTree = async (data: any) => {
 
     const isNotPhoto = Boolean(remark) || Boolean(replaced)
 
+    // Add validation for image files
+    if (!isNotPhoto && (!Array.isArray(imgs) || !imgs.every(img => img instanceof Blob || img instanceof File))) {
+      console.error('Invalid image data received:', imgs)
+      return { error: 'Invalid image format received' }
+    }
+
     const dbIds = []
     if (!isNotPhoto) {
       if (imgs.length === 0 || !location) {
@@ -179,6 +185,11 @@ export const updateTree = async (data: any) => {
           .replaceAll(' ', '_')
 
       for (const img of imgs) {
+        if (!(img instanceof Blob || img instanceof File)) {
+          console.error('Invalid image object:', img)
+          continue
+        }
+        
         const { fileId, url } = await UploadFile(img, uploadFolder)
         // Create file record with auto-increment id
         const fileRecord = await prisma.file.create({
