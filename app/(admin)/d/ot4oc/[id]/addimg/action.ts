@@ -74,6 +74,9 @@ export const getTreesByOt4ocId = async (id: string | number) => {
     where: {
       treeFormId: Number(id),
     },
+    orderBy:{
+      id: 'asc'
+    },
     select: {
       id: true,
       treeType: { select: { id: true } },
@@ -138,7 +141,6 @@ export const updateTree = async (data: any) => {
     }
 
     // logic start here
-
     const {
       treeTypeId,
       ot4ocId,
@@ -324,4 +326,13 @@ export const updateTree = async (data: any) => {
     console.error('General error:', error);
     return { error: 'Server error.' };
   }
+}
+
+export const deleteTree = async (treeId: number | string) => {
+  await prisma.tree.delete({
+    where: {
+      id: Number(treeId),
+    },
+  })
+  return { success: true }
 }

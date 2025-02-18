@@ -21,6 +21,7 @@ import { useEffect, useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { removeImage, Tree_Type, updateTree } from './action'
 import AddImage from './AddImage'
+import DeleteTree from './DeleteTree'
 
 const EditTree = ({
   ot4ocId,
@@ -100,7 +101,6 @@ const EditTree = ({
     }
 
     trens(async () => {
-
       const d = await updateTree({
         imgs: addedImage,
         location,
@@ -112,9 +112,11 @@ const EditTree = ({
         replaceReason,
         remark,
       })
+
       if (d?.error) {
         setError(d.error)
       }
+
       if (d?.success) {
         setAddedImage([])
         setLoaction(undefined)
@@ -125,15 +127,18 @@ const EditTree = ({
       }
     })
   }
+
   const [preview, setPreview] = useState<any>()
+
   return (
     <>
+      {/* this is for image preview  */}
       {preview && (
         <div className="fixed z-30 top-0 left-0 right-0 bottom-0 h-screen w-screen bg-black bg-opacity-10 flex items-center justify-center">
           <div className="relative m-2">
             <Button
-            size='icon'
-              className="absolute top-2 right-2"
+              size="icon"
+              className="absolute top-10 left-0"
               onClick={() => setPreview(undefined)}
             >
               <X size={20} />
@@ -147,14 +152,15 @@ const EditTree = ({
         </div>
       )}
 
-      <Card className="drop-shadow-md w-full">
+      <Card className="drop-shadow-md w-full relative">
+        {tree !== undefined && <DeleteTree id={tree.id} imgs={tree.images} />}
+
         <CardHeader>
           <CardTitle>Add or remove images</CardTitle>
           <CardDescription>
             Add Image for {ot4ocId} ID.
             {tree?.thisForReplached && (
               <span className="text-red-600 bg-red-600 bg-opacity-20 rounded">
-                {' '}
                 This tree is replaced.
               </span>
             )}
@@ -178,6 +184,7 @@ const EditTree = ({
                 ))}
               </select>
             </InputParent>
+
             {!isReplaced && (
               <>
                 <div>
@@ -214,6 +221,7 @@ const EditTree = ({
                       />
                     )}
                   </div>
+
                   {addedImage.length > 0 && (
                     <div className="mt-2">
                       <Label>Selected Images</Label>

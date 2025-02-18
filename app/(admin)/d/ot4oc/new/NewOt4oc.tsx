@@ -49,7 +49,7 @@ const initialData = {
   postId: undefined,
 
   // Maternity Info fields
-  treePlantDate: new Date().toISOString(),
+  treePlantDate: new Date(),
   whoPlanName: '',
   bornWeek: '',
   bornWeight: '',

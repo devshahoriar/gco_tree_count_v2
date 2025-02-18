@@ -71,6 +71,8 @@ const AddImagePage = async ({
   
   return (
     <ContentLayout title="Add Image">
+
+      {/* this is uppar info  */}
       <div className="flex justify-between items-center">
         <div>
           <p className="font-light">Add tree image for</p>
@@ -94,6 +96,8 @@ const AddImagePage = async ({
           </Button>
         </div>
       </div>
+
+      {/* here the logic begin  */}
       <div className="grid grid-cols-1  gap-5 mt-5 md:grid-cols-2 xl:grid-cols-3 place-items-start">
         {foundTrees.map((tree, i) => (
           <EditTree ot4ocId={id} key={i} allTress={alltrees} tree={tree} />
