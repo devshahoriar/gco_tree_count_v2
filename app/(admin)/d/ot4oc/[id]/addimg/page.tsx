@@ -67,8 +67,8 @@ const AddImagePage = async ({
   const previousLyAddedTress = babyInfo?.tree_count || 0
   const foundTressCount = foundTrees?.length
 
-  const newTreeCount = previousLyAddedTress - foundTressCount
-
+  const newTreeCount = (previousLyAddedTress - foundTressCount) > 0 ? (previousLyAddedTress - foundTressCount) : 0
+  
   return (
     <ContentLayout title="Add Image">
       <div className="flex justify-between items-center">
@@ -98,7 +98,7 @@ const AddImagePage = async ({
         {foundTrees.map((tree, i) => (
           <EditTree ot4ocId={id} key={i} allTress={alltrees} tree={tree} />
         ))}
-        {new Array(newTreeCount).fill('_').map((n, i) => (
+        {new Array(Number(newTreeCount)).fill('_').map((n, i) => (
           <EditTree ot4ocId={id} key={i} allTress={alltrees} />
         ))}
       </div>
