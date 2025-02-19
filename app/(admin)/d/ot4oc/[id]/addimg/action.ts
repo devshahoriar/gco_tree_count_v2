@@ -75,7 +75,7 @@ export const getTreesByOt4ocId = async (id: string | number) => {
       treeFormId: Number(id),
     },
     orderBy:{
-      id: 'asc'
+      createdAt: 'asc'
     },
     select: {
       id: true,

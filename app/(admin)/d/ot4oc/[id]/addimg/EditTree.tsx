@@ -158,7 +158,7 @@ const EditTree = ({
         <CardHeader>
           <CardTitle>Add or remove images</CardTitle>
           <CardDescription>
-            Add Image for {ot4ocId} ID.
+            Add Image for {ot4ocId} ID. tree id = {tree?.id}
             {tree?.thisForReplached && (
               <span className="text-red-600 bg-red-600 bg-opacity-20 rounded">
                 This tree is replaced.
