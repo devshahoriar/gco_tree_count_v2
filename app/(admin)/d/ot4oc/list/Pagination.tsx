@@ -72,7 +72,7 @@ const PaginationControl = ({
   }
 
   return (
-    <Pagination>
+    <Pagination className='scale-75 md:scale-100'>
       <PaginationContent>
         <PaginationItem>
           <Button

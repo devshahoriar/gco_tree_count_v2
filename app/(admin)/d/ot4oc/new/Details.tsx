@@ -124,6 +124,7 @@ const Details = ({
             title="Father's NID"
             value={baby.fatherNid || ''}
             onChange={(e) => handleChange('fatherNid', e.target.value)}
+            type='number'
           />
 
           <InputParent>
@@ -143,6 +144,7 @@ const Details = ({
               <option value="Business">Business</option>
               <option value="Doctor">Doctor</option>
               <option value="Farmer">Farmer</option>
+              <option value="Driver">Driver</option>
               <option value="Other">Other</option>
             </select>
           </InputParent>
@@ -195,6 +197,7 @@ const Details = ({
             title="Mother's NID"
             value={baby.motherNid || ''}
             onChange={(e) => handleChange('motherNid', e.target.value)}
+            type='number'
           />
 
           <InputParent>

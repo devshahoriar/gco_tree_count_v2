@@ -70,10 +70,8 @@ const Content = ({
   const [isChanged, setIsChanged] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
-  const [isSaved, setIsSaved] = useState(false)
 
   const isImageAddAble =
-    isSaved &&
     baby?.id &&
     baby?.masterId &&
     baby?.divisionId &&
@@ -110,7 +108,7 @@ const Content = ({
   const handleChange = (name: string, value: string | number) => {
     setBaby({ ...baby, [name]: value })
     setIsChanged(true)
-    setIsSaved(false)
+
   }
 
   const hendelSubmit = async () => {
@@ -137,7 +135,7 @@ const Content = ({
       }
 
       setIsChanged(false)
-      setIsSaved(true)
+
       toast.success('Contact information saved')
     } catch (e: any) {
       console.log(e)
@@ -283,10 +281,12 @@ const Content = ({
           </InputParent>
           <InputBox
             id="village"
+            name='village'
             title="Village Name"
             placeholder="Village"
             value={baby.village}
             onChange={(e) => handleChange('village', e.target.value)}
+            autoComplete='on'
           />
           <InputBox
             id="email"

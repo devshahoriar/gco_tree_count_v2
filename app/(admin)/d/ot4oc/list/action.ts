@@ -11,20 +11,19 @@ export const getListOfOt4oc = async (x: {
   page: string
   limit?: string
   sortBy?: string
-  orderBy? : string
+  orderBy?: string
   q?: string
 }) => {
-  const page = x.page || df.page;
-  const limit = x.limit || df.limit;
-  const sortBy = x.sortBy || df.sortBy;
-  const orderBy = x.orderBy || df.orderBy;
+  const page = x.page || df.page
+  const limit = x.limit || df.limit
+  const sortBy = x.sortBy || df.sortBy
+  const orderBy = x.orderBy || df.orderBy
 
   const list = await prisma.ot4oc.findMany({
     take: Number(limit),
     skip: (Number(page) - 1) * Number(limit),
     orderBy: {
       [sortBy]: orderBy,
-      
     },
     select: {
       id: true,
@@ -32,6 +31,7 @@ export const getListOfOt4oc = async (x: {
       fatherName: true,
       village: true,
       phone: true,
+
       postOffice: {
         select: {
           name: true,
@@ -57,6 +57,16 @@ export const getListOfOt4oc = async (x: {
       tree_count: true,
       createdAt: true,
       masterId: true,
+      Tree: {
+        select: {
+          id: true,
+          images: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      },
     },
     where: x.q
       ? {
@@ -65,9 +75,9 @@ export const getListOfOt4oc = async (x: {
             { phone: { contains: x.q } },
             { childName: { contains: x.q } },
             { masterId: { contains: x.q } },
-          ]
+          ],
         }
-      : undefined
+      : undefined,
   })
   return list
 }

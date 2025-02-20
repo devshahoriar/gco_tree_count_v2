@@ -211,6 +211,7 @@ const MatiInfo = ({ baby, setBaby }: { baby: any; setBaby: any }) => {
             >
               <option value="">Select Reason</option>
               <option value="distance">Distance</option>
+              <option value="Low income">Low income</option>
               <option value="husband's_Obohela">Husband's Obohela</option>
               <option value="high_Expense">High Expense</option>
             </select>

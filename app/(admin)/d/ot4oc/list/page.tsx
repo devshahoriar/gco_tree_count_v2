@@ -52,7 +52,7 @@ const Ot4ocNewPage = async ({
         <div className="flex items-center gap-2">
           <RefreshButton />
           <Filter />
-         <ResetButton />
+          <ResetButton />
         </div>
       </div>
       {list.length > 0 ? (
@@ -66,7 +66,7 @@ const Ot4ocNewPage = async ({
               <TableHead>Phone</TableHead>
               <TableHead>Tree Count</TableHead>
               <TableHead>Created At</TableHead>
-              <TableHead>Action</TableHead>
+              <TableHead className="text-center">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -89,13 +89,17 @@ const Ot4ocNewPage = async ({
                 </TableCell>
 
                 <TableCell>{item.phone || '-'}</TableCell>
-                <TableCell>{item.tree_count || 0}</TableCell>
+                <TableCell className="text-center">
+                  {item.tree_count || 0} init <br /> 
+                  {item?.Tree?.length || 0} added<br/>
+                  {item?.Tree?.filter(tree => tree.images?.length > 0).length || 0} with images
+                </TableCell>
                 <TableCell>
                   {formatDate(item?.createdAt)}
                   <br />
                   by {item.User?.name || '-'}
                 </TableCell>
-                <TableCell className='flex flex-col gap-2 items-center justify-center md:flex-row'>
+                <TableCell className="flex flex-col gap-2 items-center justify-center md:flex-row">
                   <Link
                     href={`/d/ot4oc/new?id=${item.id}`}
                     className="text-blue-600 hover:text-blue-800 text-center"
@@ -123,17 +127,17 @@ const Ot4ocNewPage = async ({
         <div className="flex flex-col items-center justify-center h-32 text-gray-500 mt-10">
           <Package size={48} />
           <p className="mt-2">No item found</p>
-          <Link 
-          href={`/d/ot4oc/list`}
-          className='text-black dark:text-white hover:opacity-70'
+          <Link
+            href={`/d/ot4oc/list`}
+            className="text-black dark:text-white hover:opacity-70"
           >
-           Show all
+            Show all
           </Link>
         </div>
       )}
       <div className="mt-3">
         <PaginationControl
-          show = {search === ''}
+          show={search === ''}
           HasNext={hasNextPage}
           currentPage={page}
           totalPage={totalPage}
