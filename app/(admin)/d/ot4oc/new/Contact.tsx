@@ -135,7 +135,7 @@ const Content = ({
       }
 
       setIsChanged(false)
-
+      setTab('details')
       toast.success('Contact information saved')
     } catch (e: any) {
       console.log(e)

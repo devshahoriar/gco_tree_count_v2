@@ -107,6 +107,7 @@ const MasterRoll = ({
         handleChange('id', x?.data)
         setIsChanged(false)
         toast.success('Data saved successfully')
+        setTab('contant')
       }
     } catch (e: any) {
       setError(e.errors?.[0]?.message || 'An error occurred')

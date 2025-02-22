@@ -53,9 +53,10 @@ const Details = ({
         setError(response.error)
         console.error(response.error)
       } else if (response?.success) {
-        console.log('Data saved:', response.data)
+        
         setIsChanged(false)
         setError('')
+        setTab('matinfo')
         toast.success('Details saved successfully')
       }
     } catch (error) {
@@ -299,6 +300,7 @@ const Details = ({
             placeholder="Taka"
             value={baby.familyIncome || ''}
             onChange={(e) => handleChange('familyIncome', e.target.value)}
+            type='number'
           />
         </div>
         {error && <p className="text-red-500 mt-2">{error}</p>}

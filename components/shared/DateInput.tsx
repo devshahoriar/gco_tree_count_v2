@@ -20,6 +20,7 @@ const DateInput = ({
       className={cn('from-input bg-transparent rounded-md', className)}
       onChange={onChange}
       value={value}
+      format="dd/MM/yyyy"
     />
   )
 }

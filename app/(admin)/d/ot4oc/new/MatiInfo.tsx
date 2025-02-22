@@ -11,8 +11,10 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { Image as Img } from 'lucide-react'
 
 import { Label } from '@/components/ui/label'
+import Link from 'next/link'
 
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -47,6 +49,16 @@ const MatiInfo = ({ baby, setBaby }: { baby: any; setBaby: any }) => {
       setIsLoading(false)
     }
   }
+
+  const isImageAddAble =
+    baby?.id &&
+    baby?.masterId &&
+    baby?.divisionId &&
+    baby?.zillaId &&
+    baby?.upZillaId &&
+    baby?.unionId &&
+    baby?.postId &&
+    baby?.wordNo
 
   return (
     <Card>
@@ -236,6 +248,13 @@ const MatiInfo = ({ baby, setBaby }: { baby: any; setBaby: any }) => {
         <Button onClick={handleSave} disabled={!isChanged || isLoading}>
           {isLoading ? 'Submitting' : 'Submit'}
         </Button>
+        {isImageAddAble && (
+          <Button asChild variant="outline" className="!text-foreground">
+            <Link href={`/d/ot4oc/${baby?.id}/addimg`}>
+              Add Image <Img className="text-red-600" />
+            </Link>
+          </Button>
+        )}
         {/* <Button onClick={() => setTab('contant')}>
           <ArrowLeft /> Previous
         </Button> */}
