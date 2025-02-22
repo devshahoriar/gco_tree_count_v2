@@ -52,8 +52,8 @@ const AddImagePage = async ({
             </Button>
           </div>
         </div>
-        <div className="grid grid-cols-1  gap-5 mt-5 md:grid-cols-2 xl:grid-cols-3 place-items-start">
-          <p className="text-red-500 text-sm font-medium">First select word no, union, up-zilla, zilla, division.</p>
+        <div className="mt-[25vh]">
+          <p className="text-red-500 text-4xl font-medium text-center">First select word no, union, up-zilla, zilla, division.</p>
         </div>
       </ContentLayout>
     )
