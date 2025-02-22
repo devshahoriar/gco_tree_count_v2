@@ -8,6 +8,15 @@ import { FileDelete, UploadFile } from '@/lib/fileMeneger'
 import prisma from '@/prisma/db'
 import { headers } from 'next/headers'
 
+export const deleteTree = async (treeId: number | string) => {
+  await prisma.tree.delete({
+    where: {
+      id: Number(treeId),
+    },
+  })
+  return { success: true }
+}
+
 export const getAllTreeTypes = async () => {
   return await prisma.treeType.findMany({
     select: {
