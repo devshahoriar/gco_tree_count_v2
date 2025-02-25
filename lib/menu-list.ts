@@ -47,8 +47,8 @@ export function getMenuList(p: string[]): Group[] {
                 icon: Notebook,
                 submenus: [
                   {
-                    href: '/d/report/ot4oc',
-                    label: 'Report OT4OC',
+                    href: '/d/report/mastar_roll',
+                    label: 'Master Roll',
                   },
                 ],
               },

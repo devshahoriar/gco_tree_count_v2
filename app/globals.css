@@ -81,16 +81,9 @@ option {
   @apply hover:dark:!bg-secondary hover:dark:!text-secondary-foreground dark:!bg-transparent
 }
 
-.printPage table,
-.printPage th,
-.printPage td {
-  @apply border border-black;
-}
 
-.printPage table {
-  page-break-before: always;
-}
-.printPage tr {
+
+.printable tr {
   page-break-inside: avoid;
   page-break-after: auto;
 }
@@ -103,4 +96,18 @@ option {
     margin: 10px;
     padding: 0 0 10%;
   }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.printable table, th, td {
+  border: 1px solid rgb(110, 110, 110);
+  border-collapse: collapse;
 }
