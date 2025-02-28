@@ -81,6 +81,8 @@ const Filter = () => {
               onChange={(e) =>
                 setFilters((prev) => ({ ...prev, search: e.target.value }))
               }
+              onKeyDown={(e) => e.key === 'Enter' && handleApplyFilters()}
+              type="search"
             />
           </div>
 
@@ -190,4 +192,3 @@ export const ResetButton = () => {
     </Button>
   )
 }
-

@@ -68,7 +68,9 @@ const AddImagePage = async ({
   const foundTressCount = foundTrees?.length
 
   const newTreeCount = (previousLyAddedTress - foundTressCount) > 0 ? (previousLyAddedTress - foundTressCount) : 0
-  
+
+
+
   return (
     <ContentLayout title="Add Image">
 

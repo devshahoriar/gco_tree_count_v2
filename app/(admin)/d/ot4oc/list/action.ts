@@ -1,6 +1,26 @@
+'use server'
+
 import prisma from '@/prisma/db'
 
-export const df = {
+export const deleteOt4oc = async (id: number) => {
+  await prisma.treeInvolved.deleteMany({
+    where: {
+      formId: id,
+    },
+  })
+  await prisma.tree.deleteMany({
+    where: {
+      treeFormId: id,
+    },
+  })
+  await prisma.ot4oc.delete({
+    where: {
+      id: id,
+    },
+  })
+}
+
+const df = {
   page: '1',
   limit: '10',
   sortBy: 'id',

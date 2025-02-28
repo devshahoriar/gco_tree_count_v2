@@ -28,7 +28,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <div vaul-drawer-wrapper="" className=""> 
           {children}
+          </div>
           <Toaster richColors position='top-right' />
         </ThemeProvider>
       </body>

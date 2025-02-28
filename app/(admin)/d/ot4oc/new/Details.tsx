@@ -53,7 +53,6 @@ const Details = ({
         setError(response.error)
         console.error(response.error)
       } else if (response?.success) {
-        
         setIsChanged(false)
         setError('')
         setTab('matinfo')
@@ -87,15 +86,13 @@ const Details = ({
             value={baby.childName || ''}
             onChange={(e) => handleChange('childName', e.target.value)}
           />
-          
+
           <InputParent>
             <Label>Child Birthday</Label>
             <DateInput
               onChange={(e) => handleChange('childBirthDate', e)}
               value={
-                baby.childBirthDate
-                  ? new Date(baby.childBirthDate)
-                  : undefined
+                baby.childBirthDate ? new Date(baby.childBirthDate) : undefined
               }
             />
           </InputParent>
@@ -125,7 +122,7 @@ const Details = ({
             title="Father's NID"
             value={baby.fatherNid || ''}
             onChange={(e) => handleChange('fatherNid', e.target.value)}
-            type='number'
+            type="number"
           />
 
           <InputParent>
@@ -198,7 +195,7 @@ const Details = ({
             title="Mother's NID"
             value={baby.motherNid || ''}
             onChange={(e) => handleChange('motherNid', e.target.value)}
-            type='number'
+            type="number"
           />
 
           <InputParent>
@@ -277,7 +274,7 @@ const Details = ({
               <option value="operation">Operation</option>
             </select>
           </InputParent>
-          <InputParent>
+          {/* <InputParent>
             <Label>Child health on delevary</Label>
             <select
               name="deliveryChildHealth"
@@ -293,14 +290,14 @@ const Details = ({
               <option value="normal">Normal</option>
               <option value="abnormal">Abnormal</option>
             </select>
-          </InputParent>
+          </InputParent> */}
           <InputBox
             id="fameliIncome"
             title="Famely income"
             placeholder="Taka"
             value={baby.familyIncome || ''}
             onChange={(e) => handleChange('familyIncome', e.target.value)}
-            type='number'
+            type="number"
           />
         </div>
         {error && <p className="text-red-500 mt-2">{error}</p>}
@@ -319,7 +316,7 @@ const Details = ({
           }}
           disabled={isLoading}
         >
-          <ArrowLeft /> <span className='hidden md:block'>Previous</span>
+          <ArrowLeft /> <span className="hidden md:block">Previous</span>
         </Button>
         <Button
           onClick={() => {
@@ -331,7 +328,7 @@ const Details = ({
           }}
           disabled={isLoading}
         >
-          <span className='hidden md:block'>Next</span> <ArrowRight />
+          <span className="hidden md:block">Next</span> <ArrowRight />
         </Button>
       </CardFooter>
     </Card>

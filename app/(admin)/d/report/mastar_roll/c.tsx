@@ -32,6 +32,7 @@ interface RowDataItem {
   tree_count: number
 }
 
+import XLSX from 'xlsx'
 import { InputParent } from '@/components/shared/InputBox'
 import {
   Select,
@@ -54,7 +55,7 @@ import {
 } from '@/components/ui/card'
 import { Label } from '@/components/ui/label'
 import { format } from 'date-fns'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import PrintHaeder from '../PrintHaeder'
 import { getData, getDevision, getUnion, getUpZilla, getZilla } from './action'
 
@@ -70,15 +71,22 @@ interface InputState {
   wordNo?: string
 }
 
+
+
 export const SelectOptions = () => {
   const [input, setInput] = useState<InputState>({})
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [rowData, setRowData] = useState<RowDataItem[]>([])
 
+  const xport = useCallback(() => {
+    const wb = XLSX.utils.table_to_book(document.getElementById('print'))
+    XLSX.writeFile(wb, `report.xlsx`)
+  }, [])
+
   const _hendelPrint = async () => {
     try {
-      // Validate required fields
+
       if (!input.fileType || !input.imgType || !input.startDate || !input.endDate) {
         setError('Please fill all required fields')
         return
@@ -89,6 +97,13 @@ export const SelectOptions = () => {
       const data = await getData(input)
     
       setRowData(data as any)
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+      if (input?.fileType === 'excel') {
+        xport()
+      }else{
+        print()
+      }
+
     } catch (error: any) {
       setError(error?.message ? error.message : 'Something went wrong')
     } finally {
@@ -96,7 +111,6 @@ export const SelectOptions = () => {
     }
   }
 
-  // Calculate totals with proper typing
   const totalTrees = rowData.reduce((acc, curr) => acc + (curr.tree_count || 0), 0)
   const totalPhotos = rowData.reduce((acc, curr) => 
     acc + (curr.Tree?.filter(t => t.images?.length > 0).length || 0), 0)
@@ -275,7 +289,7 @@ export const SelectOptions = () => {
           </div>
         </div>
 
-        <table className="text-center mt-4 text-[11px] print:w-screen">
+        <table className="text-center mt-4 text-[11px] print:w-screen" id='print'>
           <thead>
             <tr className="">
               <th className="w-[3%]">No.</th>

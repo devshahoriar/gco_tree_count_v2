@@ -10,9 +10,19 @@ import {
 import { formatDate } from '@/lib/utils'
 import { Package } from 'lucide-react'
 import Link from 'next/link'
-import { countOt4oc, df, getListOfOt4oc } from './action'
+import { countOt4oc, getListOfOt4oc } from './action'
 import Filter, { RefreshButton, ResetButton } from './Filter'
 import PaginationControl from './Pagination'
+import { getUser } from '@/lib/auth'
+import { headers } from 'next/headers'
+import DeleteOt4oc from './DeleteOt4oc'
+
+const df = {
+  page: '1',
+  limit: '10',
+  sortBy: 'id',
+  orderBy: 'desc',
+}
 
 const Ot4ocNewPage = async ({
   searchParams,
@@ -42,6 +52,8 @@ const Ot4ocNewPage = async ({
   const count = await countOt4oc()
   const hasNextPage = Number(limit) * Number(page) < count
   const totalPage = Math.ceil(count / Number(limit))
+  const user = await getUser(headers)
+ 
 
   return (
     <ContentLayout title={` OT4OC`}>
@@ -90,34 +102,42 @@ const Ot4ocNewPage = async ({
 
                 <TableCell>{item.phone || '-'}</TableCell>
                 <TableCell className="text-center">
-                  {item.tree_count || 0} init <br /> 
-                  {item?.Tree?.length || 0} added<br/>
-                  {item?.Tree?.filter(tree => tree.images?.length > 0).length || 0} with images
+                  {item.tree_count || 0} init <br />
+                  {item?.Tree?.length || 0} added
+                  <br />
+                  {item?.Tree?.filter((tree) => tree.images?.length > 0)
+                    .length || 0}{' '}
+                  with images
                 </TableCell>
                 <TableCell>
                   {formatDate(item?.createdAt)}
                   <br />
                   by {item.User?.name || '-'}
                 </TableCell>
-                <TableCell className="flex flex-col gap-2 items-center justify-center md:flex-row">
-                  <Link
-                    href={`/d/ot4oc/new?id=${item.id}`}
-                    className="text-blue-600 hover:text-blue-800 text-center"
-                  >
-                    Update
-                  </Link>
-                  <Link
-                    href={`/d/ot4oc/view?id=${item.id}`}
-                    className="text-yellow-400 hover:text-yellow-800 text-center"
-                  >
-                    View
-                  </Link>
-                  <Link
-                    href={`/d/ot4oc/${item.id}/addimg`}
-                    className="text-green-400 hover:text-green-800 text-center"
-                  >
-                    Add Image
-                  </Link>
+                <TableCell>
+                  <div className="flex flex-col gap-2 items-center justify-center md:flex-row">
+                    <Link
+                      href={`/d/ot4oc/new?id=${item.id}`}
+                      className="text-blue-600 hover:text-blue-800 text-center"
+                    >
+                      Update
+                    </Link>
+                    <Link
+                      href={`/d/ot4oc/view?id=${item.id}`}
+                      className="text-yellow-400 hover:text-yellow-800 text-center"
+                    >
+                      View
+                    </Link>
+                    <Link
+                      href={`/d/ot4oc/${item.id}/addimg`}
+                      className="text-green-400 hover:text-green-800 text-center"
+                    >
+                      Add Image
+                    </Link>
+                    {
+                      user?.role === 'superadmin' && <DeleteOt4oc id={item?.id} />
+                    }
+                  </div>
                 </TableCell>
               </TableRow>
             ))}
