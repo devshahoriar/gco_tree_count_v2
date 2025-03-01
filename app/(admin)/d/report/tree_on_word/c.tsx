@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
@@ -198,7 +199,7 @@ const TreeOnWordSelect = () => {
           )}
         </CardContent>
         <CardFooter className="flex justify-center">
-          <Button disabled={loading} onClick={null}>
+          <Button disabled={loading} >
             {loading ? 'Loading...' : 'Print'}
           </Button>
         </CardFooter>
