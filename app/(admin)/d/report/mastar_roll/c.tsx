@@ -88,7 +88,7 @@ export const SelectOptions = () => {
     try {
 
       if (!input.fileType || !input.imgType || !input.startDate || !input.endDate) {
-        setError('Please fill all required fields')
+        setError('Please fill all required fields(file type, Image type, Start Date, End Date)')
         return
       }
 
@@ -265,7 +265,7 @@ export const SelectOptions = () => {
         </style>
       </Card>
 
-      <div className="mt-10 printable hidden print:block">
+      <div className="pt-10 printable hidden print:block">
         <PrintHaeder />
         <div className="mt-5 border-t pt-2 print:w-screen">
           <h1 className="underline text-center font-semibold">

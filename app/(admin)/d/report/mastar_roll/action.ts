@@ -109,6 +109,9 @@ export const getData = async (input: INPUT) => {
         }),
       },
     },
+    orderBy:{
+      masterId: 'asc'
+    },
     select: {
       id: true,
       childName: true,

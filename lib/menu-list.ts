@@ -50,6 +50,10 @@ export function getMenuList(p: string[]): Group[] {
                     href: '/d/report/mastar_roll',
                     label: 'Master Roll',
                   },
+                  {
+                    href: '/d/report/tree_on_word',
+                    label: 'Tree On Word',
+                  },
                 ],
               },
             ]
