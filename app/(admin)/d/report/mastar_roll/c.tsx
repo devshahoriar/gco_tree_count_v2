@@ -87,8 +87,10 @@ export const SelectOptions = () => {
   const _hendelPrint = async () => {
     try {
 
-      if (!input.fileType || !input.imgType || !input.startDate || !input.endDate) {
-        setError('Please fill all required fields(file type, Image type, Start Date, End Date)')
+      // || !input.imgType || !input.startDate || !input.endDate
+      if (!input.fileType ) {
+        // , Image type, Start Date, End Date
+        setError('Please fill all required fields(file type)')
         return
       }
 
