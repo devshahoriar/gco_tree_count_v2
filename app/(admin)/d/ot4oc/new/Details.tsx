@@ -161,6 +161,7 @@ const Details = ({
               <option value="Honors">Honors</option>
 
               <option value="Higher secondary">Higher secondary</option>
+              <option value="JSC">JSC</option>
 
               <option value="Secondary">Secondary </option>
 
@@ -234,7 +235,7 @@ const Details = ({
               <option value="Honors">Honors</option>
 
               <option value="Higher secondary">Higher secondary</option>
-
+              <option value="JSC">JSC</option>
               <option value="Secondary">Secondary </option>
 
               <option value="Primary">Primary </option>

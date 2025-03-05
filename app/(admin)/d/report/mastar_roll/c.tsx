@@ -30,6 +30,7 @@ interface RowDataItem {
   Tree: Tree[]
   phone: string
   tree_count: number
+  masterId: string
 }
 
 import XLSX from 'xlsx'
@@ -294,12 +295,10 @@ export const SelectOptions = () => {
         <table className="text-center mt-4 text-[11px] print:w-screen" id='print'>
           <thead>
             <tr className="">
-              <th className="w-[3%]">No.</th>
-              <th className="w-[10%] overflow-hidden">Recipent Child</th>
+              <th className="w-[10%]">Master <br/> Id.</th>
+              <th className="w-[10%] overflow-hidden">Recipent<br/> Child</th>
               <th className="w-[10%]">
-                Mohter/
-                <br />
-                Father Name
+                Father<br/> Name
               </th>
               <th className="w-[20%]">
                 Address
@@ -331,15 +330,15 @@ export const SelectOptions = () => {
             </tr>
           </thead>
           <tbody className="text-xs">
-            {rowData.map((item: RowDataItem, index: number) => (
+            {rowData.map((item: RowDataItem) => (
               <tr key={item.id} className="h-fit">
-                <td className="p-2">{index + 1}</td>
-                <td className="p-2">{item.childName}</td>
-                <td className="p-2">{item.fatherName}</td>
-                <td className="p-2">
+                <td className="">{item?.masterId}</td>
+                <td className="">{item.childName}</td>
+                <td className="">{item.fatherName}</td>
+                <td className="">
                   {`${item?.village}, Word-${item?.wordNo}, ${item?.union?.name}, ${item?.postOffice?.name}-${item?.postOffice?.postCode}, ${item?.upZilla?.name}, ${item?.zilla?.name}`}
                 </td>
-                <td className="p-2">
+                <td className="whitespace-pre-line">
                   {item.Tree.some((t: { lat: any; lon: any }) => t.lat && t.lon)
                     ? Number(
                         item.Tree.find(
@@ -355,23 +354,23 @@ export const SelectOptions = () => {
                       ).toFixed(2)
                     : '-'}
                 </td>
-                <td className="p-2">{item.phone}</td>
-                <td className="p-2 whitespace-pre-line">
+                <td className="">{item.phone}</td>
+                <td className=" whitespace-pre-line">
                   {item.Tree.map(
                     (t: { treeType: { name: any } }) => t.treeType.name
                   ).join(',\n')}
                 </td>
-                <td className="p-2">-</td>
-                {/* <td className="p-2">Ground</td> */}
-                <td className="p-2">{item.tree_count}</td>
-                <td className="p-2">
+                <td className="">-</td>
+                {/* <td className="">Ground</td> */}
+                <td className="">{item.tree_count}</td>
+                <td className="">
                   {
                     item.Tree.filter(
                       (t: { images: string | any[] }) => t.images?.length > 0
                     ).length
                   }
                 </td>
-                <td className="p-2 whitespace-pre-line">
+                <td className=" whitespace-pre-line">
                   {item.Tree.map((tree, idx) => 
                     tree.images?.[0]?.url ? (
                       <a 

@@ -114,6 +114,7 @@ export const getData = async (input: INPUT) => {
     },
     select: {
       id: true,
+      masterId: true,
       childName: true,
       fatherName: true,
       village: true,
