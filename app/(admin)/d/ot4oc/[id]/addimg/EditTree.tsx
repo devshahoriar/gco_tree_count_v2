@@ -123,7 +123,7 @@ const EditTree = ({
         setLoaction(undefined)
         setRemark('')
         setSelectTree(undefined)
-        refresh()
+        setPreviousImg(d?.data || [])
         toast.success('Image added successfully')
       }
     })
@@ -186,7 +186,7 @@ const EditTree = ({
               </select>
             </InputParent>
 
-            {!isReplaced && (
+            {/* {!isReplaced && ( */}
               <>
                 <div>
                   <div className='space-y-2'>
@@ -298,9 +298,9 @@ const EditTree = ({
                   </div>
                 )}
               </>
-            )}
+            {/* )} */}
 
-            {previousImg?.length > 0 || (
+            {/* {previousImg?.length > 0 || ( */}
               <div className='flex-row flex items-center gap-2'>
                 <Checkbox
                   id='replaced'
@@ -310,13 +310,13 @@ const EditTree = ({
                     setReplaceReason('')
                     setRemark('')
                     setAddedImage([])
-                    setLoaction(undefined)
+                    // setLoaction(undefined)
                     setcantTakeimg(false)
                   }}
                 />
                 <Label htmlFor='replaced'>This tree replaced.</Label>
               </div>
-            )}
+            {/* )} */}
             {isReplaced && (
               <div>
                 <Label>Replaced Reason</Label>

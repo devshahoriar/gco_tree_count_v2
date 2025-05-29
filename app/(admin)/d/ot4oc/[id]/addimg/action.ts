@@ -163,7 +163,11 @@ export const updateTree = async (data: any) => {
     const isNotPhoto = Boolean(remark) || Boolean(replaced)
 
     // Add validation for image files
-    if (!isNotPhoto && (!Array.isArray(imgs) || !imgs.every(img => img instanceof Blob || img instanceof File))) {
+    if (
+      !isNotPhoto &&
+      (!Array.isArray(imgs) ||
+        !imgs.every((img) => img instanceof Blob || img instanceof File))
+    ) {
       console.error('Invalid image data received:', imgs)
       return { error: 'Invalid image format received' }
     }
@@ -198,7 +202,7 @@ export const updateTree = async (data: any) => {
           console.error('Invalid image object:', img)
           continue
         }
-        
+
         const { fileId, url } = await UploadFile(img, uploadFolder)
         // Create file record with auto-increment id
         const fileRecord = await prisma.file.create({
@@ -208,8 +212,8 @@ export const updateTree = async (data: any) => {
             fileType: FILETYPE.TREEPHOTOINITIAL,
           },
           select: {
-            id: true
-          }
+            id: true,
+          },
         })
         dbIds.push(fileRecord.id)
       }
@@ -235,53 +239,71 @@ export const updateTree = async (data: any) => {
         select: {
           id: true,
           replaced: true,
+          images: {
+            select: {
+              id: true,
+              fileId: true,
+              url: true,
+            },
+          },
         },
       })
       console.log('tree updated = ', tree.id)
     } else {
       // Modified create logic with retries
-      let retryCount = 0;
-      const maxRetries = 3;
-      
+      let retryCount = 0
+      const maxRetries = 3
+
       while (retryCount < maxRetries) {
         try {
           tree = await prisma.tree.create({
             data: {
               treeTypeId: Number(treeTypeId),
               treeFormId: Number(ot4ocId),
-              images: dbIds.length > 0 ? {
-                connect: dbIds.map((id) => ({ id }))
-              } : undefined,
+              images:
+                dbIds.length > 0
+                  ? {
+                      connect: dbIds.map((id) => ({ id })),
+                    }
+                  : undefined,
               lat: location?.lat ? location?.lat + '' : null,
               lon: location?.lon ? location?.lon + '' : null,
               imageDate: dbIds.length > 0 ? new Date() : null,
               addById: user.id,
               remarkOfImg: remark || null,
-              replaced: replaced || false
+              replaced: replaced || false,
             },
             select: {
               id: true,
               replaced: true,
+              images: {
+                select: {
+                  id: true,
+                  fileId: true,
+                  url: true,
+                },
+              },
             },
-          });
-          
-          console.log('new tree added = ', tree.id);
-          break; 
-          
+          })
+
+          console.log('new tree added = ', tree.id)
+          break
         } catch (createError: any) {
-          console.error(`Creation attempt ${retryCount + 1} failed:`, JSON.stringify(createError, null, 2));
-          
+          console.error(
+            `Creation attempt ${retryCount + 1} failed:`,
+            JSON.stringify(createError, null, 2)
+          )
+
           if (createError.code === 'P2002' && retryCount < maxRetries - 1) {
-   
             await prisma.$executeRaw`
               SELECT setval(pg_get_serial_sequence('tree', 'id'), 
                 COALESCE((SELECT MAX(id) FROM tree), 0) + 1, false);
-            `;
-            retryCount++;
-            continue;
+            `
+            retryCount++
+            continue
           }
-          
-          throw createError;
+
+          throw createError
         }
       }
     }
@@ -319,7 +341,7 @@ export const updateTree = async (data: any) => {
                 thisForReplached: true,
                 addById: user.id,
               },
-            })
+            }),
           ])
         }
       } catch (replaceError: any) {
@@ -328,9 +350,9 @@ export const updateTree = async (data: any) => {
       }
     }
 
-    return { success: true }
+    return { success: true, data: tree?.images || [] }
   } catch (error) {
-    console.error('General error:', error);
-    return { error: 'Server error.' };
+    console.error('General error:', error)
+    return { error: 'Server error.' }
   }
 }
