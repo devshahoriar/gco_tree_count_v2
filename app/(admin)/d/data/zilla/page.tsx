@@ -94,18 +94,18 @@ const DataZilla = async () => {
               <TableRow key={zilla.id}>
                 <TableCell className="w-[100px]">{zilla.id}</TableCell>
                 <TableCell>{zilla.name}</TableCell>
-                <TableCell>{zilla.division.name}</TableCell>
+                <TableCell>{zilla?.division?.name}</TableCell>
                 <TableCell>{zilla._count.Upazilla}</TableCell>
                 <TableCell className="text-right space-x-2">
                   <EditZilla
                     allDivision={allDivision}
                     id={zilla.id}
-                    n={zilla.name}
-                    dId={zilla.division.id}
+                    n={zilla.name as string}
+                    dId={zilla?.division?.id as number}
                   />
                   <DeleteZilla
                     id={zilla.id}
-                    name={zilla.name}
+                    name={zilla.name as string}
                     Upzillacount={zilla._count.Upazilla}
                   />
                 </TableCell>

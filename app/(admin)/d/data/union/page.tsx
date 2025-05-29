@@ -110,18 +110,18 @@ const DataUnion = async () => {
             {allUnion.map((unionItem) => (
               <TableRow key={unionItem.id}>
                 <TableCell className="w-[100px]">{unionItem.id}</TableCell>
-                <TableCell>{unionItem.name}</TableCell>
-                <TableCell>{unionItem.upazilla.name}</TableCell>
-                <TableCell>{unionItem.upazilla.zilla.name}</TableCell>
-                <TableCell>{unionItem.upazilla.zilla.division.name}</TableCell>
+                <TableCell>{unionItem?.name}</TableCell>
+                <TableCell>{unionItem?.upazilla?.name}</TableCell>
+                <TableCell>{unionItem?.upazilla?.zilla?.name}</TableCell>
+                <TableCell>{unionItem?.upazilla?.zilla?.division?.name}</TableCell>
                 <TableCell className="text-right space-x-2">
                   <EditUnion
                     allUpazilla={allUpazilla}
                     id={unionItem.id}
-                    n={unionItem.name}
-                    upId={unionItem.upazilla.id}
+                    n={unionItem.name || ''}
+                    upId={unionItem?.upazilla?.id as number}
                   />
-                  <DeleteUnion id={unionItem.id} name={unionItem.name} />
+                  <DeleteUnion id={unionItem.id} name={unionItem?.name as string} />
                 </TableCell>
               </TableRow>
             ))}

@@ -11,7 +11,7 @@ const AddImagePage = async ({
 }: {
   params: Promise<{ id: string }>
 }) => {
-  const id = await (await params).id
+  const id = (await params).id
   if (!id) {
     return notFound()
   }

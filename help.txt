@@ -1,0 +1,1 @@
+/usr/lib/postgresql/15/bin/pg_dump "postgres://neondb_owner:npg_zh7ZGPX5jONI@ep-solitary-glitter-a1h2nb9b.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&ssl=true" > neondb_dump.sql

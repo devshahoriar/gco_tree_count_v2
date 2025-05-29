@@ -114,18 +114,18 @@ const DataPost = async () => {
                 <TableCell className="w-[100px]">{postOffice.id}</TableCell>
                 <TableCell>{postOffice.name}</TableCell>
                 <TableCell>{postOffice.postCode}</TableCell>
-                <TableCell>{postOffice.upZilla.name}</TableCell>
-                <TableCell>{postOffice.upZilla.zilla.name}</TableCell>
-                <TableCell>{postOffice.upZilla.zilla.division.name}</TableCell>
+                <TableCell>{postOffice?.upZilla?.name}</TableCell>
+                <TableCell>{postOffice?.upZilla?.zilla?.name}</TableCell>
+                <TableCell>{postOffice?.upZilla?.zilla?.division?.name}</TableCell>
                 <TableCell className="text-right space-x-2">
                   <EditPostOffice
                     allUpazilla={allUpazilla}
                     id={postOffice.id}
-                    n={postOffice.name}
-                    pc={postOffice.postCode}
-                    upId={postOffice.upZilla.id}
+                    n={postOffice?.name as string}
+                    pc={postOffice?.postCode as string}
+                    upId={postOffice?.upZilla?.id as number}
                   />
-                  <DeletePostOffice id={postOffice.id} name={postOffice.name} />
+                  <DeletePostOffice id={postOffice.id} name={postOffice?.name as string} />
                 </TableCell>
               </TableRow>
             ))}

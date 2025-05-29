@@ -105,21 +105,21 @@ const DataUpZilla = async () => {
             {allUpZilla.map((upzilla) => (
               <TableRow key={upzilla.id}>
                 <TableCell className="w-[100px]">{upzilla.id}</TableCell>
-                <TableCell>{upzilla.name}</TableCell>
-                <TableCell>{upzilla.zilla.name}</TableCell>
-                <TableCell>{upzilla.zilla.division.name}</TableCell>
+                <TableCell>{upzilla?.name}</TableCell>
+                <TableCell>{upzilla?.zilla?.name}</TableCell>
+                <TableCell>{upzilla?.zilla?.division?.name}</TableCell>
                 <TableCell>{upzilla._count.Union}</TableCell>
                 <TableCell>{upzilla._count.PostOffice}</TableCell>
                 <TableCell className="text-right space-x-2">
                   <EditUpZilla
                     allZilla={allZilla}
                     id={upzilla.id}
-                    n={upzilla.name}
-                    zId={upzilla.zilla.id}
+                    n={upzilla.name as string}
+                    zId={upzilla?.zilla?.id as number}
                   />
                   <DeleteUpZilla
-                    id={upzilla.id}
-                    name={upzilla.name}
+                    id={upzilla.id as number}
+                    name={upzilla.name as string}
                     unionCount={upzilla._count.Union}
                     postOfficeCount={upzilla._count.PostOffice}
                   />

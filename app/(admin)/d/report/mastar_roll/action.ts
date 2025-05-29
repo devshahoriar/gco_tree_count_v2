@@ -52,7 +52,6 @@ export const getUnion = async (x: string | undefined, y: string) => {
       },
       upazillaId: Number(y),
     },
-    take: 5,
   })
 
   return allUnion

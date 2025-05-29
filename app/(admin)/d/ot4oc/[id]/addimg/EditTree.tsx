@@ -135,25 +135,25 @@ const EditTree = ({
     <>
       {/* this is for image preview  */}
       {preview && (
-        <div className="fixed z-30 top-0 left-0 right-0 bottom-0 h-screen w-screen bg-black bg-opacity-10 flex items-center justify-center">
-          <div className="relative m-2">
+        <div className='fixed z-30 top-0 left-0 right-0 bottom-0 h-screen w-screen bg-black bg-opacity-10 flex items-center justify-center'>
+          <div className='relative m-2'>
             <Button
-              size="icon"
-              className="absolute top-10 left-0"
+              size='icon'
+              className='absolute top-10 left-0'
               onClick={() => setPreview(undefined)}
             >
               <X size={20} />
             </Button>
             <img
-              className="w-full h-full object-cover "
+              className='w-full h-full object-cover '
               src={preview}
-              alt="ss"
+              alt='ss'
             />
           </div>
         </div>
       )}
 
-      <Card className="drop-shadow-md w-full relative">
+      <Card className='drop-shadow-md w-full relative'>
         {tree !== undefined && <DeleteTree id={tree.id} imgs={tree.images} />}
 
         <CardHeader>
@@ -161,21 +161,21 @@ const EditTree = ({
           <CardDescription>
             Add Image for {ot4ocId} ID. tree id = {tree?.id}
             {tree?.thisForReplached && (
-              <span className="text-red-600 bg-red-600 bg-opacity-20 rounded">
+              <span className='text-red-600 bg-red-600 bg-opacity-20 rounded'>
                 This tree is replaced.
               </span>
             )}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
+          <div className='space-y-4'>
             <InputParent>
               <Label>Select Tree</Label>
               <select
                 value={selectTree}
                 onChange={(e) => setSelectTree(Number(e.target.value))}
                 defaultValue={isUpdated ? tree?.treeType.id : undefined}
-                className="from-input bg-transparent focus:outline-none rounded-md"
+                className='from-input bg-transparent focus:outline-none rounded-md'
               >
                 <option>select</option>
                 {allTress?.map((t, i) => (
@@ -184,23 +184,17 @@ const EditTree = ({
                   </option>
                 ))}
               </select>
-
-
-
-
-
-
             </InputParent>
 
             {!isReplaced && (
               <>
                 <div>
-                  <div className="space-y-2">
+                  <div className='space-y-2'>
                     {previousImg?.length > 0 || (
-                      <div className="flex items-center gap-2">
+                      <div className='flex items-center gap-2'>
                         <Checkbox
                           checked={cantTakeimg}
-                          id="cantTakeimg"
+                          id='cantTakeimg'
                           onCheckedChange={(v) => {
                             setcantTakeimg(v as boolean)
                             setAddedImage([])
@@ -208,7 +202,7 @@ const EditTree = ({
                             setLoaction(undefined)
                           }}
                         />
-                        <Label htmlFor="cantTakeimg">Can't take image.</Label>
+                        <Label htmlFor='cantTakeimg'>Can't take image.</Label>
                       </div>
                     )}
                     {cantTakeimg ? (
@@ -230,13 +224,13 @@ const EditTree = ({
                   </div>
 
                   {addedImage.length > 0 && (
-                    <div className="mt-2">
+                    <div className='mt-2'>
                       <Label>Selected Images</Label>
-                      <div className="flex gap-2 mt-1 flex-wrap">
+                      <div className='flex gap-2 mt-1 flex-wrap'>
                         {addedImage?.map((img, i) => (
-                          <div className="relative" key={i}>
+                          <div className='relative' key={i}>
                             <button
-                              className="absolute rounded top-[1px] right-[1px] z-10 bg-red-600 p-[1px] bg-opacity-80"
+                              className='absolute rounded top-[1px] right-[1px] z-10 bg-red-600 p-[1px] bg-opacity-80'
                               onClick={() =>
                                 setAddedImage((p) =>
                                   p.filter((_, index) => index !== i)
@@ -250,8 +244,8 @@ const EditTree = ({
                               onClick={() =>
                                 setPreview(URL.createObjectURL(img))
                               }
-                              alt="tree"
-                              className="size-16 object-cover rounded-md"
+                              alt='tree'
+                              className='size-16 object-cover rounded-md'
                             />
                           </div>
                         ))}
@@ -259,11 +253,11 @@ const EditTree = ({
                     </div>
                   )}
                   {previousImg?.length > 0 && (
-                    <div className="mt-2">
+                    <div className='mt-2'>
                       <Label>Previous Images</Label>
-                      <div className="flex gap-2 mt-1 flex-wrap">
+                      <div className='flex gap-2 mt-1 flex-wrap'>
                         {previousImg?.map((img, i) => (
-                          <div className="relative" key={i}>
+                          <div className='relative' key={i}>
                             <button
                               disabled={isPending}
                               onClick={async () => {
@@ -278,14 +272,14 @@ const EditTree = ({
                                   refresh()
                                 }
                               }}
-                              className="absolute rounded top-[1px] right-[1px] z-10 bg-red-600 p-[1px] bg-opacity-80 disabled:animate-pulse"
+                              className='absolute rounded top-[1px] right-[1px] z-10 bg-red-600 p-[1px] bg-opacity-80 disabled:animate-pulse'
                             >
                               <Trash2 size={15} />
                             </button>
                             <img
                               src={img.url}
-                              alt="tree"
-                              className="size-16 object-cover rounded-md"
+                              alt='tree'
+                              className='size-16 object-cover rounded-md'
                               onClick={() => setPreview(img.url)}
                             />
                           </div>
@@ -297,7 +291,7 @@ const EditTree = ({
                 {location && (
                   <div>
                     <Label>Location</Label>
-                    <div className="flex gap-2 text-xs">
+                    <div className='flex gap-2 text-xs'>
                       <p>Lat: {location.lat.toFixed(2)}</p>
                       <p>Lon: {location.lon.toFixed(2)}</p>
                     </div>
@@ -307,9 +301,9 @@ const EditTree = ({
             )}
 
             {previousImg?.length > 0 || (
-              <div className="flex-row flex items-center gap-2">
+              <div className='flex-row flex items-center gap-2'>
                 <Checkbox
-                  id="replaced"
+                  id='replaced'
                   checked={isReplaced}
                   onCheckedChange={(v) => {
                     setIsReplaced(v as boolean)
@@ -320,7 +314,7 @@ const EditTree = ({
                     setcantTakeimg(false)
                   }}
                 />
-                <Label htmlFor="replaced">This tree replaced.</Label>
+                <Label htmlFor='replaced'>This tree replaced.</Label>
               </div>
             )}
             {isReplaced && (
@@ -329,25 +323,25 @@ const EditTree = ({
                 <select
                   value={replaceReason}
                   onChange={(e) => setReplaceReason(e.target.value)}
-                  className="from-input bg-transparent focus:outline-none rounded-md w-full"
+                  className='from-input bg-transparent focus:outline-none rounded-md w-full'
                 >
                   <option>select</option>\
-                  <option value="Naturally died">Naturally died</option>
-                  <option value="Cutting">Cutting</option>
-                  <option value="Destroyed by animal">
+                  <option value='Naturally died'>Naturally died</option>
+                  <option value='Cutting'>Cutting</option>
+                  <option value='Destroyed by animal'>
                     Destroyed by animal
                   </option>
-                  <option value="Other">Other</option>
+                  <option value='Other'>Other</option>
                 </select>
               </div>
             )}
           </div>
         </CardContent>
-        <CardFooter className="flex items-center gap-3">
+        <CardFooter className='flex items-center gap-3'>
           <Button disabled={isPending} onClick={handleAdd}>
             Save
           </Button>
-          {error && <p className="text-red-500 text-sm font-medium">{error}</p>}
+          {error && <p className='text-red-500 text-sm font-medium'>{error}</p>}
         </CardFooter>
       </Card>
     </>

@@ -71,6 +71,7 @@ export const PrintControl = ({ allDisi }: any) => {
         : null,
     fetcher
   )
+  
   const handleChange = (field: keyof FormData, value: string) => {
     setFormData((prev) => {
       const newData = { ...prev, [field]: value }
