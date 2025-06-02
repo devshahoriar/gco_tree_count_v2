@@ -93,6 +93,16 @@ export const getTreesByOt4ocId = async (id: string | number) => {
           url: true,
         },
       },
+      auditDate: true,
+     imageDate: true,
+      auditImages: {
+        select: {
+          id: true,
+          fileId: true,
+          url: true,
+        },
+      },
+      auditRemark: true,
       remarkOfImg: true,
       lat: true,
       lon: true,

@@ -248,7 +248,7 @@ model Tree {
   remarkOfImg String?
 
   auditImages    File[]    @relation("TreeAuditImages")
-  auditRemarkImg String?
+  auditRemark String?
   auditDate      DateTime?
 
   replaced         Boolean   @default(false)

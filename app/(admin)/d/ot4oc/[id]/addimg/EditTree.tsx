@@ -68,6 +68,7 @@ const EditTree = ({
     if (tree?.lat && tree?.lon) {
       setLoaction({ lat: Number(tree.lat), lon: Number(tree.lon) })
     }
+    console.log(tree)
   }, [tree])
 
   const handleAdd = async () => {
