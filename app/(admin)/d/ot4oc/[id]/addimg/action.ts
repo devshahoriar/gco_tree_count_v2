@@ -9,6 +9,7 @@ import prisma from '@/prisma/db'
 import { headers } from 'next/headers'
 
 export const deleteTree = async (treeId: number | string) => {
+  
   await prisma.tree.delete({
     where: {
       id: Number(treeId),
@@ -37,6 +38,7 @@ export const getOt4ocById = async (id: string | number) => {
       childName: true,
       village: true,
       tree_count: true,
+      replaceTreeCount: true,
       phone: true,
       fatherName: true,
       treePlantDate: true,
@@ -82,6 +84,7 @@ export const getTreesByOt4ocId = async (id: string | number) => {
   return await prisma.tree.findMany({
     where: {
       treeFormId: Number(id),
+      thisForReplached: false,
     },
     select: {
       id: true,
@@ -94,7 +97,44 @@ export const getTreesByOt4ocId = async (id: string | number) => {
         },
       },
       auditDate: true,
-     imageDate: true,
+      imageDate: true,
+      auditImages: {
+        select: {
+          id: true,
+          fileId: true,
+          url: true,
+        },
+      },
+      auditRemark: true,
+      remarkOfImg: true,
+      lat: true,
+      lon: true,
+      replaced: true,
+      replacedAt: true,
+      replaceReason: true,
+      thisForReplached: true,
+    },
+  })
+}
+
+export const getTreesByOt4ocIdReplaced = async (id: string | number) => {
+  return await prisma.tree.findMany({
+    where: {
+      treeFormId: Number(id),
+      thisForReplached: true,
+    },
+    select: {
+      id: true,
+      treeType: { select: { id: true } },
+      images: {
+        select: {
+          id: true,
+          fileId: true,
+          url: true,
+        },
+      },
+      auditDate: true,
+      imageDate: true,
       auditImages: {
         select: {
           id: true,
@@ -168,6 +208,7 @@ export const updateTree = async (data: any) => {
       remark,
       replaced,
       replaceReason,
+      thisIsReplacedTree,
     } = data
 
     const isNotPhoto = Boolean(remark) || Boolean(replaced)
@@ -245,6 +286,7 @@ export const updateTree = async (data: any) => {
           addById: user.id,
           remarkOfImg: remark,
           replaced: replaced,
+          thisForReplached: thisIsReplacedTree || false,
         },
         select: {
           id: true,
@@ -329,6 +371,7 @@ export const updateTree = async (data: any) => {
             replacedAt: new Date(),
             replaceReason: replaceReason || null,
             replacedById: user.id,
+            replaced: true,
           },
         })
 
@@ -339,7 +382,7 @@ export const updateTree = async (data: any) => {
                 id: Number(ot4ocId),
               },
               data: {
-                tree_count: {
+                replaceTreeCount: {
                   increment: 1,
                 },
               },
@@ -363,6 +406,103 @@ export const updateTree = async (data: any) => {
     return { success: true, data: tree?.images || [] }
   } catch (error) {
     console.error('General error:', error)
+    return { error: 'Server error.' }
+  }
+}
+
+export interface AditImage {
+  imgs: File[]
+  treeId: number
+  ot4ocId: number
+  aditRemark: string
+}
+
+export const aditImage = async (data: AditImage) => {
+  try {
+    const user = await getUser(headers)
+    if (!user) {
+      return { error: 'User not found' }
+    }
+    const permissions = getUserPermissions(user)
+    if (!permissions.includes('OT4OC')) {
+      return { error: 'You do not have permission to add image' }
+    }
+
+    const { imgs, treeId, ot4ocId, aditRemark } = data
+
+    if (!imgs || imgs.length === 0) {
+      return { error: 'Please add at least one image.' }
+    }
+
+    const locations = await getLocationById(ot4ocId)
+
+    if (
+      !locations ||
+      !locations.division ||
+      !locations.zilla ||
+      !locations.upZilla ||
+      !locations.union ||
+      !locations.wordNo
+    ) {
+      return {
+        error: 'First select word no, union, up-zilla, zilla, division.',
+      }
+    }
+
+    const uploadFolder =
+      `${locations?.division?.name}/${locations?.zilla?.name}/${locations?.upZilla?.name}/${locations?.union?.name}/${locations?.wordNo}`
+        .toLocaleLowerCase()
+        .replaceAll(' ', '_')
+
+    const dbIds = []
+    for (const img of imgs as any) {
+      if (!(img instanceof Blob || img instanceof File)) {
+        console.error('Invalid image object:', img)
+        continue
+      }
+
+      const { fileId, url } = await UploadFile(img, uploadFolder)
+      // Create file record with auto-increment id
+      const fileRecord = await prisma.file.create({
+        data: {
+          fileId: fileId,
+          url: url,
+          fileType: FILETYPE.TREEPHOTOADIT,
+        },
+        select: {
+          id: true,
+        },
+      })
+      dbIds.push(fileRecord.id)
+    }
+
+    const tree = await prisma.tree.update({
+      where: {
+        id: Number(treeId),
+      },
+      data: {
+        auditImages: {
+          connect: dbIds.map((id) => ({ id })),
+        },
+        auditDate: new Date(),
+        auditRemark: aditRemark || null,
+        addById: user.id,
+      },
+      select: {
+        id: true,
+        auditImages: {
+          select: {
+            id: true,
+            fileId: true,
+            url: true,
+          },
+        },
+      },
+    })
+
+    return { success: true, data: tree?.auditImages || [] }
+  } catch (error) {
+    console.error('Error in aditImage:', error)
     return { error: 'Server error.' }
   }
 }

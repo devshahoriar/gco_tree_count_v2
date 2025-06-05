@@ -181,11 +181,12 @@ model Ot4oc {
   unionId Int?
   union   Union? @relation(fields: [unionId], references: [id])
 
-  wordNo        String?
-  phone         String?
-  email         String?
-  treePlantDate DateTime?
-  tree_count    Int?
+  wordNo           String?
+  phone            String?
+  email            String?
+  treePlantDate    DateTime?
+  tree_count       Int?      @default(0)
+  replaceTreeCount Int?      @default(0)
 
   whoPlanName               String?
   bornWeek                  String?
@@ -247,9 +248,9 @@ model Tree {
   imageDate   DateTime?
   remarkOfImg String?
 
-  auditImages    File[]    @relation("TreeAuditImages")
+  auditImages File[]    @relation("TreeAuditImages")
   auditRemark String?
-  auditDate      DateTime?
+  auditDate   DateTime?
 
   replaced         Boolean   @default(false)
   replaceReason    String?

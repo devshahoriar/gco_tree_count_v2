@@ -47,7 +47,6 @@ export const getOt4ocById = async (id: string) => {
             imageDate: true,
             remarkOfImg: true,
             auditDate: true,
-            auditRemarkImg: true,
             createdAt: true,
             replacedAt: true,
             replacedBy: {

@@ -20,20 +20,25 @@ import { Trash2, X } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState, useTransition } from 'react'
 import { toast } from 'sonner'
-import { removeImage, Tree_Type, updateTree } from './action'
+import { aditImage, removeImage, Tree_Type, updateTree } from './action'
 import AddImage from './AddImage'
 import DeleteTree from './DeleteTree'
+import { differenceInMonths } from 'date-fns'
 
 const EditTree = ({
   ot4ocId,
   tree,
   allTress,
+  thisIsReplacedTree = false,
 }: {
   ot4ocId: number | string
   allTress: { id: number; name: string }[]
   tree?: Tree_Type
+  thisIsReplacedTree?: boolean
 }) => {
   const [addedImage, setAddedImage] = useState<File[]>([])
+  const [addintImage, setAditImage] = useState<File[]>([])
+  const [aditRemark, setAditRemark] = useState('')
   const [location, setLoaction] = useState<{
     lat: number
     lon: number
@@ -46,6 +51,7 @@ const EditTree = ({
   const [remark, setRemark] = useState('')
   const [isReplaced, setIsReplaced] = useState(false)
   const [replaceReason, setReplaceReason] = useState('')
+  const [isAuditable, setIsAuditable] = useState(false)
   const [previousImg, setPreviousImg] = useState<
     {
       id: number
@@ -53,6 +59,14 @@ const EditTree = ({
       fileId: string | null
     }[]
   >([])
+  const [previousAditImage, setPreviousAditImage] = useState<
+    {
+      id: number
+      url: string
+      fileId: string | null
+    }[]
+  >([])
+
   const { refresh } = useRouter()
 
   useEffect(() => {
@@ -68,11 +82,38 @@ const EditTree = ({
     if (tree?.lat && tree?.lon) {
       setLoaction({ lat: Number(tree.lat), lon: Number(tree.lon) })
     }
+    if (tree?.auditImages) {
+      setPreviousAditImage(tree?.auditImages)
+    }
+    if (tree?.auditRemark) {
+      setAditRemark(tree.auditRemark)
+    }
+    const treeDate = new Date(tree?.imageDate || '')
+    const currentDate = new Date()
+    const diff = differenceInMonths(currentDate, treeDate)
+    setIsAuditable(diff <= 3)
     console.log(tree)
   }, [tree])
 
   const handleAdd = async () => {
     setError('')
+
+    if (tree?.id && isAuditable) {
+      if (addintImage.length === 0) {
+        setError('Please add adit image')
+        return
+      }
+      trens(async () => {
+        const d = await aditImage({
+          imgs: addintImage,
+          treeId: tree.id,
+          ot4ocId: Number(ot4ocId),
+          aditRemark,
+        })
+        console.log(d)
+      })
+      return
+    }
 
     if (!isReplaced) {
       if (!cantTakeimg) {
@@ -113,6 +154,7 @@ const EditTree = ({
         replaced: isReplaced,
         replaceReason,
         remark,
+        thisIsReplacedTree,
       })
 
       if (d?.error) {
@@ -186,122 +228,118 @@ const EditTree = ({
                 ))}
               </select>
             </InputParent>
-
             {/* {!isReplaced && ( */}
-              <>
-                <div>
-                  <div className='space-y-2'>
-                    {previousImg?.length > 0 || (
-                      <div className='flex items-center gap-2'>
-                        <Checkbox
-                          checked={cantTakeimg}
-                          id='cantTakeimg'
-                          onCheckedChange={(v) => {
-                            setcantTakeimg(v as boolean)
-                            setAddedImage([])
-                            setRemark('')
-                            setLoaction(undefined)
-                          }}
-                        />
-                        <Label htmlFor='cantTakeimg'>Can't take image.</Label>
-                      </div>
-                    )}
-                    {cantTakeimg ? (
-                      <div>
-                        <Label>Enter Remark</Label>
-                        <Input
-                          value={remark}
-                          onChange={(e) => setRemark(e.target.value)}
-                          placeholder="Why can't take image"
-                        />
-                      </div>
-                    ) : (
-                      <AddImage
-                        addFun={setAddedImage}
-                        setLoaction={setLoaction}
-                        location={location}
+            <>
+              <div>
+                <div className='space-y-2'>
+                  {previousImg?.length > 0 || (
+                    <div className='flex items-center gap-2'>
+                      <Checkbox
+                        checked={cantTakeimg}
+                        id='cantTakeimg'
+                        onCheckedChange={(v) => {
+                          setcantTakeimg(v as boolean)
+                          setAddedImage([])
+                          setRemark('')
+                          setLoaction(undefined)
+                        }}
                       />
-                    )}
-                  </div>
-
-                  {addedImage.length > 0 && (
-                    <div className='mt-2'>
-                      <Label>Selected Images</Label>
-                      <div className='flex gap-2 mt-1 flex-wrap'>
-                        {addedImage?.map((img, i) => (
-                          <div className='relative' key={i}>
-                            <button
-                              className='absolute rounded top-[1px] right-[1px] z-10 bg-red-600 p-[1px] bg-opacity-80'
-                              onClick={() =>
-                                setAddedImage((p) =>
-                                  p.filter((_, index) => index !== i)
-                                )
-                              }
-                            >
-                              <Trash2 size={15} />
-                            </button>
-                            <img
-                              src={URL.createObjectURL(img)}
-                              onClick={() =>
-                                setPreview(URL.createObjectURL(img))
-                              }
-                              alt='tree'
-                              className='size-16 object-cover rounded-md'
-                            />
-                          </div>
-                        ))}
-                      </div>
+                      <Label htmlFor='cantTakeimg'>Can't take image.</Label>
                     </div>
                   )}
-                  {previousImg?.length > 0 && (
-                    <div className='mt-2'>
-                      <Label>Previous Images</Label>
-                      <div className='flex gap-2 mt-1 flex-wrap'>
-                        {previousImg?.map((img, i) => (
-                          <div className='relative' key={i}>
-                            <button
-                              disabled={isPending}
-                              onClick={async () => {
-                                if (img?.fileId) {
-                                  trens(async () => {
-                                    await removeImage(
-                                      tree?.id as any,
-                                      img.fileId as any,
-                                      img.id
-                                    )
-                                  })
-                                  refresh()
-                                }
-                              }}
-                              className='absolute rounded top-[1px] right-[1px] z-10 bg-red-600 p-[1px] bg-opacity-80 disabled:animate-pulse'
-                            >
-                              <Trash2 size={15} />
-                            </button>
-                            <img
-                              src={img.url}
-                              alt='tree'
-                              className='size-16 object-cover rounded-md'
-                              onClick={() => setPreview(img.url)}
-                            />
-                          </div>
-                        ))}
-                      </div>
+                  {cantTakeimg ? (
+                    <div>
+                      <Label>Enter Remark</Label>
+                      <Input
+                        value={remark}
+                        onChange={(e) => setRemark(e.target.value)}
+                        placeholder="Why can't take image"
+                      />
                     </div>
+                  ) : (
+                    <AddImage
+                      addFun={setAddedImage}
+                      setLoaction={setLoaction}
+                      location={location}
+                    />
                   )}
                 </div>
-                {location && (
-                  <div>
-                    <Label>Location</Label>
-                    <div className='flex gap-2 text-xs'>
-                      <p>Lat: {location.lat.toFixed(2)}</p>
-                      <p>Lon: {location.lon.toFixed(2)}</p>
+
+                {addedImage.length > 0 && (
+                  <div className='mt-2'>
+                    <Label>Selected Images</Label>
+                    <div className='flex gap-2 mt-1 flex-wrap'>
+                      {addedImage?.map((img, i) => (
+                        <div className='relative' key={i}>
+                          <button
+                            className='absolute rounded top-[1px] right-[1px] z-10 bg-red-600 p-[1px] bg-opacity-80'
+                            onClick={() =>
+                              setAddedImage((p) =>
+                                p.filter((_, index) => index !== i)
+                              )
+                            }
+                          >
+                            <Trash2 size={15} />
+                          </button>
+                          <img
+                            src={URL.createObjectURL(img)}
+                            onClick={() => setPreview(URL.createObjectURL(img))}
+                            alt='tree'
+                            className='size-16 object-cover rounded-md'
+                          />
+                        </div>
+                      ))}
                     </div>
                   </div>
                 )}
-              </>
+                {previousImg?.length > 0 && (
+                  <div className='mt-2'>
+                    <Label>Previous Images</Label>
+                    <div className='flex gap-2 mt-1 flex-wrap'>
+                      {previousImg?.map((img, i) => (
+                        <div className='relative' key={i}>
+                          <button
+                            disabled={isPending}
+                            onClick={async () => {
+                              if (img?.fileId) {
+                                trens(async () => {
+                                  await removeImage(
+                                    tree?.id as any,
+                                    img.fileId as any,
+                                    img.id
+                                  )
+                                })
+                                refresh()
+                              }
+                            }}
+                            className='absolute rounded top-[1px] right-[1px] z-10 bg-red-600 p-[1px] bg-opacity-80 disabled:animate-pulse'
+                          >
+                            <Trash2 size={15} />
+                          </button>
+                          <img
+                            src={img.url}
+                            alt='tree'
+                            className='size-16 object-cover rounded-md'
+                            onClick={() => setPreview(img.url)}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+              {location && (
+                <div>
+                  <Label>Location</Label>
+                  <div className='flex gap-2 text-xs'>
+                    <p>Lat: {location.lat.toFixed(2)}</p>
+                    <p>Lon: {location.lon.toFixed(2)}</p>
+                  </div>
+                </div>
+              )}
+            </>
             {/* )} */}
-
-            {/* {previousImg?.length > 0 || ( */}
+            {previousImg?.length > 0 || (
               <div className='flex-row flex items-center gap-2'>
                 <Checkbox
                   id='replaced'
@@ -311,13 +349,12 @@ const EditTree = ({
                     setReplaceReason('')
                     setRemark('')
                     setAddedImage([])
-                    // setLoaction(undefined)
                     setcantTakeimg(false)
                   }}
                 />
                 <Label htmlFor='replaced'>This tree replaced.</Label>
               </div>
-            {/* )} */}
+            )}
             {isReplaced && (
               <div>
                 <Label>Replaced Reason</Label>
@@ -336,6 +373,96 @@ const EditTree = ({
                 </select>
               </div>
             )}
+
+            <>
+              {isAuditable && (
+                <div>
+                  <AddImage
+                    addFun={setAditImage}
+                    setLoaction={null}
+                    location={false}
+                    title='Take adit image'
+                    needLocation={false}
+                  />
+                  {addintImage.length > 0 && (
+                    <div className='mt-2'>
+                      <Label>Selected Adit Images</Label>
+                      <div className='flex gap-2 mt-1 flex-wrap'>
+                        {addintImage?.map((img, i) => (
+                          <div className='relative' key={i}>
+                            <button
+                              className='absolute rounded top-[1px] right-[1px] z-10 bg-red-600 p-[1px] bg-opacity-80'
+                              onClick={() =>
+                                setAditImage((p) =>
+                                  p.filter((_, index) => index !== i)
+                                )
+                              }
+                            >
+                              <Trash2 size={15} />
+                            </button>
+                            <img
+                              src={URL.createObjectURL(img)}
+                              alt='tree'
+                              className='size-16 object-cover rounded-md'
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {previousAditImage?.length > 0 && (
+                    <div className='mt-2'>
+                      <Label>Previous Adit Images</Label>
+                      <div className='flex gap-2 mt-1 flex-wrap'>
+                        {previousAditImage?.map((img, i) => (
+                          <div className='relative' key={i}>
+                            <button
+                              disabled={isPending}
+                              onClick={async () => {
+                                if (img?.fileId) {
+                                  // trens(async () => {
+                                  //   await removeImage(
+                                  //     tree?.id as any,
+                                  //     img.fileId as any,
+                                  //     img.id
+                                  //   )
+                                  // })
+                                  alert(
+                                    'Adit image remove is not implemented yet'
+                                  )
+                                  refresh()
+                                }
+                              }}
+                              className='absolute rounded top-[1px] right-[1px] z-10 bg-red-600 p-[1px] bg-opacity-80 disabled:animate-pulse'
+                            >
+                              <Trash2 size={15} />
+                            </button>
+                            <img
+                              src={img.url}
+                              alt='tree'
+                              className='size-16 object-cover rounded-md'
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  <InputParent className='mt-4'>
+                    <Label>
+                      Audit Remark
+                      <span className='text-[10px] font-light'>
+                        (why you can't take image | optional)
+                      </span>
+                    </Label>
+                    <Input
+                      value={aditRemark}
+                      onChange={(e) => setAditRemark(e.target.value)}
+                      placeholder='Enter audit remark'
+                    />
+                  </InputParent>
+                </div>
+              )}
+            </>
           </div>
         </CardContent>
         <CardFooter className='flex items-center gap-3'>

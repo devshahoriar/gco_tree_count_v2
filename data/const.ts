@@ -17,4 +17,5 @@ export enum FILETYPE {
   TREEPHOTOINITIAL = 'tfi',
   TREEPHOTOODIT = 'tfo',
   USERPROFILEPHOTO = 'upp',
+  TREEPHOTOADIT = 'tpa',
 }
