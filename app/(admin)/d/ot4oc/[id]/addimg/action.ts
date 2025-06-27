@@ -9,7 +9,7 @@ import prisma from '@/prisma/db'
 import { headers } from 'next/headers'
 
 export const deleteTree = async (treeId: number | string) => {
-  
+
   await prisma.tree.delete({
     where: {
       id: Number(treeId),
@@ -410,7 +410,7 @@ export const updateTree = async (data: any) => {
   }
 }
 
-export interface AditImage {
+interface AditImage {
   imgs: File[]
   treeId: number
   ot4ocId: number
